@@ -26,7 +26,7 @@
                  	<warSourceDirectory>WebContent</warSourceDirectory>
        			 	<packagingExcludes>%regex[.*javax.servlet-api-3.1.0.jar]</packagingExcludes>
                     <webXml>WebContent/WEB-INF/web.xml</webXml>
-                    <warName>ccb</warName>
+                    <warName>grapat</warName>
                 </configuration>
             </plugin>
 		   	<plugin>
