@@ -5,4 +5,4 @@ git pull
 mvn compile war:war
 rsync -av target/grapat.war /opt/tomcat/webapps/
 service tomcat start
-touch /opt/tomcat/webapps/GraPAT.war
+touch /opt/tomcat/webapps/grapat.war
