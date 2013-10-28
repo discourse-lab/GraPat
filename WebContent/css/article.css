@@ -1,0 +1,200 @@
+#source_text {
+    padding-top: 5em;
+    padding-bottom: 5em;
+    border: 1px solid #346789;
+    border-radius: 0.5em;
+    margin: 5px;
+}
+
+#sentence {
+    display: table;
+    margin: 0 auto;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.edge_label {
+    color: white;
+    border: 1px solid #346789;
+    border-radius: 0.3em;
+    z-index: 30;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.8);
+    font-size: smaller;
+    padding: 3px;
+}
+
+.node {
+    position: relative;
+}
+
+.menu {
+    position: fixed;
+}
+
+.extra_sentential_node {
+    color: white;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.8);
+    left: -2.8em;
+    top: -2.8em;
+}
+
+#counter {
+    display: table;
+    margin: 0 auto;
+}
+
+.sentence_button {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+    float: right;
+    border: 1px solid black;
+    border-radius: 0.5em;
+    background-color: #346789;
+    width: 100px;
+    height: 60px;
+    font-size: 1em;
+    color: white;
+    box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa;
+}
+.menu_container {
+    float: right;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.menu_button {
+    position: static;
+    border: 1px solid black;
+    border-radius: 0.5em;
+    background-color: #346789;
+    width: 60px;
+    height: 40px;
+    color: white;
+    box-shadow: 2px 2px 19px #aaa;
+    -o-box-shadow: 2px 2px 19px #aaa;
+    -webkit-box-shadow: 2px 2px 19px #aaa;
+    -moz-box-shadow: 2px 2px 19px #aaa;
+}
+
+.menu_button:active {
+    width: 60px;
+    height: 34px;
+    font-size: 0.95em;
+}
+
+.sentence_button:active {
+    width: 97px;
+    height: 49px;
+    font-size: 0.95em;
+}
+
+#graph_part {
+    height: 400px;
+    padding: 3em;
+    margin: 5px;
+    border: 1px solid #346789;
+    border-radius: 0.5em;
+}
+
+.word {
+    margin: 3em;
+    z-index: 27;
+}
+
+.popUp {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.8);
+    color: white;
+    z-index: 30;
+}
+
+.popUpContent {
+    color: black;
+    background-color: white;
+    padding: 5%;
+    border-radius: 0.5em;
+    border: 2px solid black;
+}
+
+#rmenu {
+    display: none;
+    position:absolute;
+    padding: 0.25em;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    border: 1.5px solid black;
+    border-radius: 0.25em;
+    z-index: 5000000;
+}
+
+.rmenu_element:hover {
+    background-color: #B6DAFF;
+}
+
+.subheading {
+    font-weight: bold;
+    font-size: larger;
+    margin: 10px;
+}
+
+.empf {
+    font-style: italic;    
+}
+
+.excl {
+    background-color: red;
+}
+
+.named-entity {
+    color: white;
+    background-color: green;
+}
+
+
+.corefLabel {
+	background-color: #4CBBD4;
+	font-size: 1.4em;
+	border-radius: 15px;
+	z-index: 100;
+}
+
+.named-entity-loc {
+    color: white;
+    background-color: red;
+}
+
+.named-entity-org {
+    color: white;
+    background-color: black;
+}
+
+#main {
+    padding-top: 60px;
+}
+
+/** JSPLUMB ARTEFACTS **/
+._jsPlumb_connector { z-index:4; }
+._jsPlumb_endpoint { z-index:5; }
+
+.connectorClass {
+    width: 5px;
+}
+
+.endpointCLass {
+}
+
+.endpointHoverClass {
+}
