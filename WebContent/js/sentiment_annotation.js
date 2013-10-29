@@ -43,14 +43,8 @@ window.Sentiment = {
 	},
 	save : function () {
 		console.log("save pressed");
-		$.ajax({
-			url: "http://eidentity.ling.uni-potsdam.de/pol_annotation_testing/save.php",
-			type: "POST",
-			data: "id=12,xml=imagraph.cantyouseee?!",
-			success: function(msg) {
-				console.log("success msg from ajax");
-				console.log(msg);
-			}
+		$.post('GraPAT', "some text", function(data) {
+			console.log(data);
 		});
 	},
 	logout : function() {
@@ -257,11 +251,11 @@ window.Sentiment = {
             //    var state = jsPlumb.toggleSourceEnabled("window1");
             //    $(this).html(state ? "disable" : "enable");
             //});
-            $("#psentence_button")[0].value = "←\nprevious\n←";
+            $("#psentence_button")[0].value = "â†�\nprevious\nâ†�";
 	    $("#psentence_button").css({
 			float: "left"
 		});
-	    $("#nsentence_button")[0].value = "→\nnext\n→"; 
+	    $("#nsentence_button")[0].value = "â†’\nnext\nâ†’"; 
 	    $("#nsentence_button").css({
 			float: "right"
 		});

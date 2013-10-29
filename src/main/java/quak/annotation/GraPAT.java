@@ -38,10 +38,15 @@ public class GraPAT extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
+		String some_test = request.toString();
 		if (request.getParameter("text")==null)
 			return;
 		//String text = request.getParameter("text");
-		// save your content here
+		
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf8");
+		response.getWriter().print(some_test);
+		response.flushBuffer();
 	}
 
 }
