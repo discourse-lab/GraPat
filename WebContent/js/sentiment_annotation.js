@@ -43,7 +43,7 @@ window.Sentiment = {
 	},
 	save : function () {
 		console.log("save pressed");
-		$.post('GraPAT', "some text", function(data) {
+		$.post('GraPAT', "graph='some text', id='12'", function(data) {
 			console.log(data);
 		});
 	},
