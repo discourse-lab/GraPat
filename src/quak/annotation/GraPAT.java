@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class TextAnalyzer
  */
-@WebServlet("/GraPAT")
+@WebServlet("/grapat")
 public class GraPAT extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
