@@ -8,7 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class GraPAT
@@ -46,9 +48,11 @@ public class GraPAT extends HttpServlet {
 			result += line;
 		}
 		
+		Data annotations = new Gson().fromJson(result, Data.class);
+		
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
-		response.getWriter().print(result);
+		response.getWriter().print(annotations);
 		response.flushBuffer();
 	}
 

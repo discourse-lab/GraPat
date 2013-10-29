@@ -16,7 +16,24 @@
   		<artifactId>jstl</artifactId>
   		<version>1.2</version>
   	</dependency>
+  	<dependency>
+  		<groupId>com.google.code.gson</groupId>
+  		<artifactId>gson</artifactId>
+  		<version>2.2.4</version>
+  	</dependency>
   </dependencies>
+  <repositories>
+  <repository>
+  	<url>http://repo1.maven.org/maven2</url>
+	<id>maven repository</id>
+	<snapshots>
+		<enabled>false</enabled>
+	</snapshots>
+	<releases>
+		<enabled>true</enabled>
+	</releases>
+    </repository>
+  </repositories>
     <build>
         <plugins>
             <plugin>

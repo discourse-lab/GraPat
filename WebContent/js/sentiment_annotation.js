@@ -1,5 +1,10 @@
-var annotations = {};
+var annotations = {
+		"nodes": {},
+		// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
+		"edges": {}
+};
 var current_sentence_idx = -1;
+var edge_count = 0;
 var sentence_count = 0;
 var node_count = 1;
 var current_target = -1;
@@ -23,11 +28,12 @@ window.Sentiment = {
 	    sentence_div.empty();
 	    var idx = 0;
 	    jQuery.each(text[current_sentence_idx], function() {
-		window.Sentiment.add_word(this, idx);
-		++idx;
+	    	window.Sentiment.add_word(this, idx);
+	    	++idx;
 	    });
 	},
 	next_sentence : function () {
+		window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
 		++current_sentence_idx;
 	    	window.Sentiment.word_update();
@@ -43,7 +49,7 @@ window.Sentiment = {
 	},
 	save : function () {
 		console.log("save pressed");
-		$.post('GraPAT', "graph='some text', id='12'", function(data) {
+		$.post('GraPAT', annotations, function(data) {
 			console.log(data);
 		});
 	},
@@ -126,56 +132,66 @@ window.Sentiment = {
 			}
 		});
 
-            var ent_endpoints = {
-		anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-		endpoint: ["Dot", {radius: 5}],
-		isSource: true,
-		/*connectorOverlays: [
-			[ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-		],*/
-		paintStyle: {
-			gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-			strokeStyle: "black",
-			fillStyle: "#004F66",
-			lineWidth: 1.5
-		}
+        var ent_endpoints = {
+        		anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+        		endpoint: ["Dot", {radius: 5}],
+        		isSource: true,
+        		/*connectorOverlays: [
+					[ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+				],*/
+        		paintStyle: {
+        			gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+        			strokeStyle: "black",
+        			fillStyle: "#004F66",
+        			lineWidth: 1.5
+        		}
 	    };
-            //var allNodes = $(".node");
-            $(".node").each( function(index) {
-                jsPlumb.makeTarget($(this), {
-                    anchor: "Continuous" //sourceAnchors,
-                });
+        
+        //var allNodes = $(".node");
+        $(".node").each( function(index) {
+            jsPlumb.makeTarget($(this), {
+                anchor: "Continuous" //sourceAnchors,
             });
+        });
+            
 	    $(".target").each( function(index) {
-		jsPlumb.makeTarget($(this), {
-		    anchor: "Continuous"
-		});
+	    	jsPlumb.makeTarget($(this), {
+	    		anchor: "Continuous"
+	    	});
 	    });
 
-            var allMovables = $(".movable");            
-            // make them draggable
-            jsPlumb.draggable(allMovables);
-            
-            var wordDivs = $(".word");
-            jsPlumb.makeSource(wordDivs, {
-                anchor: ["TopCenter"],
-		endpoint: ["Dot", {radius: 0}],
-		paintStyle: {
-			lineWidth: 0
-		}
-            }); 
-            jsPlumb.bind("connection", function(i,c) { 
-		if (i.connection.source.nodeName != 'SPAN')
-			i.connection.toggleType('default');
-		if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
-			i.connection.target.innerHTML = i.connection.source.innerHTML;
-			i.connection.target.innerText = i.connection.source.innerText;
-		}
-		if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
-			i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-		}
+        var allMovables = $(".movable");            
+        // make them draggable
+        jsPlumb.draggable(allMovables);
+        
+        var wordDivs = $(".word");
+        jsPlumb.makeSource(wordDivs, {
+            anchor: ["TopCenter"],
+            endpoint: ["Dot", {radius: 0}],
+            paintStyle: {
+            	lineWidth: 0
+            }
+        }); 
+        jsPlumb.bind("connection", function(i,c) {
+        	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
+        	if (!(i.connection.source.nodeName in annotations))
+        		annotations.edges[i.connection.source.nodeName] = {};
+        	if (!(i.connection.target.nodeName in annotations.edges[i.connection.source.nodeName]))
+        		annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] = [];
+        	annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] += {"edge_id": edge_count, attrs:{}};
+        	++edge_count;
+        	
+			if (i.connection.source.nodeName != 'SPAN')
+				i.connection.toggleType('default');
+			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
+				i.connection.target.innerHTML = i.connection.source.innerHTML;
+				i.connection.target.innerText = i.connection.source.innerText;
+			}
+			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
+				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
-            }); 
+        }); 
 	    /*jsPlumb.bind("dblclick", function(c) {
 		if (c.source.nodeName == "SPAN")
 			return false;
@@ -191,6 +207,7 @@ window.Sentiment = {
 		    });
         },
 	labelPopUpButton_click : function () {
+		// TODO: add values to annotations
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
 		console.log('adding connection from ' + current_source + ' to ' + current_target + ' with polarity ' + polarity + ' and text anchor "' + text_anchor);
@@ -251,11 +268,11 @@ window.Sentiment = {
             //    var state = jsPlumb.toggleSourceEnabled("window1");
             //    $(this).html(state ? "disable" : "enable");
             //});
-            $("#psentence_button")[0].value = "â†�\nprevious\nâ†�";
+            $("#psentence_button")[0].value = "←\nprevious\n←";
 	    $("#psentence_button").css({
 			float: "left"
 		});
-	    $("#nsentence_button")[0].value = "â†’\nnext\nâ†’"; 
+	    $("#nsentence_button")[0].value = "→\nnext\n→"; 
 	    $("#nsentence_button").css({
 			float: "right"
 		});
@@ -273,6 +290,7 @@ window.Sentiment = {
 		var x = rclick.pageX;
 		var y = rclick.pageY;
 		console.log(rclick);
+		annotations.nodes[node_count] = "";
                 jQuery('<div/>', {
                     class: 'window movable invisible',
 		    id: 'node_' + node_count,
