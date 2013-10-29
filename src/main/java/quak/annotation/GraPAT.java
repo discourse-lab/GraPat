@@ -1,5 +1,6 @@
 package quak.annotation;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -38,15 +39,16 @@ public class GraPAT extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
-		
-		if (request.getParameter("text")==null)
-			return;
-		String graph = request.getParameter("graph");
-		String id = request.getParameter("id");
+		String result = "";
+		BufferedReader reader = request.getReader();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			result += line;
+		}
 		
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
-		response.getWriter().print(id + " : "  + graph);
+		response.getWriter().print(result);
 		response.flushBuffer();
 	}
 
