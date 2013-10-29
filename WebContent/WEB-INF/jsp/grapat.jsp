@@ -3,7 +3,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta charset="utf-8">
   <title>GraPAT</title>
   <meta name="description" content="An annotation tool for NLP problems which require graph representations.">
   <link rel="stylesheet" href="css/graph.css">
@@ -40,19 +39,19 @@
 									</form></td>
 				</tr>
 				<tr>
-					<td>context</td>	<td>	<form action="">	<input type="checkbox" name="context"></td>
+					<td>context</td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
 				</tr>
 				<tr>
-					<td>world knowledge</td> <td>	<form action="">	<input type="checkbox" name="wknow"></td>
+					<td>world knowledge</td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
 				</tr>
 				<tr>
-					<td>ironic</td>		<td>	<form action="">	<input type="checkbox" name="ironic"></td>
+					<td>ironic</td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
 				</tr>
 				<tr>
-					<td>rhetoric</td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></td>
+					<td>rhetoric</td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
 				</tr>
 				</table>
-				<input type="button" class="sentence_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();"> </input>
+				<input type="button" class="sentence_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 			</div>
 			</div>
 			<div id="author" class="node extra_sentential_node window" node_id='node_0'>Autor</div>
