@@ -7,11 +7,11 @@
 }
 
 #saved {
-	visibility: hidden;
 	background-color: white;
     border: 1px solid #346789;
     border-radius: 0.5em;
 	font-weight: bold;
+	text-align: center;
 }
 
 #sentence {

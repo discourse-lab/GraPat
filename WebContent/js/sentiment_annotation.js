@@ -237,7 +237,8 @@ window.Sentiment = {
         
         init : function() {         
             $('#rmenu').hide();
-	    $('#labelPopUp').hide();
+            $('#labelPopUp').hide();
+            $('#saved').hide();
             
             window.Sentiment.update();
 
@@ -282,6 +283,7 @@ window.Sentiment = {
 			float: "right"
 		});
         $("#graph_part").bind("contextmenu", function(e) {
+        	rclick = e;
             $('#rmenu').css({
                 top: e.pageY + 'px',
                 left: e.pageX + 'px'
