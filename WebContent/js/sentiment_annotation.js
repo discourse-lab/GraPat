@@ -180,10 +180,8 @@ window.Sentiment = {
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
-        	console.log("trying to add to annotations")
-        	console.log(c.id);
-        	console.log(annotations);
-        	annotations.edges[i.connection.sourceId][i.connection.targetId][c.id] = {	"polarity": null, 
+
+        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
         																				"text_anchor": null,
         																				"context": null,
         																				"world_knowledge": null,
@@ -224,7 +222,7 @@ window.Sentiment = {
 		var text_anchor = $('textarea#text_anchor_input').val();
 		console.log('adding connection from ' + current_source + ' to ' + current_target + ' with polarity ' + polarity + ' and text anchor "' + text_anchor);
 		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
-		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = polarity;
+		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
 		if (polarity == 'negative') {
 			current_connection.toggleType('negative');
 		}
