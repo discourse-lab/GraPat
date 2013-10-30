@@ -303,8 +303,8 @@ window.Sentiment = {
         }).appendTo('#graph_part');
 	                
 		$("#node_"+node_count).css({
-		    top: (rclick.pageY - $('#graph_part').offset().top) + 'px',
-		    left: (rclick.pageX - $('#graph_part').offset().left) + 'px',
+		    top: rclick.pageY + 'px',
+		    left: rclick.pageX + 'px',
 		    visibility: 'visible'
 		});
 		$("#node_"+node_count).fadeIn(2000);
