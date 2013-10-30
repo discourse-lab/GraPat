@@ -42,8 +42,14 @@ public class GraPAT extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf8");
+		
 		if (request.getParameter("graph")==null)
-			return;
+		{
+			response.getWriter().print("null");
+			response.flushBuffer();
+		}
 		String result = request.getParameter("graph");
 		
 		PrintWriter writer = new PrintWriter("/opt/tomcat/webapps/grapat/java.log", "UTF-8");
@@ -52,8 +58,6 @@ public class GraPAT extends HttpServlet {
 		
 		//Data annotations = new Gson().fromJson(result, Data.class);
 		
-		response.setContentType("text/html");
-		response.setCharacterEncoding("utf8");
 		response.getWriter().print("quak");
 		response.flushBuffer();
 	}
