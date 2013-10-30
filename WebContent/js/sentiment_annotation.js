@@ -34,7 +34,7 @@ window.Sentiment = {
 	    });
 	},
 	next_sentence : function (sa) {
-		sa = sa || true;
+		sa = (typeof sa === 'undefined') ? true : sa;
 		if (sa)
 			window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
@@ -303,8 +303,8 @@ window.Sentiment = {
         }).appendTo('#graph_part');
 	                
 		$("#node_"+node_count).css({
-		    top: rclick.pageY + 'px',
-		    left: rclick.pageX + 'px',
+		    top: (rclick.pageY - $('#graph_part').offset().top) + 'px',
+		    left: (rclick.pageX - $('#graph_part').offset().left) + 'px',
 		    visibility: 'visible'
 		});
 		$("#node_"+node_count).fadeIn(2000);
