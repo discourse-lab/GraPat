@@ -180,6 +180,9 @@ window.Sentiment = {
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
+        	console.log("trying to add to annotations")
+        	console.log(c.id);
+        	console.log(annotations);
         	annotations.edges[i.connection.sourceId][i.connection.targetId][c.id] = {	"polarity": null, 
         																				"text_anchor": null,
         																				"context": null,
