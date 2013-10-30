@@ -2,6 +2,7 @@ package quak.annotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,11 +49,15 @@ public class GraPAT extends HttpServlet {
 			result += line;
 		}
 		
+		PrintWriter writer = new PrintWriter("java.log", "UTF-8");
+		writer.print(result);
+		writer.close();
+		
 		Data annotations = new Gson().fromJson(result, Data.class);
 		
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
-		response.getWriter().print(annotations.toString());
+		response.getWriter().print("quak");
 		response.flushBuffer();
 	}
 
