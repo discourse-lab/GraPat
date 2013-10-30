@@ -49,11 +49,11 @@ public class GraPAT extends HttpServlet {
 			result += line;
 		}
 		
-		PrintWriter writer = new PrintWriter("java.log", "UTF-8");
+		PrintWriter writer = new PrintWriter("/opt/tomcat/webapps/grapat/java.log", "UTF-8");
 		writer.print(result);
 		writer.close();
 		
-		Data annotations = new Gson().fromJson(result, Data.class);
+		//Data annotations = new Gson().fromJson(result, Data.class);
 		
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
