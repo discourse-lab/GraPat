@@ -42,12 +42,9 @@ public class GraPAT extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
-		String result = "";
-		BufferedReader reader = request.getReader();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			result += line;
-		}
+		if (request.getParameter("graph")==null)
+			return;
+		String result = request.getParameter("graph");
 		
 		PrintWriter writer = new PrintWriter("/opt/tomcat/webapps/grapat/java.log", "UTF-8");
 		writer.print(result);
