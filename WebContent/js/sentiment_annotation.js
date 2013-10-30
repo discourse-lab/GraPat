@@ -49,6 +49,7 @@ window.Sentiment = {
 	},
 	save : function () {
 		console.log("save pressed");
+		console.log(annotations);
 		$.post('GraPAT', annotations, function(data) {
 			console.log(data);
 		});
@@ -286,17 +287,18 @@ window.Sentiment = {
                     return false;
             });
 
-            $("#add_ent").bind("click", function() {
-		var x = rclick.pageX;
-		var y = rclick.pageY;
-		console.log(rclick);
-		annotations.nodes[node_count] = "";
-                jQuery('<div/>', {
+        $("#add_ent").bind("click", function() {
+			var x = rclick.offsetX;
+			var y = rclick.offsetY;
+			console.log(rclick);
+			annotations.nodes[node_count] = "";
+	                jQuery('<div/>', {
                     class: 'window movable invisible',
-		    id: 'node_' + node_count,
-		    node_id: node_count,
+                    id: 'node_' + node_count,
+                    node_id: node_count,
                     text: 'new node'
                 }).appendTo('#graph_part');
+	                
 		$("#node_"+node_count).css({
 		    top: y + 'px',
 		    left: x + 'px',
