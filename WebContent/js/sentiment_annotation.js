@@ -181,6 +181,9 @@ window.Sentiment = {
         		annotations.edges[i.connection.source.node_id][i.connection.target.node_id] = [];
         	annotations.edges[i.connection.source.node_id][i.connection.target.node_id] += {"edge_id": edge_count, attrs:{}};
         	console.log("attn");
+        	console.log(i.connection);
+        	console.log(i.connection.source);
+        	console.log(i.connection.source.node_id);
         	console.log(i.connection.target.node_id);
         	++edge_count;
         	
