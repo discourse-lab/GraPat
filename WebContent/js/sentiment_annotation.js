@@ -294,8 +294,6 @@ window.Sentiment = {
         });
 
         $("#add_ent").bind("click", function() {
-			var x = rclick.pageX;
-			var y = rclick.pageY;
 			annotations.nodes[node_count] = "";
 	                jQuery('<div/>', {
                     class: 'window movable invisible',
@@ -305,8 +303,8 @@ window.Sentiment = {
         }).appendTo('#graph_part');
 	                
 		$("#node_"+node_count).css({
-		    top: y + 'px',
-		    left: x + 'px',
+		    top: rclick.pageY + 'px',
+		    left: rclick.pageX + 'px',
 		    visibility: 'visible'
 		});
 		$("#node_"+node_count).fadeIn(2000);
