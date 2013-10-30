@@ -33,8 +33,10 @@ window.Sentiment = {
 	    	++idx;
 	    });
 	},
-	next_sentence : function () {
-		window.Sentiment.save();
+	next_sentence : function (sa) {
+		sa = sa || true;
+		if (sa)
+			window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
 		++current_sentence_idx;
 	    	window.Sentiment.word_update();
@@ -73,7 +75,7 @@ window.Sentiment = {
 				});
 				++sentence_idx;
 			});
-			window.Sentiment.next_sentence();
+			window.Sentiment.next_sentence(false);
 		});
 	},
 
