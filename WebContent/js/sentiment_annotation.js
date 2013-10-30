@@ -7,11 +7,12 @@ var current_sentence_idx = -1;
 var edge_count = 0;
 var sentence_count = 0;
 var node_count = 1;
-var current_target = -1;
-var current_source = -1;
+var current_target = null;
+var current_source = null;
 var current_connection = null;
 var text = [];
 var rclick = null;
+var annotator_id = -1;
 
 window.Sentiment = {
 	add_word : function(to_add, wid) {
@@ -50,7 +51,7 @@ window.Sentiment = {
 	save : function () {
 		console.log("save pressed");
 		console.log(annotations);
-		$.post('GraPAT', "graph="+JSON.stringify(annotations), function(data) {
+		$.post('GraPAT', {"graph": JSON.stringify(annotations), "annotator": JSON.stringify({ "id": annotator_id })}, function(data) {
 			console.log(data);
 		});
 	},
@@ -178,8 +179,14 @@ window.Sentiment = {
         	if (!(i.connection.sourceId in annotations))
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
-        		annotations.edges[i.connection.sourceId][i.connection.targetId] = [];
-        	annotations.edges[i.connection.sourceId][i.connection.targetId].push( {"edge_id": edge_count, attrs:{}} );
+        		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
+        	annotations.edges[i.connection.sourceId][i.connection.targetId][c.id] = {	"polarity": null, 
+        																				"text_anchor": null,
+        																				"context": null,
+        																				"world_knowledge": null,
+        																				"ironic": null,
+        																				"rhetoric": null
+        																				};
 
         	++edge_count;
         	
@@ -213,7 +220,8 @@ window.Sentiment = {
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
 		console.log('adding connection from ' + current_source + ' to ' + current_target + ' with polarity ' + polarity + ' and text anchor "' + text_anchor);
-
+		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
+		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = polarity;
 		if (polarity == 'negative') {
 			current_connection.toggleType('negative');
 		}
@@ -339,8 +347,8 @@ window.Sentiment = {
                 if (c.source.nodeName == "SPAN")
                         return false;
                 console.log(c);
-                current_source = c.source.attributes.node_id.nodeValue;
-                current_target = c.target.attributes.node_id.nodeValue;
+                current_source = c.sourceId;
+                current_target = c.targetId;
                 current_connection = c;
                 $('#labelPopUp').show();
                 return false;
@@ -367,9 +375,9 @@ window.Sentiment = {
 		});
 	    });
 	    $(document).ready( function() {
-		console.log('document ready');
-		$(window).resize();
-		window.Sentiment.update();
+	    	console.log('document ready');
+	    	$(window).resize();
+			window.Sentiment.update();
 	    });
         }
 
