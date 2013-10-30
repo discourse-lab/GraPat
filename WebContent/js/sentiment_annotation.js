@@ -180,6 +180,8 @@ window.Sentiment = {
         	if (!(i.connection.target.nodeName in annotations.edges[i.connection.source.nodeName]))
         		annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] = [];
         	annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] += {"edge_id": edge_count, attrs:{}};
+        	console.log("attn");
+        	console.log(i.connection.target);
         	++edge_count;
         	
 			if (i.connection.source.nodeName != 'SPAN')
