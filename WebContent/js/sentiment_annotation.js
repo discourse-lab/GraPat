@@ -179,7 +179,7 @@ window.Sentiment = {
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.nodeId] = [];
-        	annotations.edges[i.connection.sourceId][i.connection.targetId] += {"edge_id": edge_count, attrs:{}};
+        	annotations.edges[i.connection.sourceId][i.connection.targetId].push( {"edge_id": edge_count, attrs:{}} );
 
         	++edge_count;
         	
