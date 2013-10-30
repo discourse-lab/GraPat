@@ -50,7 +50,7 @@ window.Sentiment = {
 	save : function () {
 		console.log("save pressed");
 		console.log(annotations);
-		$.post('GraPAT', annotations, function(data) {
+		$.post('GraPAT', "graph="+annotations, function(data) {
 			console.log(data);
 		});
 	},
