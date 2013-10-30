@@ -18,6 +18,7 @@
 	<div class="menu">
 		<div class="menu_container">
 			<input id="save" class="menu_button" value="Save" type="button" onclick="window.Sentiment.save();">
+			<div id="saved">saved</div>
 		</div>
 		<div class="menu_container">
 			<input id="log out" class="menu_button" value="Log out" type="button" onclick="window.Sentiment.logout();">

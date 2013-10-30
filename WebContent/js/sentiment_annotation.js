@@ -38,8 +38,6 @@ window.Sentiment = {
 	    if (current_sentence_idx < sentence_count-1) {
 		++current_sentence_idx;
 	    	window.Sentiment.word_update();
-		console.log(current_sentence_idx);
-		console.log(sentence_count);
 	    }
 	},
 	previous_sentence : function () {
@@ -49,14 +47,12 @@ window.Sentiment = {
 	    }
 	},
 	save : function () {
-		console.log("save pressed");
-		console.log(annotations);
 		$.post('GraPAT', {"graph": JSON.stringify(annotations), "annotator": JSON.stringify({ "id": annotator_id })}, function(data) {
-			console.log(data);
+			$("#saved").hide().fadeIn(1500);
+			$("#saved").fadeOut(2500);
 		});
 	},
 	logout : function() {
-	    console.log("log out pressed");
 	},
 
 	read_input_file : function () {
@@ -217,10 +213,8 @@ window.Sentiment = {
 		    });
         },
 	labelPopUpButton_click : function () {
-		// TODO: add values to annotations
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
-		console.log('adding connection from ' + current_source + ' to ' + current_target + ' with polarity ' + polarity + ' and text anchor "' + text_anchor);
 		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
 		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
 		if (polarity == 'negative') {
@@ -287,27 +281,24 @@ window.Sentiment = {
 	    $("#nsentence_button").css({
 			float: "right"
 		});
-            $("#graph_part").bind("contextmenu", function(e) {
-		    rclick = e;
-		    console.log(e);
-                    $('#rmenu').css({
-                        top: e.pageY + 'px',
-                        left: e.pageX + 'px'
-                    }).show();
-                    return false;
-            });
+        $("#graph_part").bind("contextmenu", function(e) {
+            $('#rmenu').css({
+                top: e.pageY + 'px',
+                left: e.pageX + 'px'
+            }).show();
+            return false;
+        });
 
         $("#add_ent").bind("click", function() {
 			var x = rclick.pageX;
 			var y = rclick.pageY;
-			console.log(rclick);
 			annotations.nodes[node_count] = "";
 	                jQuery('<div/>', {
                     class: 'window movable invisible',
                     id: 'node_' + node_count,
                     node_id: node_count,
                     text: 'new node'
-                }).appendTo('#graph_part');
+        }).appendTo('#graph_part');
 	                
 		$("#node_"+node_count).css({
 		    top: y + 'px',
@@ -347,7 +338,6 @@ window.Sentiment = {
             jsPlumb.bind("dblclick", function(c) {
                 if (c.source.nodeName == "SPAN")
                         return false;
-                console.log(c);
                 current_source = c.sourceId;
                 current_target = c.targetId;
                 current_connection = c;
@@ -368,7 +358,6 @@ window.Sentiment = {
                 $('#rmenu').hide();
             });
 	    $(window).resize( function() {
-		console.log("resizing");
 		$('.popUpContent').css({
 		    position: 'absolute',
 		    left: ($(window).width() - $('.popUpContent').width())/2,
@@ -376,7 +365,6 @@ window.Sentiment = {
 		});
 	    });
 	    $(document).ready( function() {
-	    	console.log('document ready');
 	    	$(window).resize();
 			window.Sentiment.update();
 	    });
