@@ -35,7 +35,7 @@
 }
 
 .node {
-    position: relative;
+    position: absolute;
 }
 
 .menu {
@@ -43,6 +43,7 @@
 }
 
 .extra_sentential_node {
+	position: relative;
     color: white;
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0, 0.8);
