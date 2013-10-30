@@ -48,11 +48,11 @@ public class GraPAT extends HttpServlet {
 			result += line;
 		}
 		
-		// Data annotations = new Gson().fromJson(result, Data.class);
+		Data annotations = new Gson().fromJson(result, Data.class);
 		
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
-		response.getWriter().print("quak");
+		response.getWriter().print(annotations.toString());
 		response.flushBuffer();
 	}
 

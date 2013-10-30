@@ -178,7 +178,7 @@ window.Sentiment = {
         	if (!(i.connection.sourceId in annotations))
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
-        		annotations.edges[i.connection.sourceId][i.connection.nodeId] = [];
+        		annotations.edges[i.connection.sourceId][i.connection.targetId] = [];
         	annotations.edges[i.connection.sourceId][i.connection.targetId].push( {"edge_id": edge_count, attrs:{}} );
 
         	++edge_count;
@@ -289,8 +289,8 @@ window.Sentiment = {
             });
 
         $("#add_ent").bind("click", function() {
-			var x = rclick.offsetX;
-			var y = rclick.offsetY;
+			var x = rclick.pageX;
+			var y = rclick.pageY;
 			console.log(rclick);
 			annotations.nodes[node_count] = "";
 	                jQuery('<div/>', {
