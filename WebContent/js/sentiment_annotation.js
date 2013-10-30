@@ -175,13 +175,13 @@ window.Sentiment = {
         }); 
         jsPlumb.bind("connection", function(i,c) {
         	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
-        	if (!(i.connection.source.nodeName in annotations))
-        		annotations.edges[i.connection.source.nodeName] = {};
-        	if (!(i.connection.target.nodeName in annotations.edges[i.connection.source.nodeName]))
-        		annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] = [];
-        	annotations.edges[i.connection.source.nodeName][i.connection.target.nodeName] += {"edge_id": edge_count, attrs:{}};
+        	if (!(i.connection.source.node_id in annotations))
+        		annotations.edges[i.connection.source.node_id] = {};
+        	if (!(i.connection.target.node_id in annotations.edges[i.connection.source.node_id]))
+        		annotations.edges[i.connection.source.node_id][i.connection.target.node_id] = [];
+        	annotations.edges[i.connection.source.node_id][i.connection.target.node_id] += {"edge_id": edge_count, attrs:{}};
         	console.log("attn");
-        	console.log(i.connection.target);
+        	console.log(i.connection.target.node_id);
         	++edge_count;
         	
 			if (i.connection.source.nodeName != 'SPAN')
