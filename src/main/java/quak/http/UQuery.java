@@ -38,6 +38,7 @@ public class UQuery
 			if (!more) 
 			{
 				logger.println("not registered user");
+				logger.flush();
 				System.out.println("Sorry, you are not a registered user! Please sign up first");
 				bean.setValid(false);
 			} 
@@ -52,11 +53,15 @@ public class UQuery
 				bean.setFirstName(firstName);
 				bean.setLastName(lastName);
 				bean.setValid(true);
+				
+				logger.println("validated!");
+				logger.flush();
 			}
 		} 
 		catch (Exception ex) 
 		{
-			System.out.println("Log In failed: An Exception has occurred! " + ex);
+			logger.println("Log In failed: An Exception has occurred! " + ex);
+			logger.flush();
 		} 
 		//some exception handling
 		finally 
