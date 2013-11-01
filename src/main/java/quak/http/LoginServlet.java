@@ -40,8 +40,8 @@ public class LoginServlet extends HttpServlet {
 		     {
 			        
 		          HttpSession session = request.getSession(true);	    
-		          session.setAttribute("currentSessionUser",user); 
-		          response.sendRedirect("/GraPAT"); //logged-in page      		
+		          session.setAttribute("currentSessionUser", user); 
+		          response.sendRedirect("/GraPAT");      		
 		     }
 			        
 		     else 

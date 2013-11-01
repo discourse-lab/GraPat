@@ -7,10 +7,8 @@
 <title>Log in to GraPAT</title>
 </head>
 <body>
-
-
 		<div>
-			<form method="get" action="LoginServlet">
+			<form method="post" action="LoginServlet">
 				<input id="username" name="username" class="textfield" value="eMail" type="text">
 				<input id="password" name="password" class="textfield" value="Password" type="password">
 				<input type="submit" value="Log in" class="menu_button wbutton">

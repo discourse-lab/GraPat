@@ -45,7 +45,7 @@ public class GraPAT extends HttpServlet {
 		response.setContentType("text/html");
 		response.setCharacterEncoding("utf8");
 		
-		if (request.getParameter("graph")==null)
+		if (request.getParameter("graph") == null)
 		{
 			response.getWriter().print("null");
 			response.flushBuffer();
