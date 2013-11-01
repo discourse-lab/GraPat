@@ -20,7 +20,7 @@ public class ConnectionManager {
     	 String database = "grapat_logins";
     	 String db = "jdbc:mysql://" + host + ":" + port + "/?characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes&" + database;
 
-         Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+    	 Class.forName("com.mysql.jdbc.Driver").newInstance();
          
          try
          {            	
@@ -38,6 +38,14 @@ public class ConnectionManager {
       {
           logger.println(e);
           logger.flush();
+      } 
+      catch (InstantiationException e) {
+		// TODO Auto-generated catch block
+    	  logger.println(e);
+      } 
+      catch (IllegalAccessException e) {
+		// TODO Auto-generated catch block
+    	  logger.println(e);
       }
       logger.println("getConnection done");
       logger.flush();
