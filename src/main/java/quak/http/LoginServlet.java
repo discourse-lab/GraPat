@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 		     }
 			        
 		     else 
-		          response.sendRedirect("login.jsp"); //error page 
+		          response.sendRedirect("WEB-INF/jsp/login.jsp"); //error page 
 		} 
 				
 				
