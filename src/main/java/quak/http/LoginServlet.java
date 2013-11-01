@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
 		     }
 			        
 		     else 
-		    	 request.getRequestDispatcher("WEB-INF/jsp/grapat.jsp").forward(request, response); 
+		    	 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response); 
 		} 
 				
 				
