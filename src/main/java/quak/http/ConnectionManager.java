@@ -1,5 +1,6 @@
 package main.java.quak.http;
 
+import java.io.PrintWriter;
 import java.sql.*;
 
 
@@ -8,7 +9,7 @@ public class ConnectionManager {
    static Connection con;
    static String url;
          
-   public static Connection getConnection()
+   public static Connection getConnection(PrintWriter logger)
    {
      
       try
@@ -27,7 +28,8 @@ public class ConnectionManager {
          
          catch (SQLException ex)
          {
-            ex.printStackTrace();
+            logger.println(ex.getStackTrace());
+            logger.flush();
          }
       }
 

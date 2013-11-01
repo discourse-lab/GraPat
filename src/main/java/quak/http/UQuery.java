@@ -2,6 +2,7 @@ package main.java.quak.http;
 
 import java.text.*;
 import java.util.*;
+import java.io.PrintWriter;
 import java.sql.*;
 
 public class UQuery 	
@@ -9,7 +10,7 @@ public class UQuery
 	static Connection currentCon = null;
 	static ResultSet rs = null;
 		
-	public static UserBean login(UserBean bean) {
+	public static UserBean login(UserBean bean, PrintWriter logger) {
 		//preparing some objects for connection 
 		Statement stmt = null;    
 		
@@ -26,7 +27,9 @@ public class UQuery
 		try 
 		{
 			//connect to DB 
-			currentCon = ConnectionManager.getConnection();
+			logger.println("trying connection");
+			logger.flush();
+			currentCon = ConnectionManager.getConnection(logger);
 			stmt = currentCon.createStatement();
 			rs = stmt.executeQuery(searchQuery);	        
 			boolean more = rs.next();
@@ -34,6 +37,7 @@ public class UQuery
 			// if user does not exist set the isValid variable to false
 			if (!more) 
 			{
+				logger.println("not registered user");
 				System.out.println("Sorry, you are not a registered user! Please sign up first");
 				bean.setValid(false);
 			} 
