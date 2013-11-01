@@ -1,6 +1,9 @@
 package main.java.quak.http;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -18,12 +21,15 @@ import javax.servlet.http.HttpSession;
  */
 @WebFilter("/GraPAT")
 public class LoginFilter implements Filter {
-
+	PrintWriter logger;
     /**
      * Default constructor. 
+     * @throws UnsupportedEncodingException 
+     * @throws FileNotFoundException 
      */
-    public LoginFilter() {
+    public LoginFilter() throws FileNotFoundException, UnsupportedEncodingException {
         // TODO Auto-generated constructor stub
+    	logger = new PrintWriter("/opt/tomcat/webapps/grapat/filter.log", "UTF-8");
     }
 
 	/**
@@ -40,7 +46,10 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession(false);
-
+        
+        logger.println(session.toString());
+        logger.println(session.getAttribute("user"));
+        logger.flush();
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet"); // No logged-in user found, so redirect to login page.
         } else {
