@@ -11,7 +11,8 @@ public class ConnectionManager {
          
    public static Connection getConnection(PrintWriter logger)
    {
-     
+       logger.println("getConnection started");
+       logger.flush();
       try
       {
     	 String host = "localhost";
@@ -35,9 +36,11 @@ public class ConnectionManager {
 
       catch(ClassNotFoundException e)
       {
-         System.out.println(e);
+          logger.println(e.getStackTrace());
+          logger.flush();
       }
-
+      logger.println("getConnection done");
+      logger.flush();
       return con;
    }
 }
