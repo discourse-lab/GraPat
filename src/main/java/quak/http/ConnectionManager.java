@@ -13,8 +13,8 @@ public class ConnectionManager {
      
       try
       {
-    	 String host = "eidentity.ling.uni-potsdam.de";
-    	 String port = "";
+    	 String host = "localhost";
+    	 String port = "3306";
     	 String database = "grapat_logins";
     	 String db = "jdbc:mysql://" + host + ":" + port + "/?characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes&" + database;
 
