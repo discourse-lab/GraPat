@@ -27,6 +27,7 @@ public class LoginServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
         try {
 			writer = new PrintWriter("/opt/tomcat/webapps/grapat/login.log", "UTF-8");
+			writer.println("inited");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
