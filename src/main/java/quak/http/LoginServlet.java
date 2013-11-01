@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
 				writer.flush();
 		          HttpSession session = request.getSession(true);	    
 		          session.setAttribute("currentSessionUser", user); 
-		          response.sendRedirect("/GraPAT");      		
+		          response.sendRedirect("GraPAT");      		
 		     }
 			        
 		     else 
