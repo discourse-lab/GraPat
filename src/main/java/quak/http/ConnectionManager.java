@@ -18,7 +18,7 @@ public class ConnectionManager {
     	 String host = "localhost";
     	 String port = "3306";
     	 String database = "grapat_logins";
-    	 String db = "jdbc:mysql://" + host + ":" + port + "/?characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes&" + database;
+    	 String db = "jdbc:mysql://" + host + ":" + port + "/" + database;
 
     	 Class.forName("com.mysql.jdbc.Driver").newInstance();
          
