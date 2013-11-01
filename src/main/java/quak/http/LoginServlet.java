@@ -69,7 +69,8 @@ public class LoginServlet extends HttpServlet {
 		     writer.print("trying to auth " + user.getUsername() + " " + user.getPassword());
 		     writer.flush();
 		     user = UQuery.login(user);
-			   		    
+		     writer.print("checked user " + user.isValid() + user.getFirstName());
+		     writer.flush();
 		     if (user.isValid())
 		     {
 		 		
