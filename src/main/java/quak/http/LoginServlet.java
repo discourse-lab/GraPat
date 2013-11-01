@@ -38,6 +38,7 @@ public class LoginServlet extends HttpServlet {
     
     public void destroy () {
     	writer.close();
+    	writer.print("closed");
     }
 
 	/**
@@ -45,6 +46,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+		writer.print("received get. returning jsp");
 	}
 	
 
@@ -52,6 +54,7 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		writer.print("post got. starting auth");
 		try
 		{	    
 	
@@ -78,7 +81,7 @@ public class LoginServlet extends HttpServlet {
 				
 		catch (Throwable theException) 	    
 		{
-		     System.out.println(theException); 
+		     writer.println(theException); 
 		}
 	}
 
