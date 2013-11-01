@@ -28,6 +28,7 @@ public class LoginServlet extends HttpServlet {
         try {
 			writer = new PrintWriter("/opt/tomcat/webapps/grapat/login.log", "UTF-8");
 			writer.println("inited");
+			writer.flush();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,8 +39,11 @@ public class LoginServlet extends HttpServlet {
     }
     
     public void destroy () {
-    	writer.close();
+    	
     	writer.print("closed");
+    	writer.flush();
+    	
+    	writer.close();
     }
 
 	/**
@@ -63,13 +67,14 @@ public class LoginServlet extends HttpServlet {
 		     user.setUserName(request.getParameter("username"));
 		     user.setPassword(request.getParameter("password"));
 		     writer.print("trying to auth " + user.getFirstName());
+		     writer.flush();
 		     user = UQuery.login(user);
 			   		    
 		     if (user.isValid())
 		     {
 		 		
 				writer.print("valid user detected. creating session for user " + user.getFirstName() + " " + user.getLastName());
-				
+				writer.flush();
 		          HttpSession session = request.getSession(true);	    
 		          session.setAttribute("currentSessionUser", user); 
 		          response.sendRedirect("/GraPAT");      		
@@ -82,7 +87,8 @@ public class LoginServlet extends HttpServlet {
 				
 		catch (Throwable theException) 	    
 		{
-		     writer.println(theException); 
+		     writer.println(theException);
+		     writer.flush();
 		}
 	}
 
