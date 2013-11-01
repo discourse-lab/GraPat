@@ -77,7 +77,7 @@ public class LoginServlet extends HttpServlet {
 				writer.print("valid user detected. creating session for user " + user.getFirstName() + " " + user.getLastName());
 				writer.flush();
 		          HttpSession session = request.getSession(true);	    
-		          session.setAttribute("currentSessionUser", user); 
+		          session.setAttribute("user", user);
 		          response.sendRedirect("GraPAT");      		
 		     }
 			        
