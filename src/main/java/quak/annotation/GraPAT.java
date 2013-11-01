@@ -1,4 +1,4 @@
-package quak.annotation;
+package main.java.quak.annotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;

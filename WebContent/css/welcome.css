@@ -1,5 +1,14 @@
 @CHARSET "UTF-8";
 
+.textfield {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.wbutton {
+	margin: 2em;
+}
+
 #main {
 	margin-right: auto;
 	margin-left: auto;
