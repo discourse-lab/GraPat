@@ -1,6 +1,10 @@
 package main.java.quak.http;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,13 +18,26 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	PrintWriter writer;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
+        try {
+			writer = new PrintWriter("/opt/tomcat/webapps/grapat/login.log", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public void destroy () {
+    	writer.close();
     }
 
 	/**
@@ -46,7 +63,9 @@ public class LoginServlet extends HttpServlet {
 			   		    
 		     if (user.isValid())
 		     {
-			        
+		 		
+				writer.print("valid user detected. creating session for user " + user.getFirstName() + " " + user.getLastName());
+				
 		          HttpSession session = request.getSession(true);	    
 		          session.setAttribute("currentSessionUser", user); 
 		          response.sendRedirect("/GraPAT");      		
