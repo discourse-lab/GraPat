@@ -29,14 +29,14 @@ public class ConnectionManager {
          
          catch (SQLException ex)
          {
-            logger.println(ex.getStackTrace());
+            logger.println(ex);
             logger.flush();
          }
       }
 
       catch(ClassNotFoundException e)
       {
-          logger.println(e.getStackTrace());
+          logger.println(e);
           logger.flush();
       }
       logger.println("getConnection done");
