@@ -66,7 +66,7 @@ public class LoginServlet extends HttpServlet {
 		     UserBean user = new UserBean();
 		     user.setUserName(request.getParameter("username"));
 		     user.setPassword(request.getParameter("password"));
-		     writer.print("trying to auth " + user.getFirstName());
+		     writer.print("trying to auth " + user.getUsername() + " " + user.getPassword());
 		     writer.flush();
 		     user = UQuery.login(user);
 			   		    
