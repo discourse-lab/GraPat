@@ -33,29 +33,29 @@
 				<div class="attrsContent">
 					<table class="popUpTable">
 					<tr>
-						<td>text anchor</td>	<td> <textarea id="text_anchor_input" rows="1" cols="25"></textarea></td>
+						<td><b>text anchor</b></td>	<td> <textarea id="text_anchor_input" rows="1" cols="25"></textarea></td>
 					</tr>
 					<tr>
-						<td>polarity</td>	<td> 	<form action=""> 	<input type="radio" name="polarity" value="negative"> negative <br>
+						<td><b>polarity</b></td>	<td> 	<form action=""> 	<input type="radio" name="polarity" value="negative"> negative <br>
 													<input type="radio" name="polarity" value="positive"> positive <br>
 													<input type="radio" name="polarity" value="other">other
 										</form></td>
 					</tr>
 					<tr>
-						<td>context</td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
+						<td><b>context</b></td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
 					</tr>
 					<tr>
-						<td>world knowledge</td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
+						<td><b>world knowledge</b></td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
 					</tr>
 					<tr>
-						<td>ironic</td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
+						<td><b>ironic</b></td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
 					</tr>
 					<tr>
-						<td>rhetoric</td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
+						<td><b>rhetoric</b></td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
 					</tr>
 					</table>
-					<input type="button" class="menu_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 				</div>
+				<input type="button" id="attrs_button" class="menu_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 			</div>
 			</div>
 			<div id="author" class="node extra_sentential_node window" node_id='node_0'>Autor</div>

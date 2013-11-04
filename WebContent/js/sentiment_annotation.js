@@ -193,12 +193,15 @@ window.Sentiment = {
 				i.connection.toggleType('default');
 			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
 				i.connection.target.innerHTML = i.connection.source.innerHTML;
-				i.connection.target.innerText = i.connection.source.innerText;
+				// i.connection.target.innerText = i.connection.source.innerText;
+				annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
 			}
 			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+				annotations.nodes[i.connection.targetId] += i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
+			showAttrsPopUp(i.connection);
         }); 
 	    /*jsPlumb.bind("dblclick", function(c) {
 		if (c.source.nodeName == "SPAN")
@@ -253,6 +256,15 @@ window.Sentiment = {
 							}]);
 		++node_count;
 		window.Sentiment.update();
+	},
+	showAttrsPopUp : function(c) {
+	        if (c.source.nodeName == "SPAN")
+	            return false;
+	    current_source = c.sourceId;
+	    current_target = c.targetId;
+	    current_connection = c;
+	    $('#labelPopUp').show();
+	    return false;
 	},
         
         init : function() {         
@@ -312,10 +324,11 @@ window.Sentiment = {
         });
 
         $("#add_ent").bind("click", function() {
-			annotations.nodes[node_count] = "";
-	                jQuery('<div/>', {
+        	var node_id = 'node_' + node_count;
+			annotations.nodes[node_id] = "";
+            jQuery('<div/>', {
                     class: 'window movable invisible',
-                    id: 'node_' + node_count,
+                    id: node_id,
                     node_id: node_count,
                     text: 'new node'
         }).appendTo('#graph_part');
@@ -356,13 +369,7 @@ window.Sentiment = {
 
 
             jsPlumb.bind("dblclick", function(c) {
-                if (c.source.nodeName == "SPAN")
-                        return false;
-                current_source = c.sourceId;
-                current_target = c.targetId;
-                current_connection = c;
-                $('#labelPopUp').show();
-                return false;
+            	showAttrsPopUp(c);
             });
             jsPlumb.bind("ready", function () {
                 jsPlumb.addEndpoint($(".node"), ent_endpoints);
@@ -378,11 +385,11 @@ window.Sentiment = {
                 $('#rmenu').hide();
             });
 	    $(window).resize( function() {
-		$('.popUpContent').css({
-		    position: 'absolute',
-		    left: ($(window).width() - $('.popUpContent').width())/2,
-		    top: ($(window).height() - $('.popUpContent').height())/2
-		});
+			$('.popUpContent').css({
+			    position: 'absolute',
+			    left: ($(window).width() - $('.popUpContent').width())/2,
+			    top: ($(window).height() - $('.popUpContent').height())/2
+			});
 	    });
 	    $(document).ready( function() {
 	    	$(window).resize();

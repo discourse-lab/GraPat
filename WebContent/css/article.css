@@ -98,6 +98,14 @@
     font-size: 0.95em;
 }
 
+#attrsButton {
+	float: right;
+}
+
+#popUpTable {
+	border-spacing: 10px;
+}
+
 .sentence_button:active {
     width: 97px;
     height: 49px;
@@ -160,6 +168,7 @@
 	width: 100%;
 	text-align: center;
 	border-bottom: 1px solid black;
+	padding-bottom: 8%;
 }
 
 .subheading {
