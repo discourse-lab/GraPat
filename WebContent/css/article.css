@@ -153,6 +153,12 @@
     background-color: #B6DAFF;
 }
 
+#attrsHeadline {
+	width: 100%;
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
 .subheading {
     font-weight: bold;
     font-size: larger;

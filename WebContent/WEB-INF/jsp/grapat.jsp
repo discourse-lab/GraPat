@@ -29,6 +29,7 @@
 		<div id="graph_part">
 			<div id="labelPopUp" class="popUp">
 			<div class="popUpContent">
+				<h2 id="attrsHeadline">Attributes</h2>
 				<table class="popUpTable">
 				<tr>
 					<td>text anchor</td>	<td> <textarea id="text_anchor_input" rows="1" cols="25"></textarea></td>
@@ -52,7 +53,7 @@
 					<td>rhetoric</td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
 				</tr>
 				</table>
-				<input type="button" class="sentence_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
+				<input type="button" class="menu_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 			</div>
 			</div>
 			<div id="author" class="node extra_sentential_node window" node_id='node_0'>Autor</div>

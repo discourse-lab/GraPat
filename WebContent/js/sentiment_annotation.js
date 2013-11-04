@@ -181,10 +181,10 @@ window.Sentiment = {
 
         	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
         																				"text_anchor": null,
-        																				"context": null,
-        																				"world_knowledge": null,
-        																				"ironic": null,
-        																				"rhetoric": null
+        																				"context": false,
+        																				"world_knowledge": false,
+        																				"ironic": false,
+        																				"rhetoric": false
         																				};
 
         	++edge_count;
@@ -219,6 +219,24 @@ window.Sentiment = {
 		var text_anchor = $('textarea#text_anchor_input').val();
 		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
 		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+		
+		if ($('input[name="context"]:checked').val())
+			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
+		else
+			annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
+		if ($('input[name="wknow"]:checked').val())
+			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
+		else
+			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
+		if ($('input[name="ironic"]:checked').val())
+			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
+		else
+			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
+		if ($('input[name="rhetoric"]:checked').val())
+			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
+		else
+			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
+		
 		if (polarity == 'negative') {
 			current_connection.toggleType('negative');
 		}
