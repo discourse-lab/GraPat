@@ -49,7 +49,6 @@ public class UQuery
 				String firstName = rs.getString("FirstName");
 				String lastName = rs.getString("LastName");
 				
-				System.out.println("Welcome " + firstName);
 				bean.setFirstName(firstName);
 				bean.setLastName(lastName);
 				bean.setValid(true);

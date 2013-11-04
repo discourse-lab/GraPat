@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
  */
 @WebFilter("/GraPAT")
 public class LoginFilter implements Filter {
-	PrintWriter logger;
     /**
      * Default constructor. 
      * @throws UnsupportedEncodingException 
@@ -29,7 +28,6 @@ public class LoginFilter implements Filter {
      */
     public LoginFilter() throws FileNotFoundException, UnsupportedEncodingException {
         // TODO Auto-generated constructor stub
-    	logger = new PrintWriter("/opt/tomcat/webapps/grapat/filter.log", "UTF-8");
     }
 
 	/**
