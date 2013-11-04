@@ -132,7 +132,6 @@
 .popUpContent {
     color: black;
     background-color: white;
-    padding: 5%;
     border-radius: 0.5em;
     border: 2px solid black;
 }
@@ -153,7 +152,11 @@
     background-color: #B6DAFF;
 }
 
-#attrsHeadline {
+.attrsContent {
+	padding: 4%;
+}
+
+.attrsHeadline {
 	width: 100%;
 	text-align: center;
 	border-bottom: 1px solid black;
