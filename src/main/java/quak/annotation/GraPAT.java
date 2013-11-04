@@ -66,6 +66,12 @@ public class GraPAT extends HttpServlet {
 			writer.print(result);
 			writer.close();
 		}
+		else {
+			String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_unknown_user.json";
+			PrintWriter writer = new PrintWriter("/opt/tomcat/webapps/grapat/" + filename, "UTF-8");
+			writer.print(result);
+			writer.close();
+		}
 		
 		//Data annotations = new Gson().fromJson(result, Data.class);
 		
