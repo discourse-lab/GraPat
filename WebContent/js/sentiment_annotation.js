@@ -201,7 +201,7 @@ window.Sentiment = {
 				annotations.nodes[i.connection.targetId] += i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
-			showAttrsPopUp(i.connection);
+			window.Sentiment.showAttrsPopUp(i.connection);
         }); 
 	    /*jsPlumb.bind("dblclick", function(c) {
 		if (c.source.nodeName == "SPAN")
@@ -369,7 +369,7 @@ window.Sentiment = {
 
 
             jsPlumb.bind("dblclick", function(c) {
-            	showAttrsPopUp(c);
+            	window.Sentiment.showAttrsPopUp(c);
             });
             jsPlumb.bind("ready", function () {
                 jsPlumb.addEndpoint($(".node"), ent_endpoints);
