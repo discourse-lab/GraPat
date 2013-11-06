@@ -68,11 +68,11 @@ public class GraPAT extends HttpServlet {
 		String result = request.getParameter("graph");
 		// String path = "/home/grapat/save/sentiment/";
 		String username = "unknown";
+		System.err.println( request.getAttribute("user"));
 		if (request != null && request.getAttribute("user") != null)
 		{
 			UserBean user = (UserBean) request.getAttribute("user");
 			username = user.getUsername();
-			System.err.println(user);
 			//String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_" + user.getFirstName() + user.getLastName() + ".json";
 			//PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
 			//writer.print(result);
