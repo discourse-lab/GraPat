@@ -1,9 +1,10 @@
-package main.java.quak.annotation;
+package quak.annotation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
 
 import quak.http.ConnectionManager;
-import main.java.quak.http.UserBean;
+import quak.http.UserBean;
 
 import com.google.gson.Gson;
 
@@ -88,14 +89,20 @@ public class GraPAT extends HttpServlet {
 	
 	private void writeToDB(String result, String username) {
 		currentCon = ConnectionManager.getConnection();
-		Statement stmt = currentCon.createStatement();
-
-		String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		// create table if it doesnt exist
-		stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
-				" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
-				" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
-		stmt.execute("INSERT into " + "results" + "(username, graph, time) VALUES (" + username + "," + result + "," + time + ")");
+		Statement stmt;
+		try {
+			stmt = currentCon.createStatement();
+			
+			String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			// create table if it doesnt exist
+			stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
+					" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
+					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
+			stmt.execute("INSERT into " + "results" + "(username, graph, time) VALUES (" + username + "," + result + "," + time + ")");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

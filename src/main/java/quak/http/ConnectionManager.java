@@ -1,4 +1,4 @@
-package main.java.quak.http;
+package quak.http;
 
 import java.io.PrintWriter;
 import java.sql.*;

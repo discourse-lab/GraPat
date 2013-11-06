@@ -1,7 +1,6 @@
-package main.java.quak.http;
+package quak.http;
 
-import java.text.*;
-import java.util.*;
+
 import java.io.PrintWriter;
 import java.sql.*;
 

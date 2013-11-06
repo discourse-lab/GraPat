@@ -1,4 +1,4 @@
-package main.java.quak.http;
+package quak.http;
 
 public class UserBean {
 	private String username;
