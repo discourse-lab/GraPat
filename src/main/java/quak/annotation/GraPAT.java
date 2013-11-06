@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,6 +23,7 @@ import quak.http.ConnectionManager;
 import quak.http.UserBean;
 
 import com.google.gson.Gson;
+//import com.mysql.jdbc.PreparedStatement;
 
 /**
  * Servlet implementation class GraPAT
@@ -93,14 +96,23 @@ public class GraPAT extends HttpServlet {
 		try {
 			stmt = currentCon.createStatement();
 			
-			String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			// String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			Timestamp time = new Timestamp(new Date().getTime());
 			// create table if it doesnt exist
 			stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
 					" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
-			String insert = "INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")";
-			System.err.println(insert);
-			stmt.execute(insert);
+			String prep_insert = "INSERT INTO results SET"
+					+ "username = ?,"
+					+ "graph = ?,"
+					+ "time = ?";
+			final PreparedStatement pstmt = currentCon.prepareStatement(prep_insert);
+			//String insert = "INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")";
+			pstmt.setString(1, username);
+			pstmt.setString(2, result);
+			pstmt.setTimestamp(3, time);
+			//System.err.println(insert);
+			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
