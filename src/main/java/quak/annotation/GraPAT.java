@@ -62,13 +62,13 @@ public class GraPAT extends HttpServlet {
 		{
 			UserBean user = (UserBean) request.getAttribute("user");
 			String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_" + user.getFirstName() + user.getLastName() + ".json";
-			PrintWriter writer = new PrintWriter("/opt/tomcat/webapps/grapat/" + filename, "UTF-8");
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			writer.print(result);
 			writer.close();
 		}
 		else {
 			String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_unknown_user.json";
-			PrintWriter writer = new PrintWriter("WEB-INF/results/" + filename, "UTF-8");
+			PrintWriter writer = new PrintWriter(filename, "UTF-8");
 			writer.print(result);
 			writer.close();
 		}
