@@ -72,6 +72,7 @@ public class GraPAT extends HttpServlet {
 		{
 			UserBean user = (UserBean) request.getAttribute("user");
 			username = user.getUsername();
+			System.err.println(user);
 			//String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_" + user.getFirstName() + user.getLastName() + ".json";
 			//PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
 			//writer.print(result);
@@ -111,7 +112,7 @@ public class GraPAT extends HttpServlet {
 			pstmt.setString(1, username);
 			pstmt.setString(2, result);
 			pstmt.setTimestamp(3, time);
-			System.err.println(pstmt.toString());
+			
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
