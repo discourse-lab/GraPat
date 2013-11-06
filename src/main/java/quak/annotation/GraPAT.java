@@ -58,17 +58,18 @@ public class GraPAT extends HttpServlet {
 			response.flushBuffer();
 		}
 		String result = request.getParameter("graph");
+		String path = "/opt/tomcat/webapps/grapat/";
 		if (request != null && request.getAttribute("user") != null)
 		{
 			UserBean user = (UserBean) request.getAttribute("user");
 			String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_" + user.getFirstName() + user.getLastName() + ".json";
-			PrintWriter writer = new PrintWriter("/home/grapat/save/sentiment/" + filename, "UTF-8");
+			PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
 			writer.print(result);
 			writer.close();
 		}
 		else {
 			String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_unknown_user.json";
-			PrintWriter writer = new PrintWriter("/home/grapat/save/sentiment/" + filename, "UTF-8");
+			PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
 			writer.print(result);
 			writer.close();
 		}
