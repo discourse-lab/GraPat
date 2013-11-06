@@ -102,7 +102,7 @@ public class GraPAT extends HttpServlet {
 			stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
 					" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
-			String prep_insert = "INSERT INTO results SET"
+			String prep_insert = "INSERT INTO results SET "
 					+ "username = ?,"
 					+ "graph = ?,"
 					+ "time = ?";
@@ -111,7 +111,7 @@ public class GraPAT extends HttpServlet {
 			pstmt.setString(1, username);
 			pstmt.setString(2, result);
 			pstmt.setTimestamp(3, time);
-			//System.err.println(insert);
+			System.err.println(pstmt.toString());
 			pstmt.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
