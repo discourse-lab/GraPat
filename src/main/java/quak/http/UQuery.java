@@ -29,7 +29,7 @@ public class UQuery
 			//connect to DB 
 			logger.println("trying connection");
 			logger.flush();
-			currentCon = ConnectionManager.getConnection(logger);
+			currentCon = ConnectionManager.getConnection();
 			stmt = currentCon.createStatement();
 			rs = stmt.executeQuery(searchQuery);	        
 			boolean more = rs.next();

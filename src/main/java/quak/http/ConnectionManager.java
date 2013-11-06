@@ -9,15 +9,13 @@ public class ConnectionManager {
    static Connection con;
    static String url;
          
-   public static Connection getConnection(PrintWriter logger)
+   public static Connection getConnection()
    {
-       logger.println("getConnection started");
-       logger.flush();
       try
       {
     	 String host = "localhost";
     	 String port = "3306";
-    	 String database = "grapat_logins";
+    	 String database = "grapat";
     	 String db = "jdbc:mysql://" + host + ":" + port + "/" + database;
 
     	 Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -29,26 +27,21 @@ public class ConnectionManager {
          
          catch (SQLException ex)
          {
-            logger.println(ex);
-            logger.flush();
          }
       }
 
       catch(ClassNotFoundException e)
       {
-          logger.println(e);
-          logger.flush();
+    	  System.err.println(e);
       } 
       catch (InstantiationException e) {
 		// TODO Auto-generated catch block
-    	  logger.println(e);
+    	  System.err.println(e);
       } 
       catch (IllegalAccessException e) {
 		// TODO Auto-generated catch block
-    	  logger.println(e);
+    	  System.err.println(e);
       }
-      logger.println("getConnection done");
-      logger.flush();
       return con;
    }
 }
