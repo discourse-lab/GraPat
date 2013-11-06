@@ -58,7 +58,7 @@ public class GraPAT extends HttpServlet {
 			response.flushBuffer();
 		}
 		String result = request.getParameter("graph");
-		String path = "/opt/tomcat/webapps/grapat/";
+		String path = "/home/grapat/save/sentiment/";
 		if (request != null && request.getAttribute("user") != null)
 		{
 			UserBean user = (UserBean) request.getAttribute("user");
