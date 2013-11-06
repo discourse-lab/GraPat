@@ -98,7 +98,7 @@ public class GraPAT extends HttpServlet {
 			stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
 					" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
-			stmt.execute("INSERT into " + "results" + "(username, graph, time) VALUES (" + username + "," + result + "," + time + ")");
+			stmt.execute("INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
