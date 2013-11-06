@@ -59,7 +59,7 @@ window.Sentiment = {
 
 	read_input_file : function () {
 		var filename = "sentences.txt";
-		jQuery.get('WEB-INF/data/' + filename, function(data) {
+		jQuery.get('data/' + filename, function(data) {
 		    var all_sentences = data.split("\n");
 		    var sentence_idx = 0;
 		    jQuery.each(all_sentences, function() {
