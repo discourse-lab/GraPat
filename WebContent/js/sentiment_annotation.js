@@ -17,7 +17,7 @@ var annotator_id = -1;
 window.Sentiment = {
 		
 	get_files_to_be_annotated : function() {
-		$.get( "ResourceHandler", function(data) {
+		$.getJSON( "ResourceHandler", function(data) {
 			console.log(data);
 			//data = {"1": "sentences.txt", "2": "sentencesDemo.txt"};
 			
