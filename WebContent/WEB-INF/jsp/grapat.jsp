@@ -73,15 +73,6 @@
 		<input id="nsentence_button" class="sentence_button" type="button" onclick="window.Sentiment.next_sentence();">
 		<div id="source_text">
 			<div id="sentence" >
-				<span id="word1" class="word window">Wir</span>
-				<span id="word2" class="word window">lehnen</span>
-				<span id="word3" class="word window">das</span>
-				<span id="word4" class="word window">waehrend</span>
-				<span id="word5" class="word window">Moskau</span>
-				<span id="word6" class="word window">es</span>
-				<span id="word7" class="word window">leider</span>
-				<span id="word8" class="word window">begruesst</span>
-				<span id="word9" class="word window">.</span>
 			</div>
 		</div>
 		<div id="counter"></div>

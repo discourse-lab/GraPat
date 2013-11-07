@@ -51,7 +51,7 @@ window.Sentiment = {
 		var flist = $("#annot_file_select")[0];
 		var key = flist.options[flist.selectedIndex].value;
 		var value = flist.options[flist.selectedIndex].text;
-		console.log("file selection changed to " + key + ":" + value);
+		// console.log("file selection changed to " + key + ":" + value);
 		
 		window.Sentiment.read_input_file(value);
 		window.Sentiment.update();
@@ -120,6 +120,7 @@ window.Sentiment = {
 			});
 			window.Sentiment.next_sentence(false);
 		});
+		console.log(text);
 	},
 
         update : function () {
