@@ -10,11 +10,28 @@ var node_count = 1;
 var current_target = null;
 var current_source = null;
 var current_connection = null;
-var text = [];
+var text = {};
 var rclick = null;
 var annotator_id = -1;
 
 window.Sentiment = {
+	
+	init_globals : function() {
+		annotations = {
+				"nodes": {},
+				"edges": {}
+		};
+		current_sentence_idx = -1;
+		edge_count = 0;
+		sentence_count = 0;
+		node_count = 1;
+		current_target = null;
+		current_source = null;
+		current_connection = null;
+		text = {};
+		rclick = null;
+		annotator_id = -1;
+	},
 		
 	get_files_to_be_annotated : function() {
 		$.getJSON( "ResourceHandler", function(data) {
@@ -84,6 +101,7 @@ window.Sentiment = {
 
 	read_input_file : function (filename) {
 		//var filename = "sentences.txt";
+		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
 		    var all_sentences = data.split("\n");
 		    var sentence_idx = 0;
@@ -91,12 +109,12 @@ window.Sentiment = {
 				var current_sentence = this;
 				if (current_sentence == "") 
 					return false;
-				
-				text.push([]);
+				var sentence_id = "" + sentence_idx;
+				text[sentence_id] = [];
 				++sentence_count;
 				var words = current_sentence.split(" ");
 				jQuery.each(words, function() {
-					text[sentence_idx].push(this);
+					text[sentence_id].push(this);
 				});
 				++sentence_idx;
 			});
