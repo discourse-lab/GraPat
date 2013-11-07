@@ -15,6 +15,10 @@ var sentence_order = [];
 var rclick = null;
 var annotator_id = -1;
 
+window.XMLParser = {
+		
+},
+
 window.Sentiment = {
 	
 	init_globals : function() {
@@ -102,6 +106,31 @@ window.Sentiment = {
 	},
 
 	read_input_file : function (filename) {
+		//var filename = "sentences.txt";
+		window.Sentiment.init_globals();
+		jQuery.get('data/' + filename, function(data) {
+		    var all_sentences = $(data).find('entity');
+		    var sentence_idx = 0;
+		    jQuery.each(all_sentences, function() {
+				var current_sentence = this;
+
+				var sentence_id = current_sentence.attr('id');
+				text[sentence_id] = [];
+				sentence_order.push(sentence_id);
+				++sentence_count;
+				var words = current_sentence.find('token_range');
+				jQuery.each(words, function() {
+					console.log(this);
+					//text[sentence_id].push(this);
+				});
+				++sentence_idx;
+			});
+			window.Sentiment.next_sentence(false);
+		});
+		console.log(text);
+	},
+	
+	read_plain_input_file : function (filename) {
 		//var filename = "sentences.txt";
 		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
