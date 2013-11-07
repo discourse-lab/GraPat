@@ -19,7 +19,7 @@ window.Sentiment = {
 	get_files_to_be_annotated : function() {
 		$.get( "ResourceHandler", function(data) {
 			console.log(data);
-			data = {"1": "sentences.txt", "2": "sentencesDemo.txt"};
+			//data = {"1": "sentences.txt", "2": "sentencesDemo.txt"};
 			
 			$.each(data, function(key, value) {
 				$('#annot_file_select')
@@ -30,7 +30,10 @@ window.Sentiment = {
 	},
 	
 	change_annot_file : function() {
-		console.log("file selection changed");
+		var flist = $("#annot_file_select");
+		var key = flist.options[flist.selectedIndex].value;
+		var value = flist.options[flist.selectedIndex].text;
+		console.log("file selection changed to " + key + ":" + value);
 	},
 		
 	add_word : function(to_add, wid) {

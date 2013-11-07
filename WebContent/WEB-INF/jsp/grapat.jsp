@@ -17,18 +17,16 @@
 <body>
 	<div class="menu">
 		<div class="menu_container">
+			<select id="annot_file_select" name="annot_file_select" onchange="window.Sentiment.change_annot_file();">
+			    <option value="" disabled="disabled" selected="selected">Please select a file for annotation</option>
+			</select>
+		</div>
+		<div class="menu_container">
 			<input id="save" class="menu_button" value="Save" type="button" onclick="window.Sentiment.save();">
 			<div id="saved">saved</div>
 		</div>
 		<div class="menu_container">
 			<input id="log out" class="menu_button" value="Log out" type="button" onclick="window.Sentiment.logout();">
-		</div>
-		<div class="menu_container">
-			<select id="annot_file_select" name="annot_file_select" onchange="window.Sentiment.change_annot_file();">
-			    <option value="" disabled="disabled" selected="selected">Please select a name</option>
-			    <option value="1">One</option>
-			    <option value="2">Two</option>
-			</select>
 		</div>
 	</div>
 	<div id="main">

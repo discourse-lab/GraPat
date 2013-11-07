@@ -1,6 +1,9 @@
 package quak.annotation;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+
 
 /**
  * Servlet implementation class ResourceHandler
@@ -30,9 +34,11 @@ public class ResourceHandler extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
 		response.setCharacterEncoding("utf8");
-		Gson files = new Gson();
-		String[] file_list = {"sentences.txt", "sentencesDemo.txt"};
-		files.toJson(file_list);
+		Gson files_gson = new Gson();
+		Map<String, String> filesMap = new HashMap<String, String>();
+		filesMap.put("1", "sentences.txt");
+		filesMap.put("2", "sentencesDemo.txt");
+		files_gson.toJson(filesMap);
 		
 		response.getWriter().print("sentences.txt");
 	}
