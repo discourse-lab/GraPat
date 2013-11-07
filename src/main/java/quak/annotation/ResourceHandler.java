@@ -41,6 +41,7 @@ public class ResourceHandler extends HttpServlet {
 		filesMap.put("2", "sentencesDemo.txt");
 		files_gson.toJson(filesMap);
 		response.setContentType("application/json");
+		System.err.println(files_gson);
 		response.getWriter().print(files_gson);
 	}
 
