@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotation_bundle id="1" semantics="sentiment">
+	<entity id="0">
+		<token_range id="0"><![CDATA[Wir]]></token_range>
+		<token_range id="1"><![CDATA[lehnen]]></token_range>
+		<token_range id="2"><![CDATA[das]]></token_range>
+		<token_range id="3"><![CDATA[ab]]></token_range>
+		<token_range id="4"><![CDATA[,]]></token_range>
+		<token_range id="5"><![CDATA[während]]></token_range>
+		<token_range id="6"><![CDATA[Moskau]]></token_range>
+		<token_range id="7"><![CDATA[es]]></token_range>
+		<token_range id="8"><![CDATA[leider]]></token_range>
+		<token_range id="9"><![CDATA[begrüßt]]></token_range>
+		<token_range id="10"><![CDATA[.]]></token_range>
+	</entity>
+	<entity id="1">
+		<token_range id="0"><![CDATA[Zu]]></token_range>
+		<token_range id="1"><![CDATA[Moskaus]]></token_range>
+		<token_range id="2"><![CDATA[Leidwesen]]></token_range>
+		<token_range id="3"><![CDATA[erneuerte]]></token_range>
+		<token_range id="4"><![CDATA[auch]]></token_range>
+		<token_range id="5"><![CDATA[Washington]]></token_range>
+		<token_range id="6"><![CDATA[bekräftigte]]></token_range>
+		<token_range id="7"><![CDATA[seinen]]></token_range>
+		<token_range id="8"><![CDATA[Unmut]]></token_range>
+		<token_range id="9"><![CDATA[.]]></token_range>
+	</entity>
+	<entity id="2">
+		<token_range id="0"><![CDATA[Die]]></token_range>
+		<token_range id="1"><![CDATA[Koalition]]></token_range>
+		<token_range id="2"><![CDATA[lehnte]]></token_range>
+		<token_range id="3"><![CDATA[das]]></token_range>
+		<token_range id="4"><![CDATA[Paket]]></token_range>
+		<token_range id="5"><![CDATA[ab]]></token_range>
+		<token_range id="6"><![CDATA[obwohl]]></token_range>
+		<token_range id="7"><![CDATA[sie]]></token_range>
+		<token_range id="8"><![CDATA[auch]]></token_range>
+		<token_range id="9"><![CDATA[es]]></token_range>
+		<token_range id="10"><![CDATA[vor]]></token_range>
+		<token_range id="11"><![CDATA[5]]></token_range>
+		<token_range id="12"><![CDATA[Jahren]]></token_range>
+		<token_range id="13"><![CDATA[selbst]]></token_range>
+		<token_range id="14"><![CDATA[forderte]]></token_range>
+		<token_range id="15"><![CDATA[.]]></token_range>
+	</entity>
+	<entity id="3">
+		<token_range id="0"><![CDATA[We]]></token_range>
+		<token_range id="1"><![CDATA[disapprove]]></token_range>
+		<token_range id="2"><![CDATA[that]]></token_range>
+		<token_range id="3"><![CDATA[,]]></token_range>
+		<token_range id="4"><![CDATA[while]]></token_range>
+		<token_range id="5"><![CDATA[,]]></token_range>
+		<token_range id="6"><![CDATA[sadly]]></token_range>
+		<token_range id="7"><![CDATA[,]]></token_range>
+		<token_range id="8"><![CDATA[Moscow]]></token_range>
+		<token_range id="9"><![CDATA[appreciated]]></token_range>
+		<token_range id="10"><![CDATA[it]]></token_range>
+		<token_range id="11"><![CDATA[.]]></token_range>
+	</entity>
+	<entity id="4">
+		<token_range id="0"><![CDATA[To]]></token_range>
+		<token_range id="1"><![CDATA[Moscows]]></token_range>
+		<token_range id="2"><![CDATA[regret]]></token_range>
+		<token_range id="3"><![CDATA[,]]></token_range>
+		<token_range id="4"><![CDATA[Washington]]></token_range>
+		<token_range id="5"><![CDATA[expressed]]></token_range>
+		<token_range id="6"><![CDATA[its]]></token_range>
+		<token_range id="7"><![CDATA[resentments]]></token_range>
+		<token_range id="8"><![CDATA[as]]></token_range>
+		<token_range id="9"><![CDATA[well]]></token_range>
+		<token_range id="10"><![CDATA[.]]></token_range>
+	</entity>
+	<entity id="5">
+		<token_range id="0"><![CDATA[The]]></token_range>
+		<token_range id="1"><![CDATA[EU]]></token_range>
+		<token_range id="2"><![CDATA[is]]></token_range>
+		<token_range id="3"><![CDATA[a]]></token_range>
+		<token_range id="4"><![CDATA[good]]></token_range>
+		<token_range id="5"><![CDATA[idea]]></token_range>
+		<token_range id="6"><![CDATA[but]]></token_range>
+		<token_range id="7"><![CDATA[also]]></token_range>
+		<token_range id="8"><![CDATA[a]]></token_range>
+		<token_range id="9"><![CDATA[bureaucratic]]></token_range>
+		<token_range id="10"><![CDATA[monster]]></token_range>
+		<token_range id="11"><![CDATA[.]]></token_range>
+	</entity>
+</annotation_bundle>

@@ -112,7 +112,7 @@ window.Sentiment = {
 		    var all_sentences = $(data).find('entity');
 		    var sentence_idx = 0;
 		    jQuery.each(all_sentences, function() {
-				var current_sentence = this;
+				var current_sentence = $(this);
 
 				var sentence_id = current_sentence.attr('id');
 				text[sentence_id] = [];
@@ -120,14 +120,12 @@ window.Sentiment = {
 				++sentence_count;
 				var words = current_sentence.find('token_range');
 				jQuery.each(words, function() {
-					console.log(this);
-					//text[sentence_id].push(this);
+					text[sentence_id].push($(this).text());
 				});
 				++sentence_idx;
 			});
 			window.Sentiment.next_sentence(false);
 		});
-		console.log(text);
 	},
 	
 	read_plain_input_file : function (filename) {

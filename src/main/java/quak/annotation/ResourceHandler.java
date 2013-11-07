@@ -38,9 +38,8 @@ public class ResourceHandler extends HttpServlet {
 		Gson files_gson = new Gson();
 		
 		Map<String, String> fileMap = new HashMap<String, String>();
-		fileMap.put("1", "sentences.txt");
-		fileMap.put("2", "sentencesDemo.txt");
-		fileMap.put("3", "EU-Schweiz");
+		fileMap.put("1", "Demo");
+		fileMap.put("2", "EU-Schweiz");
 
 		response.setContentType("application/json");
 		response.getWriter().print(files_gson.toJson(fileMap));
