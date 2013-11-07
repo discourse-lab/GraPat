@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.crypto.Data;
 
 import quak.http.ConnectionManager;
 import quak.http.UserBean;
@@ -73,19 +72,7 @@ public class GraPAT extends HttpServlet {
 		{
 			UserBean user = (UserBean) session.getAttribute("user");
 			username = user.getUsername();
-			//String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_" + user.getFirstName() + user.getLastName() + ".json";
-			//PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
-			//writer.print(result);
-			//writer.close();
 		}
-		else {
-			//String filename =  new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "_unknown_user.json";
-			//PrintWriter writer = new PrintWriter(path + filename, "UTF-8");
-			//writer.print(result);
-			//writer.close();
-		}
-		
-		//Data annotations = new Gson().fromJson(result, Data.class);
 		
 		writeToDB(result, username);
 

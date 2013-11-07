@@ -23,6 +23,13 @@
 		<div class="menu_container">
 			<input id="log out" class="menu_button" value="Log out" type="button" onclick="window.Sentiment.logout();">
 		</div>
+		<div class="menu_container">
+			<select id="annot_file_select" name="annot_file_select" onchange="window.Sentiment.change_annot_file();">
+			    <option value="" disabled="disabled" selected="selected">Please select a name</option>
+			    <option value="1">One</option>
+			    <option value="2">Two</option>
+			</select>
+		</div>
 	</div>
 	<div id="main">
 		<div id="render"></div>

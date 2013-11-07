@@ -15,6 +15,24 @@ var rclick = null;
 var annotator_id = -1;
 
 window.Sentiment = {
+		
+	get_files_to_be_annotated : function() {
+		$.get( "ResourceHandler", function(data) {
+			console.log(data);
+			data = {"1": "sentences.txt", "2": "sentencesDemo.txt"};
+			
+			$.each(data, function(key, value) {
+				$('#annot_file_select')
+					.append($('<option>', {value : key})
+					.text(value));
+			});
+		});
+	},
+	
+	change_annot_file : function() {
+		console.log("file selection changed");
+	},
+		
 	add_word : function(to_add, wid) {
 		jQuery('<span/>', {
 			class: 'word window',
@@ -198,7 +216,7 @@ window.Sentiment = {
 			}
 			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-				annotations.nodes[i.connection.targetId] += i.connection.source.innerHTML;
+				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
 			window.Sentiment.showAttrsPopUp(i.connection);
@@ -271,7 +289,7 @@ window.Sentiment = {
             $('#rmenu').hide();
             $('#labelPopUp').hide();
             $('#saved').hide();
-            
+            window.Sentiment.get_files_to_be_annotated();
             window.Sentiment.update();
 
             // make 'window1' a connection source. notice the filter parameter: it tells jsPlumb to ignore drags
