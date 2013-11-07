@@ -75,10 +75,10 @@ public class ResourceHandler extends HttpServlet {
 		f1.setFilename("sentencesDemo.txt");
 		files.addFile(f1);
 		files.addFile(f2);
-		files_gson.toJson(files);
+		
 		response.setContentType("application/json");
-		System.err.println(files_gson);
-		response.getWriter().print(files_gson);
+		System.err.println(files_gson.toJson(files));
+		response.getWriter().print(files_gson.toJson(files));
 	}
 
 	/**
