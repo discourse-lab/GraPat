@@ -36,11 +36,12 @@ public class ResourceHandler extends HttpServlet {
 		response.setCharacterEncoding("utf8");
 		Gson files_gson = new Gson();
 		Map<String, String> filesMap = new HashMap<String, String>();
+		String[] files = {"sentences.txt"};
 		filesMap.put("1", "sentences.txt");
 		filesMap.put("2", "sentencesDemo.txt");
-		files_gson.toJson(filesMap);
+		files_gson.toJson(files);
 		
-		response.getWriter().print(files_gson.toString());
+		response.getWriter().print(files_gson);
 	}
 
 	/**
