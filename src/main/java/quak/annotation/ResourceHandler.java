@@ -68,6 +68,10 @@ public class ResourceHandler extends HttpServlet {
 		response.setCharacterEncoding("utf8");
 		Gson files_gson = new Gson();
 		
+		Map<String, String> fileMap = new HashMap<String, String>();
+		fileMap.put("1", "sentences.txt");
+		fileMap.put("2", "sentencesDemo.txt");
+		
 		FileList files = new FileList();
 		FileInfo f1 = new FileInfo();
 		f1.setFilename("sentences.txt");
@@ -78,7 +82,7 @@ public class ResourceHandler extends HttpServlet {
 		
 		response.setContentType("application/json");
 		System.err.println(files_gson.toJson(files));
-		response.getWriter().print(files_gson.toJson(files));
+		response.getWriter().print(files_gson.toJson(fileMap));
 	}
 
 	/**
