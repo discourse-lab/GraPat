@@ -11,6 +11,7 @@ var current_target = null;
 var current_source = null;
 var current_connection = null;
 var text = {};
+var sentence_order = [];
 var rclick = null;
 var annotator_id = -1;
 
@@ -29,6 +30,7 @@ window.Sentiment = {
 		current_source = null;
 		current_connection = null;
 		text = {};
+		sentence_order = [];
 		rclick = null;
 		annotator_id = -1;
 	},
@@ -70,7 +72,7 @@ window.Sentiment = {
 	    // remove old words
 	    sentence_div.empty();
 	    var idx = 0;
-	    jQuery.each(text[current_sentence_idx], function() {
+	    jQuery.each(text[sentence_order[current_sentence_idx]], function() {
 	    	window.Sentiment.add_word(this, idx);
 	    	++idx;
 	    });
@@ -111,6 +113,7 @@ window.Sentiment = {
 					return false;
 				var sentence_id = "" + sentence_idx;
 				text[sentence_id] = [];
+				sentence_order.push(sentence_id);
 				++sentence_count;
 				var words = current_sentence.split(" ");
 				jQuery.each(words, function() {
