@@ -31,10 +31,13 @@ window.Sentiment = {
 	},
 	
 	change_annot_file : function() {
-		var flist = $("#annot_file_select");
+		var flist = $("#annot_file_select")[0];
 		var key = flist.options[flist.selectedIndex].value;
 		var value = flist.options[flist.selectedIndex].text;
 		console.log("file selection changed to " + key + ":" + value);
+		
+		window.Sentiment.read_input_file(value);
+		window.Sentiment.update();
 	},
 		
 	add_word : function(to_add, wid) {
@@ -79,8 +82,8 @@ window.Sentiment = {
 	logout : function() {
 	},
 
-	read_input_file : function () {
-		var filename = "sentences.txt";
+	read_input_file : function (filename) {
+		//var filename = "sentences.txt";
 		jQuery.get('data/' + filename, function(data) {
 		    var all_sentences = data.split("\n");
 		    var sentence_idx = 0;
@@ -396,9 +399,6 @@ window.Sentiment = {
             jsPlumb.bind("ready", function () {
                 jsPlumb.addEndpoint($(".node"), ent_endpoints);
             });
-
-
-	    window.Sentiment.read_input_file();
 
             $('#rmenu').click(function() {
                 $('#rmenu').hide();

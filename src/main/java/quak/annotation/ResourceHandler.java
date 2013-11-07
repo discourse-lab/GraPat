@@ -14,37 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-class FileInfo {
-	private String filename;
-	public FileInfo() {};
-	
-	public void setFilename (String value) {
-		filename = value;
-	}
-	public String getFilename () {
-		return filename;
-	}
-	
-}
-
-class FileList {
-	private List<FileInfo> files;
-	
-	public FileList () {
-		files = new ArrayList<FileInfo>();
-	}
-	
-	public List<FileInfo> getFiles() {
-		return files;
-	}
-	public void setFiles(List<FileInfo> value) {
-		files = value;
-	}
-	public void addFile (FileInfo value) {
-		files.add(value);
-	}
-}
-
 /**
  * Servlet implementation class ResourceHandler
  */
@@ -71,17 +40,8 @@ public class ResourceHandler extends HttpServlet {
 		Map<String, String> fileMap = new HashMap<String, String>();
 		fileMap.put("1", "sentences.txt");
 		fileMap.put("2", "sentencesDemo.txt");
-		
-		FileList files = new FileList();
-		FileInfo f1 = new FileInfo();
-		f1.setFilename("sentences.txt");
-		FileInfo f2 = new FileInfo();
-		f1.setFilename("sentencesDemo.txt");
-		files.addFile(f1);
-		files.addFile(f2);
-		
+
 		response.setContentType("application/json");
-		System.err.println(files_gson.toJson(files));
 		response.getWriter().print(files_gson.toJson(fileMap));
 	}
 
