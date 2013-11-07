@@ -1,7 +1,9 @@
 package quak.annotation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,6 +14,36 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+class FileInfo {
+	private String filename;
+	public FileInfo() {};
+	
+	public void setFilename (String value) {
+		filename = value;
+	}
+	public String getFilename () {
+		return filename;
+	}
+	
+}
+
+class FileList {
+	private List<FileInfo> files;
+	
+	public FileList () {
+		files = new ArrayList<FileInfo>();
+	}
+	
+	public List<FileInfo> getFiles() {
+		return files;
+	}
+	public void setFiles(List<FileInfo> value) {
+		files = value;
+	}
+	public void addFile (FileInfo value) {
+		files.add(value);
+	}
+}
 
 /**
  * Servlet implementation class ResourceHandler
@@ -35,11 +67,15 @@ public class ResourceHandler extends HttpServlet {
 		request.setCharacterEncoding("utf8");
 		response.setCharacterEncoding("utf8");
 		Gson files_gson = new Gson();
-		Map<String, String> filesMap = new HashMap<String, String>();
-		String[] files = {"sentences.txt"};
-		filesMap.put("1", "sentences.txt");
-		filesMap.put("2", "sentencesDemo.txt");
-		files_gson.toJson(filesMap);
+		
+		FileList files = new FileList();
+		FileInfo f1;
+		f1.setFilename("sentences.txt");
+		FileInfo f2;
+		f1.setFilename("sentencesDemo.txt");
+		files.addFile(f1);
+		files.addFile(f2);
+		files_gson.toJson(files);
 		response.setContentType("application/json");
 		System.err.println(files_gson);
 		response.getWriter().print(files_gson);
