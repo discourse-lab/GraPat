@@ -69,9 +69,9 @@ public class ResourceHandler extends HttpServlet {
 		Gson files_gson = new Gson();
 		
 		FileList files = new FileList();
-		FileInfo f1;
+		FileInfo f1 = new FileInfo();
 		f1.setFilename("sentences.txt");
-		FileInfo f2;
+		FileInfo f2 = new FileInfo();
 		f1.setFilename("sentencesDemo.txt");
 		files.addFile(f1);
 		files.addFile(f2);
