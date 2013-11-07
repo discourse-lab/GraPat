@@ -40,7 +40,7 @@ public class ResourceHandler extends HttpServlet {
 		filesMap.put("2", "sentencesDemo.txt");
 		files_gson.toJson(filesMap);
 		
-		response.getWriter().print("sentences.txt");
+		response.getWriter().print(files_gson);
 	}
 
 	/**
