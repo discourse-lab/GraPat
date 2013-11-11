@@ -99,8 +99,9 @@ window.Sentiment = {
 		if (sa)
 			window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
-		++current_sentence_idx;
+	    	++current_sentence_idx;
 	    	window.Sentiment.word_update();
+	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
 	previous_sentence : function () {
