@@ -80,6 +80,7 @@ public class Loader extends HttpServlet {
 			stmt.setString(1, username);
 			stmt.setString(2, bundle_id);
 			stmt.setString(3, sentence_id);
+			System.err.println("querying for " + username + " " + bundle_id + " " + sentence_id);
 			String graph = null;
 			Date date = new Date(0, 0, 1);
 			ResultSet result = stmt.executeQuery();
