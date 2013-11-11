@@ -25,7 +25,8 @@ window.Sentiment = {
 	load_data : function(bundle_id, sentence_id) {
 		var req_data = {
 				"bundle_id": annotation_bundle_id,
-				"sentence_id": sentence_order[current_sentence_idx]
+				"sentence_id": sentence_order[current_sentence_idx],
+				"test": "bullshit"
 		};
 		console.log(annotation_bundle_id);
 		console.log(sentence_order[current_sentence_idx]);

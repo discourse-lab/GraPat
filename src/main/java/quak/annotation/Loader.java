@@ -46,6 +46,7 @@ public class Loader extends HttpServlet {
 		request.setCharacterEncoding("utf8");
 		response.setCharacterEncoding("utf8");
 		
+		String test = (String) request.getAttribute("test");
 		String bundle_id = (String) request.getAttribute("bundle_id");
 		String sentence_id = (String) request.getAttribute("sentence_id");
 		
