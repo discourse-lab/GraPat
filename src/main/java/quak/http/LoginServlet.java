@@ -59,18 +59,15 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		writer.print("post got. starting auth");
+		request.setCharacterEncoding("utf8");
+		System.err.println("servlet received attribute " + request.getAttribute("bundle_id"));
 		try
 		{	    
 	
 		     UserBean user = new UserBean();
 		     user.setUserName(request.getParameter("username"));
 		     user.setPassword(request.getParameter("password"));
-		     writer.print("trying to auth " + user.getUsername() + " " + user.getPassword());
-		     writer.flush();
 		     user = UQuery.login(user, writer);
-		     writer.print("checked user " + user.isValid() + user.getFirstName());
-		     writer.flush();
 		     if (user.isValid())
 		     {
 		 		
@@ -80,7 +77,6 @@ public class LoginServlet extends HttpServlet {
 		          // Pretend sessions running out
 		          session.setMaxInactiveInterval(0);
 		          session.setAttribute("user", user);
-		          System.err.println("servlet received attribute " + request.getAttribute("bundle_id"));
 		          response.sendRedirect("GraPAT");      		
 		     }
 			        
