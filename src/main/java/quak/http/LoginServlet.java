@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,7 +61,23 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
-		System.err.println("servlet received attribute " + request.getAttribute("bundle_id"));
+		
+		  StringBuilder sb = new StringBuilder();
+			
+		  Enumeration<String> parameterNames = request.getParameterNames();	
+		  while (parameterNames.hasMoreElements()) {
+		      String parameterName = parameterNames.nextElement();
+		      sb.append(parameterName);
+		      sb.append(":");
+		      sb.append(request.getParameter(parameterName));
+		  			
+		      if (parameterNames.hasMoreElements()) {
+		          sb.append(", ");
+		      }
+		  }
+		  System.err.println(sb.toString()); // slf4j
+		
+		
 		try
 		{	    
 	
