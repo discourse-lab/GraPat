@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,10 @@ public class Loader extends HttpServlet {
 			UserBean user = (UserBean) session.getAttribute("user");
 			username = user.getUsername();
 		}
-		System.err.println(request.getAttributeNames().toString());
+		Enumeration<String> att_list = request.getAttributeNames();
+		while (att_list.hasMoreElements()) {
+			System.err.println(att_list.nextElement());
+		}
 		String bundle_id = (String) request.getAttribute("bundle_id");
 		String sentence_id = (String) request.getAttribute("sentence_id");
 		
