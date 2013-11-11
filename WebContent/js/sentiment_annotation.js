@@ -22,6 +22,16 @@ window.XMLParser = {
 
 window.Sentiment = {
 	
+	load_data : function(bundle_id, sentence_id) {
+		var req_data = {
+				"bundle_id": annotation_bundle_id,
+				"sentence_id": sentence_order[current_sentence_idx]
+		};
+		$.getJSON( "Loader", req_data, function(data) {
+			console.log(data);
+		});		
+	},
+		
 	init_globals : function() {
 		annotations = {
 				"nodes": {},
@@ -42,10 +52,6 @@ window.Sentiment = {
 		
 	get_files_to_be_annotated : function() {
 		$.getJSON( "ResourceHandler", function(data) {
-			console.log("resourceHandler succes");
-			console.log(data);
-			//data = {"1": "sentences.txt", "2": "sentencesDemo.txt"};
-			
 			$.each(data, function(key, value) {
 				$('#annot_file_select')
 					.append($('<option>', {value : key})

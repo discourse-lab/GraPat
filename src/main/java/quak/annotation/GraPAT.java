@@ -69,7 +69,6 @@ public class GraPAT extends HttpServlet {
 		String sentence = request.getParameter("sentence");
 		// String path = "/home/grapat/save/sentiment/";
 		String username = "unknown";
-		System.err.println( session.getAttribute("user"));
 		if (session != null && session.getAttribute("user") != null)
 		{
 			UserBean user = (UserBean) session.getAttribute("user");
