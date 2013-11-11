@@ -63,7 +63,6 @@ public class LoginServlet extends HttpServlet {
 		request.setCharacterEncoding("utf8");
 		
 		  StringBuilder sb = new StringBuilder();
-			
 		  Enumeration<String> parameterNames = request.getParameterNames();	
 		  while (parameterNames.hasMoreElements()) {
 		      String parameterName = parameterNames.nextElement();
@@ -75,7 +74,7 @@ public class LoginServlet extends HttpServlet {
 		          sb.append(", ");
 		      }
 		  }
-		  System.err.println(sb.toString()); // slf4j
+		  System.err.println(sb.toString());
 		
 		
 		try

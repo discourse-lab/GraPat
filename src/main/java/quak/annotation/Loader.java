@@ -46,10 +46,26 @@ public class Loader extends HttpServlet {
 		request.setCharacterEncoding("utf8");
 		response.setCharacterEncoding("utf8");
 		
-		String test = (String) request.getAttribute("test");
+		
 		String bundle_id = (String) request.getAttribute("bundle_id");
 		String sentence_id = (String) request.getAttribute("sentence_id");
-		System.err.println(test + " " + bundle_id + " " + sentence_id);
+		
+		  StringBuilder sb = new StringBuilder();
+		  Enumeration<String> parameterNames = request.getParameterNames();	
+		  while (parameterNames.hasMoreElements()) {
+		      String parameterName = parameterNames.nextElement();
+		      sb.append(parameterName);
+		      sb.append(":");
+		      sb.append(request.getParameter(parameterName));
+		  			
+		      if (parameterNames.hasMoreElements()) {
+		          sb.append(", ");
+		      }
+		  }
+		  System.err.println(sb.toString());
+
+		
+		
 		HttpSession session = request.getSession(false);
 		String username = null;
 		if (session != null && session.getAttribute("user") != null)
