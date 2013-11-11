@@ -45,7 +45,9 @@ public class Loader extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
 		response.setCharacterEncoding("utf8");
-		Gson files_gson = new Gson();
+		
+		String bundle_id = (String) request.getAttribute("bundle_id");
+		String sentence_id = (String) request.getAttribute("sentence_id");
 		
 		HttpSession session = request.getSession(false);
 		String username = null;
@@ -53,18 +55,12 @@ public class Loader extends HttpServlet {
 		{
 			UserBean user = (UserBean) session.getAttribute("user");
 			username = user.getUsername();
-		}
-		Enumeration<String> att_list = request.getAttributeNames();
-		while (att_list.hasMoreElements()) {
-			System.err.println(att_list.nextElement());
-		}
-		String bundle_id = (String) request.getAttribute("bundle_id");
-		String sentence_id = (String) request.getAttribute("sentence_id");
-		
+		}		
 		String graph = getFromDB(username, bundle_id, sentence_id);
-
+		
+		Gson gson = new Gson();
 		response.setContentType("application/json");
-		response.getWriter().print(files_gson.toJson(graph));
+		response.getWriter().print(gson.toJson(graph));
 	}
 
 	/**
