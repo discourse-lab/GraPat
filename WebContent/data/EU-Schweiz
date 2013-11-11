@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<annotation_bundle id="bundle_1" semantics="sentiment">
+<annotation_bundle id="eu_schweiz_1" semantics="sentiment">
 	<entity id="sentence_0">
 		<token_range id="0"><![CDATA[Warum]]></token_range>
 		<token_range id="1"><![CDATA[die]]></token_range>
