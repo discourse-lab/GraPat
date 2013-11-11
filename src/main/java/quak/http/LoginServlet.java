@@ -80,6 +80,7 @@ public class LoginServlet extends HttpServlet {
 		          // Pretend sessions running out
 		          session.setMaxInactiveInterval(0);
 		          session.setAttribute("user", user);
+		          System.err.println("servlet received attribute " + request.getAttribute("bundle_id"));
 		          response.sendRedirect("GraPAT");      		
 		     }
 			        
