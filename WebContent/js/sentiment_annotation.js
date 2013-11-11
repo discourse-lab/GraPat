@@ -1,8 +1,4 @@
-var annotations = {
-		"nodes": {},
-		// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
-		"edges": {}
-};
+var annotations = {};
 var current_sentence_idx = -1;
 var edge_count = 0;
 var sentence_count = 0;
@@ -14,6 +10,8 @@ var text = {};
 var sentence_order = [];
 var rclick = null;
 var annotator_id = -1;
+
+var annotation_bundle_id = null;
 
 window.XMLParser = {
 		
@@ -83,6 +81,14 @@ window.Sentiment = {
 	},
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
+		var sentence_id = sentence_order[current_sentence_idx];
+		if (!(annotation_bundle_id in annotations))
+			annotations[annotation_bundle_id] = {};
+		if (!(sentence_id in annotations[annotation_bundle_id]))
+			annotations[annotation_bundle_id][sentence_id] = { 		"nodes": {},
+																	"edges": {} 
+			};
+		
 		if (sa)
 			window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
@@ -109,6 +115,7 @@ window.Sentiment = {
 		//var filename = "sentences.txt";
 		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
+			annotation_bundle_id = $(data).find('annotation_bundle')[0].Attr('id');
 		    var all_sentences = $(data).find('entity');
 		    var sentence_idx = 0;
 		    jQuery.each(all_sentences, function() {
