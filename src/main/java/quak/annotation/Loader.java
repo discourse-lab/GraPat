@@ -49,7 +49,7 @@ public class Loader extends HttpServlet {
 		String test = (String) request.getAttribute("test");
 		String bundle_id = (String) request.getAttribute("bundle_id");
 		String sentence_id = (String) request.getAttribute("sentence_id");
-		
+		System.err.println(test + " " + bundle_id + " " + sentence_id);
 		HttpSession session = request.getSession(false);
 		String username = null;
 		if (session != null && session.getAttribute("user") != null)
