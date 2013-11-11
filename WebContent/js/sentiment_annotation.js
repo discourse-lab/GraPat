@@ -1,4 +1,7 @@
-var annotations = {};
+var annotations = {
+		"nodes": {},
+		"edges": {} 
+};
 var current_sentence_idx = -1;
 var edge_count = 0;
 var sentence_count = 0;
@@ -81,13 +84,6 @@ window.Sentiment = {
 	},
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
-		var sentence_id = sentence_order[current_sentence_idx];
-		if (!(annotation_bundle_id in annotations))
-			annotations[annotation_bundle_id] = {};
-		if (!(sentence_id in annotations[annotation_bundle_id]))
-			annotations[annotation_bundle_id][sentence_id] = { 		"nodes": {},
-																	"edges": {} 
-			};
 		
 		if (sa)
 			window.Sentiment.save();
@@ -103,7 +99,11 @@ window.Sentiment = {
 	    }
 	},
 	save : function () {
-		$.post('GraPAT', {"graph": JSON.stringify(annotations), "annotator": JSON.stringify({ "id": annotator_id })}, function(data) {
+		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
+							"sentence": sentence_order[current_sentence_idx], 
+							"graph": JSON.stringify(annotations), 
+							"annotator": JSON.stringify({ "id": annotator_id })}, 
+							function(data) {
 			$("#saved").hide().fadeIn(1500);
 			$("#saved").fadeOut(2500);
 		});
@@ -260,7 +260,7 @@ window.Sentiment = {
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
         	var sentence_id = sentence_order[current_sentence_idx];
-        	annotations[annotation_bundle_id][sentence_id].edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
+        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
         																				"text_anchor": null,
         																				"context": false,
         																				"world_knowledge": false,
@@ -275,11 +275,11 @@ window.Sentiment = {
 			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
 				i.connection.target.innerHTML = i.connection.source.innerHTML;
 				// i.connection.target.innerText = i.connection.source.innerText;
-				annotations[annotation_bundle_id][sentence_id].nodes[i.connection.targetId] = i.connection.source.innerHTML;
+				annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
 			}
 			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-				annotations[annotation_bundle_id][sentence_id].nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
 			window.Sentiment.showAttrsPopUp(i.connection);
@@ -302,25 +302,25 @@ window.Sentiment = {
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
 		var sentence_id = sentence_order[current_sentence_idx];
-		annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
-		annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
+		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
 		
 		if ($('input[name="context"]:checked').val())
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["context"] = true;
+			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
 		else
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["context"] = false;
+			annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
 		if ($('input[name="wknow"]:checked').val())
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
+			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
 		else
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
+			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
 		if ($('input[name="ironic"]:checked').val())
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["ironic"] = true;
+			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
 		else
 			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
 		if ($('input[name="rhetoric"]:checked').val())
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
+			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
 		else
-			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
+			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
 		
 		if (polarity == 'negative') {
 			current_connection.toggleType('negative');

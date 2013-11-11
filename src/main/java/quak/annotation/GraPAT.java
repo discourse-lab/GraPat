@@ -65,6 +65,8 @@ public class GraPAT extends HttpServlet {
 			response.flushBuffer();
 		}
 		String result = request.getParameter("graph");
+		int annotation_bundle = Integer.parseInt( request.getParameter("annotation_bundle") );
+		int sentence = Integer.parseInt( request.getParameter("sentence") );
 		// String path = "/home/grapat/save/sentiment/";
 		String username = "unknown";
 		System.err.println( session.getAttribute("user"));
@@ -74,11 +76,11 @@ public class GraPAT extends HttpServlet {
 			username = user.getUsername();
 		}
 		
-		writeToDB(result, username);
+		writeToDB(result, username, annotation_bundle, sentence);
 
 	}
 	
-	private void writeToDB(String result, String username) {
+	private void writeToDB(String result, String username, int annotation_bundle, int sentence) {
 		currentCon = ConnectionManager.getConnection();
 		Statement stmt;
 		try {
@@ -88,17 +90,27 @@ public class GraPAT extends HttpServlet {
 			Timestamp time = new Timestamp(new Date().getTime());
 			// create table if it doesnt exist
 			stmt.execute("CREATE TABLE IF NOT EXISTS " + "results" + 
-					" (`id` int(11) NOT NULL AUTO_INCREMENT, `username` text , `graph` longtext,   time TIMESTAMP," +
+					" ("
+					+ "`id` int(11) NOT NULL AUTO_INCREMENT, "
+					+ "`username` text , "
+					+ "`annotation_bundle` int , "
+					+ "`sentence` int , "
+					+ "`graph` longtext, "
+					+ "`time` TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
 			String prep_insert = "INSERT INTO results SET "
 					+ "username = ?,"
+					+ "annotation_bundle = ?,"
+					+ "sentence = ?,"
 					+ "graph = ?,"
 					+ "time = ?";
 			final PreparedStatement pstmt = currentCon.prepareStatement(prep_insert);
 			//String insert = "INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")";
 			pstmt.setString(1, username);
-			pstmt.setString(2, result);
-			pstmt.setTimestamp(3, time);
+			pstmt.setInt(2, annotation_bundle);
+			pstmt.setInt(3, sentence);
+			pstmt.setString(4, result);
+			pstmt.setTimestamp(5, time);
 			
 			pstmt.execute();
 		} catch (SQLException e) {
