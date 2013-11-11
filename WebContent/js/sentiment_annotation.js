@@ -27,6 +27,8 @@ window.Sentiment = {
 				"bundle_id": annotation_bundle_id,
 				"sentence_id": sentence_order[current_sentence_idx]
 		};
+		console.log(annotation_bundle_id);
+		console.log(sentence_order[current_sentence_idx]);
 		$.getJSON( "Loader", req_data, function(data) {
 			console.log(data);
 		});		

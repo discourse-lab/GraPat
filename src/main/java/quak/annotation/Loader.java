@@ -53,6 +53,7 @@ public class Loader extends HttpServlet {
 			UserBean user = (UserBean) session.getAttribute("user");
 			username = user.getUsername();
 		}
+		System.err.println(request.getAttributeNames().toString());
 		String bundle_id = (String) request.getAttribute("bundle_id");
 		String sentence_id = (String) request.getAttribute("sentence_id");
 		
