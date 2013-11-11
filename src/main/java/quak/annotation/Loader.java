@@ -47,15 +47,15 @@ public class Loader extends HttpServlet {
 		response.setCharacterEncoding("utf8");
 		
 		
-		String bundle_id = (String) request.getAttribute("bundle_id");
-		String sentence_id = (String) request.getAttribute("sentence_id");
-		
+		String bundle_id = request.getParameter("bundle_id");
+		String sentence_id = request.getParameter("sentence_id");
+		System.err.println(bundle_id);
 		  StringBuilder sb = new StringBuilder();
 		  Enumeration<String> parameterNames = request.getParameterNames();	
 		  while (parameterNames.hasMoreElements()) {
 		      String parameterName = parameterNames.nextElement();
 		      sb.append(parameterName);
-		      sb.append(":");
+		      sb.append(" : ");
 		      sb.append(request.getParameter(parameterName));
 		  			
 		      if (parameterNames.hasMoreElements()) {
