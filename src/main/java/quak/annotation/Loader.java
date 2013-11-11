@@ -85,6 +85,8 @@ public class Loader extends HttpServlet {
 			ResultSet result = stmt.executeQuery();
 			while (result.next()) {
 				Date this_time = result.getTimestamp("time");
+				System.err.println(this_time.toGMTString());
+				System.err.println(result.getString("graph"));
 				if (this_time.after(date))
 				{
 					date = result.getTimestamp("time");
