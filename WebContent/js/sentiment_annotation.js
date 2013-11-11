@@ -115,7 +115,7 @@ window.Sentiment = {
 		//var filename = "sentences.txt";
 		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
-			annotation_bundle_id = $(data).find('annotation_bundle')[0].Attr('id');
+			annotation_bundle_id = $(data).find('annotation_bundle')[0].attr('id');
 		    var all_sentences = $(data).find('entity');
 		    var sentence_idx = 0;
 		    jQuery.each(all_sentences, function() {

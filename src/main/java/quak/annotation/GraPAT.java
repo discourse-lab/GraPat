@@ -65,8 +65,8 @@ public class GraPAT extends HttpServlet {
 			response.flushBuffer();
 		}
 		String result = request.getParameter("graph");
-		int annotation_bundle = Integer.parseInt( request.getParameter("annotation_bundle") );
-		int sentence = Integer.parseInt( request.getParameter("sentence") );
+		String annotation_bundle = request.getParameter("annotation_bundle");
+		String sentence = request.getParameter("sentence");
 		// String path = "/home/grapat/save/sentiment/";
 		String username = "unknown";
 		System.err.println( session.getAttribute("user"));
@@ -80,7 +80,7 @@ public class GraPAT extends HttpServlet {
 
 	}
 	
-	private void writeToDB(String result, String username, int annotation_bundle, int sentence) {
+	private void writeToDB(String result, String username, String annotation_bundle, String sentence) {
 		currentCon = ConnectionManager.getConnection();
 		Statement stmt;
 		try {
@@ -107,8 +107,8 @@ public class GraPAT extends HttpServlet {
 			final PreparedStatement pstmt = currentCon.prepareStatement(prep_insert);
 			//String insert = "INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")";
 			pstmt.setString(1, username);
-			pstmt.setInt(2, annotation_bundle);
-			pstmt.setInt(3, sentence);
+			pstmt.setString(2, annotation_bundle);
+			pstmt.setString(3, sentence);
 			pstmt.setString(4, result);
 			pstmt.setTimestamp(5, time);
 			
