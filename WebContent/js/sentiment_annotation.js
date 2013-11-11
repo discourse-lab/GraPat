@@ -259,8 +259,8 @@ window.Sentiment = {
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
-
-        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
+        	var sentence_id = sentence_order[current_sentence_idx];
+        	annotations[annotation_bundle_id][sentence_id].edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
         																				"text_anchor": null,
         																				"context": false,
         																				"world_knowledge": false,
@@ -275,11 +275,11 @@ window.Sentiment = {
 			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
 				i.connection.target.innerHTML = i.connection.source.innerHTML;
 				// i.connection.target.innerText = i.connection.source.innerText;
-				annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+				annotations[annotation_bundle_id][sentence_id].nodes[i.connection.targetId] = i.connection.source.innerHTML;
 			}
 			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+				annotations[annotation_bundle_id][sentence_id].nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
 			window.Sentiment.showAttrsPopUp(i.connection);
@@ -301,25 +301,26 @@ window.Sentiment = {
 	labelPopUpButton_click : function () {
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
-		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
-		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+		var sentence_id = sentence_order[current_sentence_idx];
+		annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
+		annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
 		
 		if ($('input[name="context"]:checked').val())
-			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["context"] = true;
 		else
-			annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["context"] = false;
 		if ($('input[name="wknow"]:checked').val())
-			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
 		else
-			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
 		if ($('input[name="ironic"]:checked').val())
-			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["ironic"] = true;
 		else
 			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
 		if ($('input[name="rhetoric"]:checked').val())
-			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
 		else
-			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
+			annotations[annotation_bundle_id][sentence_id].edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
 		
 		if (polarity == 'negative') {
 			current_connection.toggleType('negative');
