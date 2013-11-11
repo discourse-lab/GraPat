@@ -93,8 +93,8 @@ public class GraPAT extends HttpServlet {
 					" ("
 					+ "`id` int(11) NOT NULL AUTO_INCREMENT, "
 					+ "`username` text , "
-					+ "`annotation_bundle` int , "
-					+ "`sentence` int , "
+					+ "`annotation_bundle` text , "
+					+ "`sentence` text , "
 					+ "`graph` longtext, "
 					+ "`time` TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");

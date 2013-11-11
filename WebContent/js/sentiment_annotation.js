@@ -85,6 +85,11 @@ window.Sentiment = {
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
+		annotations = {
+				"nodes": {},
+				"edges": {} 
+		};
+		
 		if (sa)
 			window.Sentiment.save();
 	    if (current_sentence_idx < sentence_count-1) {
