@@ -31,10 +31,13 @@ window.Sentiment = {
 		console.log(annotation_bundle_id);
 		console.log(sentence_order[current_sentence_idx]);
 		$.getJSON( "Loader", req_data, function(data) {
+            var graph = jQuery.parseJSON( data.graph );
+            var layout = jQuery.parseJSON( data.layout );
 			
-			var data_json = jQuery.parseJSON( data );
-			$.each(data_json.nodes, function(key, value) {
-				window.Sentiment.add_node(key, 100, 200, value);
+			$.each(graph.nodes, function(key, value) {
+				var x = layout[key]["x"];
+				var y = layout[key]["y"];
+				window.Sentiment.add_node(key, x, y, value);
 			});
 		});		
 	},
@@ -54,8 +57,8 @@ window.Sentiment = {
 	    }).appendTo('#graph_part');
 	            
 		$("#"+node_id).css({
-		    top: x + 'px',
-		    left: y + 'px',
+		    top: x ,
+		    left: y ,
 		    visibility: 'visible'
 		});
 		++node_count;
@@ -150,12 +153,14 @@ window.Sentiment = {
 		var layout = {};
 		var nodes = $(".node");
 		$.each(nodes, function() {
-			layout[$(this).id]["x"] = $(this).css("left");
-			layout[$(this).id]["y"] = $(this).css("top");
+			if (!($(this)[0].id in layout))
+				layout[ $(this)[0].id ] = {};
+			layout[$(this)[0].id]["x"] = $(this).css("left");
+			layout[$(this)[0].id]["y"] = $(this).css("top");
 		});
 		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
 							"sentence": sentence_order[current_sentence_idx], 
-							"layout": layout,
+							"layout": JSON.stringify(layout),
 							"graph": JSON.stringify(annotations), 
 							"annotator": JSON.stringify({ "id": annotator_id })}, 
 							function(data) {
