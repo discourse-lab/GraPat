@@ -339,13 +339,18 @@ window.Sentiment = {
 				i.connection.toggleType('default');
 			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
 				i.connection.target.innerHTML = i.connection.source.innerHTML;
-				// i.connection.target.innerText = i.connection.source.innerText;
-				annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+				//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
 			}
 			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
+			
+			if (annotations.nodes[i.connection.targetId] == "")
+				annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+			else if (annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
+				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+			
 		// the connection and if not already there, the connected nodes have to be added to the internal model
 			var loading = false;
 			if (c == null)
