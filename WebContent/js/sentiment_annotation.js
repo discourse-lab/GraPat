@@ -2,6 +2,7 @@ var annotations = {
 		"nodes": {},
 		"edges": {} 
 };
+
 var current_sentence_idx = -1;
 var edge_count = 0;
 var sentence_count = 0;
@@ -30,9 +31,9 @@ window.Sentiment = {
 		console.log(annotation_bundle_id);
 		console.log(sentence_order[current_sentence_idx]);
 		$.getJSON( "Loader", req_data, function(data) {
-			$.each(data.nodes, function(key, value) {
-				console.log("looping nodes");
-				console.log(key + " : " + value);
+			
+			var data_json = jQuery.parseJSON( data );
+			$.each(data_json.nodes, function(key, value) {
 				window.Sentiment.add_node(key, 100, 200, value);
 			});
 		});		
@@ -57,6 +58,9 @@ window.Sentiment = {
 		    left: y + 'px',
 		    visibility: 'visible'
 		});
+		++node_count;
+		$("#"+node_id).addClass("node");
+		window.Sentiment.update();
 	},
 		
 	init_globals : function() {
@@ -142,8 +146,15 @@ window.Sentiment = {
 	    }
 	},
 	save : function () {
+		// node_id -> x,y coordinates
+		var layout = {};
+		var nodes = $(".node");
+		$.each(nodes, function() {
+			console.log(this);
+		});
 		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
 							"sentence": sentence_order[current_sentence_idx], 
+							"layout": layout,
 							"graph": JSON.stringify(annotations), 
 							"annotator": JSON.stringify({ "id": annotator_id })}, 
 							function(data) {
