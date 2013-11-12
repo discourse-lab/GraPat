@@ -15,6 +15,7 @@ var sentence_order = [];
 var rclick = null;
 var annotator_id = -1;
 
+var loading = false;
 var annotation_bundle_id = null;
 
 window.XMLParser = {
@@ -24,6 +25,7 @@ window.XMLParser = {
 window.Sentiment = {
 	
 	load_data : function(bundle_id, sentence_id) {
+		loading = true;
 		var req_data = {
 				"bundle_id": annotation_bundle_id,
 				"sentence_id": sentence_order[current_sentence_idx]
@@ -39,7 +41,17 @@ window.Sentiment = {
 				var y = layout[key]["y"];
 				window.Sentiment.add_node(key, x, y, value);
 			});
-		});		
+			
+            $.each(graph.edges, function(source_id, value) {
+                $.each(value, function(target_id, edges) {
+                    $.each(edges, function(conn_id, attrs) {
+                        jsPlumb.connect({source: source_id, target: target_id});
+                        console.log(attrs);
+                    });
+                });
+            });
+		});
+		loading = false;
 	},
 	
 	add_node : function(node_id, x, y, label) {
@@ -57,8 +69,8 @@ window.Sentiment = {
 	    }).appendTo('#graph_part');
 	            
 		$("#"+node_id).css({
-		    top: x ,
-		    left: y ,
+		    top: y ,
+		    left: x ,
 		    visibility: 'visible'
 		});
 		++node_count;
@@ -342,7 +354,15 @@ window.Sentiment = {
 				annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
 		// the connection and if not already there, the connected nodes have to be added to the internal model
-			window.Sentiment.showAttrsPopUp(i.connection);
+			if (!loading)
+				window.Sentiment.showAttrsPopUp(i.connection);
+			else {
+		        if (c.source.nodeName == "SPAN")
+		            return false;
+			    current_source = c.sourceId;
+			    current_target = c.targetId;
+			    current_connection = c;
+			}
         }); 
 	    /*jsPlumb.bind("dblclick", function(c) {
 		if (c.source.nodeName == "SPAN")
@@ -358,7 +378,7 @@ window.Sentiment = {
 		jsPlumb.addEndpoint($(".node"), ent_endpoints);
 		    });
         },
-	labelPopUpButton_click : function () {
+	labelPopUpButton_click : function (pol, text, context, wk, ironic, rhetoric) {
 		var polarity = $('input[name="polarity"]:checked').val();
 		var text_anchor = $('textarea#text_anchor_input').val();
 		var sentence_id = sentence_order[current_sentence_idx];
