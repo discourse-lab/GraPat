@@ -30,8 +30,27 @@ window.Sentiment = {
 		console.log(annotation_bundle_id);
 		console.log(sentence_order[current_sentence_idx]);
 		$.getJSON( "Loader", req_data, function(data) {
-			console.log(data);
+			$.each(data.nodes, function(key, value) {
+				console.log("looping nodes");
+				console.log(key + " : " + value);
+				window.Sentiment.add_node(key, 100, 200, value);
+			});
 		});		
+	},
+	
+	add_node : function(node_id, x, y, label) {
+        jQuery('<div/>', {
+            class: 'window movable invisible',
+            id: node_id,
+            node_id: node_count,
+            text: label
+	    }).appendTo('#graph_part');
+	            
+		$("#node_"+node_count).css({
+		    top: x + 'px',
+		    left: y + 'px',
+		    visibility: 'visible'
+		});
 	},
 		
 	init_globals : function() {
@@ -82,8 +101,12 @@ window.Sentiment = {
 	word_update : function () {
 	    var sentence_div = $("#sentence");
 	    $("#counter")[0].innerHTML = current_sentence_idx+1 + " of " + sentence_count; $("#counter")[0].innerText = current_sentence_idx+1 + " of " + sentence_count;
+	    // remove connections and anchor points to word divs
+	    // TODO
 	    // remove old words
 	    sentence_div.empty();
+	    
+	    
 	    var idx = 0;
 	    jQuery.each(text[sentence_order[current_sentence_idx]], function() {
 	    	window.Sentiment.add_word(this, idx);
@@ -427,18 +450,18 @@ window.Sentiment = {
                     id: node_id,
                     node_id: node_count,
                     text: 'new node'
-        }).appendTo('#graph_part');
+            }).appendTo('#graph_part');
 	                
-		$("#node_"+node_count).css({
-		    top: rclick.pageY + 'px',
-		    left: rclick.pageX + 'px',
-		    visibility: 'visible'
-		});
-		$("#node_"+node_count).fadeIn(2000);
-		$("#node_"+node_count).addClass('node');
-		++node_count;
+			$("#node_"+node_count).css({
+			    top: rclick.pageY + 'px',
+			    left: rclick.pageX + 'px',
+			    visibility: 'visible'
+			});
+			$("#node_"+node_count).fadeIn(2000);
+			$("#node_"+node_count).addClass('node');
+			++node_count;
                 window.Sentiment.update();
-            });
+        });
             
             $("#del_ele").bind("click", function(e) {
 		jsPlumb.removeAllEndpoints(rclick.target);
