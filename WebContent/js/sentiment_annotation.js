@@ -39,6 +39,12 @@ window.Sentiment = {
 	},
 	
 	add_node : function(node_id, x, y, label) {
+		console.log("add_node");
+		console.log(node_id);
+		console.log(label);
+		console.log(x);
+		console.log(y);
+		console.log("/add_node");
         jQuery('<div/>', {
             class: 'window movable invisible',
             id: node_id,
@@ -46,7 +52,7 @@ window.Sentiment = {
             text: label
 	    }).appendTo('#graph_part');
 	            
-		$("#node_"+node_count).css({
+		$("#"+node_id).css({
 		    top: x + 'px',
 		    left: y + 'px',
 		    visibility: 'visible'
