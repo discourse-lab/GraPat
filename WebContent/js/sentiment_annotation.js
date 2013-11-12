@@ -150,7 +150,8 @@ window.Sentiment = {
 		var layout = {};
 		var nodes = $(".node");
 		$.each(nodes, function() {
-			console.log(this);
+			layout[$(this).id]["x"] = $(this).css("left");
+			layout[$(this).id]["y"] = $(this).css("top");
 		});
 		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
 							"sentence": sentence_order[current_sentence_idx], 

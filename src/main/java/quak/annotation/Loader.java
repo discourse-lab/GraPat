@@ -24,6 +24,12 @@ import quak.http.UserBean;
 
 import com.google.gson.Gson;
 
+class DBAnswer {
+	public DBAnswer(){};
+	public String graph;
+	public String layout;
+}
+
 /**
  * Servlet implementation class Loader
  */
@@ -73,11 +79,11 @@ public class Loader extends HttpServlet {
 			UserBean user = (UserBean) session.getAttribute("user");
 			username = user.getUsername();
 		}		
-		String graph = getFromDB(username, bundle_id, sentence_id);
+		DBAnswer save = getFromDB(username, bundle_id, sentence_id);
 		
 		Gson gson = new Gson();
 		response.setContentType("application/json");
-		response.getWriter().print(gson.toJson(graph));
+		response.getWriter().print( "{\"graph\" : " + gson.toJson(save.graph) + ", \"layout\" : " + gson.toJson(save.layout) + "}");
 	}
 
 	/**
@@ -87,12 +93,12 @@ public class Loader extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private String getFromDB(String username, String bundle_id, String sentence_id) {
+	private DBAnswer getFromDB(String username, String bundle_id, String sentence_id) {
 		Connection currentCon = ConnectionManager.getConnection();
 		PreparedStatement stmt;
 		
 		try {
-			String pstmt = "SELECT graph, time FROM results WHERE username=? AND annotation_bundle=? AND sentence=?";
+			String pstmt = "SELECT graph, time, layout FROM results WHERE username=? AND annotation_bundle=? AND sentence=?";
 			stmt = currentCon.prepareStatement(pstmt);
 			
 			stmt.setString(1, username);
@@ -100,6 +106,7 @@ public class Loader extends HttpServlet {
 			stmt.setString(3, sentence_id);
 			System.err.println("querying for " + username + " " + bundle_id + " " + sentence_id);
 			String graph = null;
+			String layout = null;
 			Date date = new Date(0, 0, 1);
 			ResultSet result = stmt.executeQuery();
 			while (result.next()) {
@@ -110,17 +117,21 @@ public class Loader extends HttpServlet {
 				{
 					date = result.getTimestamp("time");
 					graph = result.getString("graph");
+					layout = result.getString("layout");
 				}
 			}
 			System.err.println("loaded annotation from " + date.toGMTString());
-			return graph;
+			DBAnswer res = new DBAnswer();
+			res.graph = graph;
+			res.layout = layout;
+			return res;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return "";
+		return null;
 	}
 
 }

@@ -65,6 +65,7 @@ public class GraPAT extends HttpServlet {
 			response.flushBuffer();
 		}
 		String result = request.getParameter("graph");
+		String layout = request.getParameter("layout");
 		String annotation_bundle = request.getParameter("annotation_bundle");
 		String sentence = request.getParameter("sentence");
 		// String path = "/home/grapat/save/sentiment/";
@@ -75,11 +76,11 @@ public class GraPAT extends HttpServlet {
 			username = user.getUsername();
 		}
 		
-		writeToDB(result, username, annotation_bundle, sentence);
+		writeToDB(result, layout, username, annotation_bundle, sentence);
 
 	}
 	
-	private void writeToDB(String result, String username, String annotation_bundle, String sentence) {
+	private void writeToDB(String result, String layout, String username, String annotation_bundle, String sentence) {
 		currentCon = ConnectionManager.getConnection();
 		Statement stmt;
 		try {
@@ -95,6 +96,7 @@ public class GraPAT extends HttpServlet {
 					+ "`annotation_bundle` text , "
 					+ "`sentence` text , "
 					+ "`graph` longtext, "
+					+ "`layout` longtext, "
 					+ "`time` TIMESTAMP," +
 					" PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8");
 			String prep_insert = "INSERT INTO results SET "
@@ -102,6 +104,7 @@ public class GraPAT extends HttpServlet {
 					+ "annotation_bundle = ?,"
 					+ "sentence = ?,"
 					+ "graph = ?,"
+					+ "layout = ?,"
 					+ "time = ?";
 			final PreparedStatement pstmt = currentCon.prepareStatement(prep_insert);
 			//String insert = "INSERT into " + "results" + "(username, graph, time) VALUES (\"" + username + "\",\"" + result + "\",\"" + time + "\")";
@@ -109,7 +112,8 @@ public class GraPAT extends HttpServlet {
 			pstmt.setString(2, annotation_bundle);
 			pstmt.setString(3, sentence);
 			pstmt.setString(4, result);
-			pstmt.setTimestamp(5, time);
+			pstmt.setString(5, layout);
+			pstmt.setTimestamp(6, time);
 			
 			pstmt.execute();
 		} catch (SQLException e) {
