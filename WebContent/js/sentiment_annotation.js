@@ -44,8 +44,8 @@ window.Sentiment = {
                         current_connection = jsPlumb.connect({source: source_id, target: target_id});
                         current_source = current_connection.sourceId;
                         current_target = current_connection.targetId;
-                        
-                        window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                        if (current_connection.source.nodeName != "SPAN")
+                        	window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
                     });
                 });
             });
@@ -53,6 +53,7 @@ window.Sentiment = {
 	},
 	
 	add_node : function(node_id, x, y, label) {
+		annotations.nodes[node_id] = "";
         jQuery('<div/>', {
             class: 'window movable invisible',
             id: node_id,
@@ -319,7 +320,7 @@ window.Sentiment = {
         }); 
         jsPlumb.bind("connection", function(i,c) {
         	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
-        	if (!(i.connection.sourceId in annotations))
+        	if (!(i.connection.sourceId in annotations.edges))
         		annotations.edges[i.connection.sourceId] = {};
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
