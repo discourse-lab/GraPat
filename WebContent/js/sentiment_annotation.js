@@ -348,10 +348,11 @@ window.Sentiment = {
 			
             if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
                 annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-            else if (annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0 && i.connection.source.nodeName == "SPAN")
+            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
                 annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			
 		// the connection and if not already there, the connected nodes have to be added to the internal model
+
 			var loading = false;
 			if (c == null)
 				loading = true;
