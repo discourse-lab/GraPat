@@ -457,7 +457,7 @@ window.Sentiment = {
 	    current_target = c.targetId;
 	    current_connection = c;
 	    $('#labelPopUp').show();
-	    $('#text_anchor_input').setActive();
+	    $(window).resize();
 	    $('#text_anchor_input').focus();
 	    return false;
 	},
@@ -468,6 +468,28 @@ window.Sentiment = {
             $('#saved').hide();
             window.Sentiment.get_files_to_be_annotated();
             window.Sentiment.update();
+            
+            $(document.body).keydown( function(event) {
+                var pressed = event.keyCode || event.which;
+                if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus'))) {
+                        // n
+                        if (pressed == 78) {
+                                $('input[name="polarity"]').val(['negative']);
+                                console.log('setting neg');
+                        }
+                        if (pressed == 13) {
+                                $("#attrs_button").click();
+                        }
+                }
+            });    
+            
+            $('#text_anchor_input').keydown( function(event) {
+                var pressed = event.keyCode || event.which;
+                if (pressed == 13 && ($('#text_anchor_input').is(':focus'))) {
+                        $('#text_anchor_input').blur();
+                }
+                event.stopPropagation();
+            });
 
             // make 'window1' a connection source. notice the filter parameter: it tells jsPlumb to ignore drags
             // that started on the 'enable/disable' link on the blue window.
