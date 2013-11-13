@@ -41,22 +41,22 @@
 						<td><b>text anchor</b></td>	<td> <textarea id="text_anchor_input" rows="1" cols="25"></textarea></td>
 					</tr>
 					<tr>
-						<td><b>polarity</b></td>	<td> 	<form action=""> 	<input type="radio" name="polarity" value="negative"> negative <br>
+						<td><b>(p)olarity</b></td>	<td> 	<form action=""> 	<input type="radio" name="polarity" value="negative"> negative <br>
 													<input type="radio" name="polarity" value="positive"> positive <br>
 													<input type="radio" name="polarity" value="other">other
 										</form></td>
 					</tr>
 					<tr>
-						<td><b>context</b></td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
+						<td><b>(c)ontext</b></td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
 					</tr>
 					<tr>
-						<td><b>world knowledge</b></td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
+						<td><b>(w)orld knowledge</b></td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
 					</tr>
 					<tr>
-						<td><b>ironic</b></td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
+						<td><b>(i)ronic</b></td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
 					</tr>
 					<tr>
-						<td><b>rhetoric</b></td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
+						<td><b>(r)hetoric</b></td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
 					</tr>
 					</table>
 				</div>
