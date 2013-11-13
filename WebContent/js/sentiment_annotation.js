@@ -386,7 +386,7 @@ window.Sentiment = {
 		if (pol != null)
 			polarity = pol;
 		else
-			$('input[name="polarity"]:checked').val();
+			polarity = $('input[name="polarity"]:checked').val();
 		
 		if (text != null)
 			text_anchor = text;
@@ -457,6 +457,8 @@ window.Sentiment = {
 	    current_target = c.targetId;
 	    current_connection = c;
 	    $('#labelPopUp').show();
+	    $('#text_anchor_input').setActive();
+	    $('#text_anchor_input').focus();
 	    return false;
 	},
         
