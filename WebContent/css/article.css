@@ -53,6 +53,8 @@
     background-color: rgba(0,0,0, 0.8);
     left: -2.8em;
     top: -2.8em;
+    width: 5em;
+    height: 3em;
 }
 
 #counter {
