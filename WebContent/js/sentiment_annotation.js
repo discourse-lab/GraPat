@@ -25,13 +25,16 @@ window.Sentiment = {
 	
 	load_data : function(bundle_id, sentence_id) {
 		var req_data = {
-				"bundle_id": annotation_bundle_id,
+				"bundle_id": bundle_id,
 				"sentence_id": sentence_order[current_sentence_idx]
 		};
 		$.getJSON( "Loader", req_data, function(data) {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
 			
+            if (graph == null)
+            	return;
+            
 			$.each(graph.nodes, function(key, value) {
 				var x = layout[key]["x"];
 				var y = layout[key]["y"];
@@ -151,6 +154,7 @@ window.Sentiment = {
 	    if (current_sentence_idx > 0) {
 	    	--current_sentence_idx;
 	    	window.Sentiment.word_update();
+	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
 	save : function () {
