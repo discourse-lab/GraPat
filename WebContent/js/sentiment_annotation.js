@@ -165,7 +165,14 @@ window.Sentiment = {
 	clear : function () {
 		jsPlumb.detachEveryConnection();
 		jsPlumb.deleteEveryEndpoint();
+		
 		$('.node').remove();
+        jQuery('<div/>', {
+            class: 'node extra_sentential_node window',
+            id: 'author',
+            node_id: 'node_0',
+            text: 'Autor'
+        }).appendTo('#graph_part');
 	},
 	
 	save : function () {
