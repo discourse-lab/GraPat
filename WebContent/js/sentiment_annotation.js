@@ -157,7 +157,7 @@ window.Sentiment = {
 	    if (current_sentence_idx > 0) {
 	    	--current_sentence_idx;
 	    	window.Sentiment.word_update();
-	    	clear();
+	    	window.Sentiment.clear();
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
