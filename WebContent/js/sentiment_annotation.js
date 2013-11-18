@@ -475,19 +475,19 @@ window.Sentiment = {
                 if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus'))) {
 	                    // c
 	                    if (pressed == 67) {
-	                    	document.getElementById("context_chbox").checked = true;
+	                    	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
 	                    }
 	                 // w
 	                    if (pressed == 87) {
-	                    	document.getElementById("wknow_chbox").checked = true;
+	                    	document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
 	                    }
 	                 // i
-	                    if (pressed == 67) {
-	                    	document.getElementById("ironic_chbox").checked = true;
+	                    if (pressed == 73) {
+	                    	document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
 	                    }
 	                 // r
 	                    if (pressed == 82) {
-	                    	document.getElementById("rhetoric_chbox").checked = true;
+	                    	document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
 	                    }
                         // n
                         if (pressed == 78) {
