@@ -473,11 +473,35 @@ window.Sentiment = {
             $(document.body).keydown( function(event) {
                 var pressed = event.keyCode || event.which;
                 if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus'))) {
+	                    // c
+	                    if (pressed == 67) {
+	                    	document.getElementById("context_chbox").checked = true;
+	                    }
+	                 // w
+	                    if (pressed == 87) {
+	                    	document.getElementById("wknow_chbox").checked = true;
+	                    }
+	                 // i
+	                    if (pressed == 67) {
+	                    	document.getElementById("ironic_chbox").checked = true;
+	                    }
+	                 // r
+	                    if (pressed == 82) {
+	                    	document.getElementById("rhetoric_chbox").checked = true;
+	                    }
                         // n
                         if (pressed == 78) {
                                 $('input[name="polarity"]').val(['negative']);
-                                console.log('setting neg');
                         }
+                        // o
+                        if (pressed == 79) {
+                                $('input[name="polarity"]').val(['other']);
+                        }
+                        // p
+                        if (pressed == 80) {
+                                $('input[name="polarity"]').val(['positive']);
+                        }
+                        // return
                         if (pressed == 13) {
                                 $("#attrs_button").click();
                         }

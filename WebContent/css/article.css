@@ -134,7 +134,7 @@
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0, 0.8);
     color: white;
-    z-index: 30;
+    z-index: 300;
 }
 
 .popUpContent {

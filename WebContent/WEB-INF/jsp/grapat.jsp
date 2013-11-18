@@ -47,16 +47,16 @@
 										</form></td>
 					</tr>
 					<tr>
-						<td><b>(c)ontext</b></td>	<td>	<form action="">	<input type="checkbox" name="context"></form></td>
+						<td><b>(c)ontext</b></td>	<td>	<form action="">	<input id="context_chbox" type="checkbox" name="context"></form></td>
 					</tr>
 					<tr>
-						<td><b>(w)orld knowledge</b></td> <td>	<form action="">	<input type="checkbox" name="wknow"></form></td>
+						<td><b>(w)orld knowledge</b></td> <td>	<form action="">	<input id="wknow_chbox" type="checkbox" name="wknow"></form></td>
 					</tr>
 					<tr>
-						<td><b>(i)ronic</b></td>		<td>	<form action="">	<input type="checkbox" name="ironic"></form></td>
+						<td><b>(i)ronic</b></td>		<td>	<form action="">	<input id="ironic_chbox" type="checkbox" name="ironic"></form></td>
 					</tr>
 					<tr>
-						<td><b>(r)hetoric</b></td> 	<td>	<form action="">	<input type="checkbox" name="rhetoric"></form></td>
+						<td><b>(r)hetoric</b></td> 	<td>	<form action="">	<input id="rhetoric_chbox" type="checkbox" name="rhetoric"></form></td>
 					</tr>
 					</table>
 				</div>
