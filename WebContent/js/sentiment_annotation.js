@@ -178,6 +178,7 @@ window.Sentiment = {
 			layout[$(this)[0].id]["x"] = $(this).css("left");
 			layout[$(this)[0].id]["y"] = $(this).css("top");
 		});
+		console.log(annotations);
 		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
 							"sentence": sentence_order[current_sentence_idx], 
 							"layout": JSON.stringify(layout),
