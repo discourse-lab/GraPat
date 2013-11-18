@@ -137,16 +137,16 @@ window.Sentiment = {
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
-		annotations = {
-				"nodes": {},
-				"edges": {} 
-		};
-		
 		if (sa)
 		{
 			console.log("saving in next_sentence function for sentence no " + current_sentence_idx);
 			window.Sentiment.save();
 		}
+		
+		annotations = {
+				"nodes": {},
+				"edges": {} 
+		};
 	    if (current_sentence_idx < sentence_count-1) {
 	    	++current_sentence_idx;
 	    	window.Sentiment.word_update();
