@@ -153,10 +153,18 @@ window.Sentiment = {
 	previous_sentence : function () {
 	    if (current_sentence_idx > 0) {
 	    	--current_sentence_idx;
-	    	window.Sentiment.word_update();
+	    	//window.Sentiment.word_update();
+	    	clear();
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
+	
+	clear : function () {
+		jsPlumb.detachEveryConnection();
+		jsPlumb.deleteEveryEndpoint();
+		$('.node').remove();
+	},
+	
 	save : function () {
 		// node_id -> x,y coordinates
 		var layout = {};
