@@ -23,6 +23,10 @@
     visibility: hidden;
 }
 
+.full_size {
+	width: 100%;
+}
+
 .edge_label {
     color: white;
     border: 1px solid #346789;
