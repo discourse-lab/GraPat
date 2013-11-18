@@ -464,6 +464,7 @@ window.Sentiment = {
 			current_connection.toggleType('positive');
 		}
 		$('#labelPopUp').hide();
+		current_connection.addOverlay(['Arrow']);
 		current_connection.addOverlay(["Custom", { create: function(component) {
 								return $('<div node_id="node_' + node_count + '" class="edge_label target">'+text_anchor+'</div>');
 							},
