@@ -61,24 +61,24 @@ window.Sentiment = {
             });
             
             while (delayed.length > 0) {
-	            $.each( delayed, function(i, entry) {
-	                var source_id = entry[0];
-	                var target_id = entry[1];
-	                var attrs = entry[2];
-	                
-	                if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
-	                    delayed.push([ source_id, target_id, attrs ]);
-	                    // continue
-	                    return true;
-	                }
-	                
-	                current_connection = jsPlumb.connect({source: source_id, target: target_id});
-	                current_source = current_connection.sourceId;
-	                current_target = current_connection.targetId;
-	                if (current_connection.source.nodeName != "SPAN")
-	                	window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
-	                
-	            });
+            	var entry = delayed.pop();
+                var source_id = entry[0];
+                var target_id = entry[1];
+                var attrs = entry[2];
+                
+                if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
+                    delayed.push([ source_id, target_id, attrs ]);
+                    // continue
+                    return true;
+                }
+                
+                current_connection = jsPlumb.connect({source: source_id, target: target_id});
+                current_source = current_connection.sourceId;
+                current_target = current_connection.targetId;
+                if (current_connection.source.nodeName != "SPAN")
+                	window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                
+            
             }
             
             
