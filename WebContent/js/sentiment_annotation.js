@@ -40,7 +40,7 @@ window.Sentiment = {
 				var y = layout[key]["y"];
 				window.Sentiment.add_node(key, x, y, value);
 			});
-			
+			var delayed = [];
             $.each(graph.edges, function(source_id, value) {
                 $.each(value, function(target_id, edges) {
                     $.each(edges, function(conn_id, attrs) {
