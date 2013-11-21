@@ -23,6 +23,10 @@ window.XMLParser = {
 
 window.Sentiment = {
 	
+	update_node_count : function() {
+		return $('.target').length + $('.node').length-1 ;
+	},
+		
 	load_data : function(bundle_id, sentence_id) {
 		var req_data = {
 				"bundle_id": bundle_id,
@@ -34,7 +38,7 @@ window.Sentiment = {
 			
             if (graph == null)
             	return;
-            
+            window.Sentiment.update_node_count();
 			$.each(graph.nodes, function(key, value) {
 				var x = layout[key]["x"];
 				var y = layout[key]["y"];
@@ -494,7 +498,7 @@ window.Sentiment = {
 			current_connection.toggleType('positive');
 		}
 		$('#labelPopUp').hide();
-		current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:25 }]);
+		current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
 		current_connection.addOverlay(["Custom", { create: function(component) {
 								return $('<div id="node_' + node_count + '" class="edge_label target">'+text_anchor+'</div>');
 							},
@@ -513,7 +517,12 @@ window.Sentiment = {
 	    current_connection = c;
 	    $('#labelPopUp').show();
 	    $(window).resize();
-	    $('#text_anchor_input').focus();
+	    
+	    setTimeout(function() {
+	    	  $('#text_anchor_input').focus();
+	    	}, 0);
+	    
+	    
 	    return false;
 	},
         
