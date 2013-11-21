@@ -43,10 +43,14 @@ public class ResourceHandler extends HttpServlet {
 		fileMap.put("1", "Demo");
 		fileMap.put("2", "EU-Schweiz");
 		
-		URL defaultImage = ResourceHandler.class.getResource("data/EU-Schweiz");
-		File imageFile = new File(defaultImage.toURI());
-		System.err.println(imageFile.getAbsolutePath());
-		System.err.println(imageFile.getName());
+		try {
+			URL defaultImage = ResourceHandler.class.getResource("data/EU-Schweiz");
+			File imageFile = new File(defaultImage.toURI());
+			System.err.println(imageFile.getAbsolutePath());
+			System.err.println(imageFile.getName());			
+		} catch (Exception e) {
+			System.err.println(e.getStackTrace());
+		}
 		
 		File[] source_files = get_files(".");
 		for (File file : source_files) {
