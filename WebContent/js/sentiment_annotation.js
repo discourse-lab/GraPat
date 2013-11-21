@@ -24,7 +24,8 @@ window.XMLParser = {
 window.Sentiment = {
 	
 	update_node_count : function() {
-		return $('.target').length + $('.node').length-1 ;
+		// since we want the first unused number, we can ommit the -1 which had to be there due to the author node being counted
+		return $('.target').length + $('.node').length ;
 	},
 		
 	load_data : function(bundle_id, sentence_id) {
