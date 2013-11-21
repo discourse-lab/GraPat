@@ -2,6 +2,7 @@ package quak.annotation;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +43,12 @@ public class ResourceHandler extends HttpServlet {
 		fileMap.put("1", "Demo");
 		fileMap.put("2", "EU-Schweiz");
 		
+		URL defaultImage = ResourceHandler.class.getResource("data/EU-Schweiz");
+		File imageFile = new File(defaultImage.toURI());
+		System.err.println(imageFile.getAbsolutePath());
+		System.err.println(imageFile.getName());
+		
 		File[] source_files = get_files(".");
-		System.err.println(System.getProperty("user.dir"));
 		for (File file : source_files) {
 			System.err.println(file.getAbsolutePath());
 			System.err.println(file.getName());
