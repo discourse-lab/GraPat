@@ -28,6 +28,10 @@ window.Sentiment = {
 	},
 		
 	load_data : function(bundle_id, sentence_id) {
+		annotations = {
+				"nodes": {},
+				"edges": {} 
+		};
 		var req_data = {
 				"bundle_id": bundle_id,
 				"sentence_id": sentence_order[current_sentence_idx]
