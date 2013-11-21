@@ -487,8 +487,8 @@ window.Sentiment = {
 		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
 		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
 
-		if (context)
-			annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
+		
+		annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
 		
 		if (context)
 			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
