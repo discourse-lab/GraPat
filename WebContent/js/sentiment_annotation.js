@@ -42,7 +42,7 @@ window.Sentiment = {
 			
             if (graph == null)
             	return;
-            window.Sentiment.update_node_count();
+            node_count = window.Sentiment.update_node_count();
 			$.each(graph.nodes, function(key, value) {
 				var x = layout[key]["x"];
 				var y = layout[key]["y"];
