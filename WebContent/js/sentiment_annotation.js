@@ -3,6 +3,8 @@ var annotations = {
 		"edges": {} 
 };
 
+var changed = false;
+
 var current_sentence_idx = -1;
 var edge_count = 0;
 var sentence_count = 0;
@@ -90,7 +92,7 @@ window.Sentiment = {
                 
             
             }
-            
+            changed = false;
             
 		});
 	},
@@ -112,6 +114,7 @@ window.Sentiment = {
 		++node_count;
 		$("#"+node_id).addClass("node");
 		window.Sentiment.update();
+		changed = true;
 	},
 		
 	init_globals : function() {
@@ -177,7 +180,7 @@ window.Sentiment = {
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
-		if (sa)
+		if (sa && changed)
 			window.Sentiment.save();
 		
 		annotations = {
@@ -213,6 +216,8 @@ window.Sentiment = {
 	},
 	
 	save : function () {
+		if (!changed)
+			return;
 		// node_id -> x,y coordinates
 		var layout = {};
 		var nodes = $(".node");
@@ -379,6 +384,7 @@ window.Sentiment = {
             }
         }); 
         jsPlumb.bind("connection", function(i,c) {
+        	changed = true;
         	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
         	if (!(i.connection.sourceId in annotations.edges))
         		annotations.edges[i.connection.sourceId] = {};
@@ -439,7 +445,7 @@ window.Sentiment = {
 		    });
         },
 	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc) {
-		
+		changed = true;
 		var polarity = null;
 		var text_anchor = null;
 		var context = null;
@@ -646,6 +652,7 @@ window.Sentiment = {
         });
 
         $("#add_ent").bind("click", function() {
+        	changed = true;
         	var node_id = 'node_' + node_count;
 			annotations.nodes[node_id] = "";
             jQuery('<div/>', {
