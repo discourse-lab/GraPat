@@ -2,12 +2,15 @@ package quak.annotation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,10 +47,12 @@ public class ResourceHandler extends HttpServlet {
 		fileMap.put("2", "EU-Schweiz");
 		
 		try {
-			URL defaultImage = ResourceHandler.class.getResource("WebContent/data/EU-Schweiz");
-			File imageFile = new File(defaultImage.toURI());
-			System.err.println(imageFile.getAbsolutePath());
-			System.err.println(imageFile.getName());			
+			ServletContext context = getServletContext();
+			Set<String> filesSet = context.getResourcePaths("/data/");
+			
+			for (String string : filesSet) {
+				System.err.println(string);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
