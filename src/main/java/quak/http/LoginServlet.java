@@ -19,32 +19,18 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	PrintWriter writer;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
-        try {
-			writer = new PrintWriter("/opt/tomcat/webapps/grapat/login.log", "UTF-8");
-			writer.println("inited");
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        
     }
     
     public void destroy () {
     	
-    	writer.print("closed");
-    	writer.flush();
-    	
-    	writer.close();
     }
 
 	/**
@@ -52,7 +38,6 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
-		writer.print("received get. returning jsp");
 	}
 	
 
@@ -62,33 +47,15 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf8");
 		
-		  StringBuilder sb = new StringBuilder();
-		  Enumeration<String> parameterNames = request.getParameterNames();	
-		  while (parameterNames.hasMoreElements()) {
-		      String parameterName = parameterNames.nextElement();
-		      sb.append(parameterName);
-		      sb.append(":");
-		      sb.append(request.getParameter(parameterName));
-		  			
-		      if (parameterNames.hasMoreElements()) {
-		          sb.append(", ");
-		      }
-		  }
-		  System.err.println(sb.toString());
-		
-		
 		try
 		{	    
 	
 		     UserBean user = new UserBean();
 		     user.setUserName(request.getParameter("username"));
 		     user.setPassword(request.getParameter("password"));
-		     user = UQuery.login(user, writer);
+		     user = UQuery.login(user);
 		     if (user.isValid())
 		     {
-		 		
-				writer.print("valid user detected. creating session for user " + user.getFirstName() + " " + user.getLastName());
-				writer.flush();
 		          HttpSession session = request.getSession(true);
 		          // Pretend sessions running out
 		          session.setMaxInactiveInterval(0);
@@ -98,13 +65,10 @@ public class LoginServlet extends HttpServlet {
 			        
 		     else 
 		    	 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response); 
-		} 
-				
-				
+		}		
 		catch (Throwable theException) 	    
 		{
-		     writer.println(theException);
-		     writer.flush();
+			theException.printStackTrace();
 		}
 	}
 

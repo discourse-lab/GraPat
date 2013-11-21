@@ -9,7 +9,7 @@ public class UQuery
 	static Connection currentCon = null;
 	static ResultSet rs = null;
 		
-	public static UserBean login(UserBean bean, PrintWriter logger) {
+	public static UserBean login(UserBean bean) {
 		//preparing some objects for connection 
 		Statement stmt = null;    
 		
@@ -25,9 +25,7 @@ public class UQuery
 		    
 		try 
 		{
-			//connect to DB 
-			logger.println("trying connection");
-			logger.flush();
+			//connect to DB
 			currentCon = ConnectionManager.getConnection();
 			stmt = currentCon.createStatement();
 			rs = stmt.executeQuery(searchQuery);	        
@@ -35,12 +33,7 @@ public class UQuery
 			   
 			// if user does not exist set the isValid variable to false
 			if (!more) 
-			{
-				logger.println("not registered user");
-				logger.flush();
-				System.out.println("Sorry, you are not a registered user! Please sign up first");
 				bean.setValid(false);
-			} 
 			    
 			//if user exists set the isValid variable to true
 			else if (more) 
@@ -51,15 +44,11 @@ public class UQuery
 				bean.setFirstName(firstName);
 				bean.setLastName(lastName);
 				bean.setValid(true);
-				
-				logger.println("validated!");
-				logger.flush();
 			}
 		} 
 		catch (Exception ex) 
 		{
-			logger.println("Log In failed: An Exception has occurred! " + ex);
-			logger.flush();
+			ex.printStackTrace();
 		} 
 		//some exception handling
 		finally 

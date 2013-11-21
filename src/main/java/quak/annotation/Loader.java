@@ -54,23 +54,7 @@ public class Loader extends HttpServlet {
 		
 		
 		String bundle_id = request.getParameter("bundle_id");
-		String sentence_id = request.getParameter("sentence_id");
-		System.err.println(bundle_id);
-		  StringBuilder sb = new StringBuilder();
-		  Enumeration<String> parameterNames = request.getParameterNames();	
-		  while (parameterNames.hasMoreElements()) {
-		      String parameterName = parameterNames.nextElement();
-		      sb.append(parameterName);
-		      sb.append(" : ");
-		      sb.append(request.getParameter(parameterName));
-		  			
-		      if (parameterNames.hasMoreElements()) {
-		          sb.append(", ");
-		      }
-		  }
-		  System.err.println(sb.toString());
-
-		
+		String sentence_id = request.getParameter("sentence_id");		
 		
 		HttpSession session = request.getSession(false);
 		String username = null;
@@ -111,8 +95,6 @@ public class Loader extends HttpServlet {
 			ResultSet result = stmt.executeQuery();
 			while (result.next()) {
 				Date this_time = result.getTimestamp("time");
-				System.err.println(this_time.toGMTString());
-				System.err.println(result.getString("graph"));
 				if (this_time.after(date))
 				{
 					date = result.getTimestamp("time");
@@ -120,7 +102,7 @@ public class Loader extends HttpServlet {
 					layout = result.getString("layout");
 				}
 			}
-			System.err.println("loaded annotation from " + date.toGMTString());
+			
 			DBAnswer res = new DBAnswer();
 			res.graph = graph;
 			res.layout = layout;
