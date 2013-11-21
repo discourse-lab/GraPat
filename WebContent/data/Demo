@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <annotation_bundle id="1" semantics="sentiment">
 	<entity id="0">
-		<token_range id="0"><![CDATA[Wir]]></token_range>
-		<token_range id="1"><![CDATA[lehnen]]></token_range>
+		<token_range id="0"><![CDATA[Die NATO]]></token_range>
+		<token_range id="1"><![CDATA[lehnt]]></token_range>
 		<token_range id="2"><![CDATA[das]]></token_range>
 		<token_range id="3"><![CDATA[ab]]></token_range>
 		<token_range id="4"><![CDATA[,]]></token_range>
