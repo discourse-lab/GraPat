@@ -1,5 +1,6 @@
 package quak.annotation;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,12 @@ public class ResourceHandler extends HttpServlet {
 		Map<String, String> fileMap = new HashMap<String, String>();
 		fileMap.put("1", "Demo");
 		fileMap.put("2", "EU-Schweiz");
+		
+		File[] source_files = get_files(".");
+		for (File file : source_files) {
+			System.err.println(file.getAbsolutePath());
+			System.err.println(file.getName());
+		}
 
 		response.setContentType("application/json");
 		response.getWriter().print(files_gson.toJson(fileMap));
@@ -52,4 +59,9 @@ public class ResourceHandler extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 
+	private File[] get_files(String directory_name) {
+		File dir = new File(directory_name);
+		
+		return dir.listFiles();
+	}
 }

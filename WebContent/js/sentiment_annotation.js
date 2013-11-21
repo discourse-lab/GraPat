@@ -178,10 +178,7 @@ window.Sentiment = {
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
 		if (sa)
-		{
-			console.log("saving in next_sentence function for sentence no " + current_sentence_idx);
 			window.Sentiment.save();
-		}
 		
 		annotations = {
 				"nodes": {},
@@ -225,7 +222,7 @@ window.Sentiment = {
 			layout[$(this)[0].id]["x"] = $(this).css("left");
 			layout[$(this)[0].id]["y"] = $(this).css("top");
 		});
-		console.log(annotations);
+		
 		$.post('GraPAT', {	"annotation_bundle": annotation_bundle_id, 
 							"sentence": sentence_order[current_sentence_idx], 
 							"layout": JSON.stringify(layout),
@@ -285,7 +282,7 @@ window.Sentiment = {
 			});
 			window.Sentiment.next_sentence(false);
 		});
-		console.log(text);
+		
 	},
 
         update : function () {
@@ -410,11 +407,14 @@ window.Sentiment = {
 				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
 				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 			}
-			
-            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
-                annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
-                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+
+			// only do this for non-edge nodes
+			if (i.connection.targetId in annotations.nodes) {
+	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
+	                annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+	            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
+	                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+			}
 			
 		// the connection and if not already there, the connected nodes have to be added to the internal model
 
