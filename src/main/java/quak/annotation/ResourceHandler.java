@@ -44,7 +44,7 @@ public class ResourceHandler extends HttpServlet {
 		fileMap.put("2", "EU-Schweiz");
 		
 		try {
-			URL defaultImage = ResourceHandler.class.getResource("/data/EU-Schweiz");
+			URL defaultImage = ResourceHandler.class.getResource("WebContent/data/EU-Schweiz");
 			File imageFile = new File(defaultImage.toURI());
 			System.err.println(imageFile.getAbsolutePath());
 			System.err.println(imageFile.getName());			
