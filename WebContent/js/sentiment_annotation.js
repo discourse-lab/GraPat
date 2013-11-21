@@ -237,6 +237,7 @@ window.Sentiment = {
 			$("#saved").hide().fadeIn(1500);
 			$("#saved").fadeOut(2500);
 		});
+		changed = false;
 	},
 	logout : function() {
 	},
@@ -674,9 +675,10 @@ window.Sentiment = {
         });
             
             $("#del_ele").bind("click", function(e) {
-		jsPlumb.removeAllEndpoints(rclick.target);
-		jsPlumb.detachAllConnections(rclick.target);
-		rclick.target.remove();
+            	jsPlumb.removeAllEndpoints(rclick.target);
+            	jsPlumb.detachAllConnections(rclick.target);
+            	console.log(rclick);
+            	rclick.target.remove();
             });            
 
 
