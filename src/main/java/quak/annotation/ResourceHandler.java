@@ -43,24 +43,17 @@ public class ResourceHandler extends HttpServlet {
 		Gson files_gson = new Gson();
 		
 		Map<String, String> fileMap = new HashMap<String, String>();
-		fileMap.put("1", "Demo");
-		fileMap.put("2", "EU-Schweiz");
+		//fileMap.put("1", "Demo");
+		//fileMap.put("2", "EU-Schweiz");
 		
-		try {
-			ServletContext context = getServletContext();
-			Set<String> filesSet = context.getResourcePaths("/data/");
-			
-			for (String string : filesSet) {
-				System.err.println(string);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		File[] source_files = get_files(".");
-		for (File file : source_files) {
-			System.err.println(file.getAbsolutePath());
-			System.err.println(file.getName());
+		ServletContext context = getServletContext();
+		Set<String> filesSet = context.getResourcePaths("/data/");
+		Integer index = 0;
+		for (String file : filesSet) {
+			String[] structuredFileName = file.split("/");
+			String filename = structuredFileName[structuredFileName.length - 1];
+			fileMap.put(index.toString(), filename);
+			++index;
 		}
 
 		response.setContentType("application/json");
