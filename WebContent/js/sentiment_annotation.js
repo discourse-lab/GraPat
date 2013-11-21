@@ -541,7 +541,7 @@ window.Sentiment = {
 	    current_connection = c;
 	    $('#labelPopUp').show();
 	    $(window).resize();
-	    
+	    $('textarea#text_anchor_input').val('');
 	    setTimeout(function() {
 	    	  $('#text_anchor_input').focus();
 	    	}, 0);
