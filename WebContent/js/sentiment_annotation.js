@@ -675,9 +675,15 @@ window.Sentiment = {
         });
             
             $("#del_ele").bind("click", function(e) {
+            	alert("Deleting elements is not supported at the moment.");
+            	return;
+            	
             	jsPlumb.removeAllEndpoints(rclick.target);
             	jsPlumb.detachAllConnections(rclick.target);
-            	console.log(rclick);
+            	
+            	// also remove everything from annotations which includes rclick.target.id
+            	// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
+            	
             	rclick.target.remove();
             });            
 
