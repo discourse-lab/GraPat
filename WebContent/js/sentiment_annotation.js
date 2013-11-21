@@ -62,8 +62,9 @@ window.Sentiment = {
                         current_connection = jsPlumb.connect({source: source_id, target: target_id});
                         current_source = current_connection.sourceId;
                         current_target = current_connection.targetId;
-                        if (current_connection.source.nodeName != "SPAN")
-                        	window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                        if (current_connection.source.nodeName != "SPAN") {
+                        	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                        }
                     });
                 });
             });
@@ -84,7 +85,7 @@ window.Sentiment = {
                 current_source = current_connection.sourceId;
                 current_target = current_connection.targetId;
                 if (current_connection.source.nodeName != "SPAN")
-                	window.Sentiment.labelPopUpButton_click(attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
                 
             
             }
@@ -386,7 +387,9 @@ window.Sentiment = {
         	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
         	var sentence_id = sentence_order[current_sentence_idx];
-        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {	"polarity": null, 
+        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
+        																				"label_node_id": null,
+        																				"polarity": null, 
         																				"text_anchor": null,
         																				"context": false,
         																				"world_knowledge": false,
@@ -434,7 +437,7 @@ window.Sentiment = {
 		jsPlumb.addEndpoint($(".node"), ent_endpoints);
 		    });
         },
-	labelPopUpButton_click : function (pol, text, ctxt, wk, irn, rhtrc) {
+	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc) {
 		
 		var polarity = null;
 		var text_anchor = null;
@@ -442,9 +445,15 @@ window.Sentiment = {
 		var worldknowledge = null;
 		var irony = null;
 		var rhetoric = null;
+		var ln_id = null;
 		
-		var sentence_id = sentence_order[current_sentence_idx];
+		//var sentence_id = sentence_order[current_sentence_idx];
 		
+		if (label_node_id != null)
+			ln_id = label_node_id;
+		else
+			ln_id = 'node_' + node_count;
+			
 		if (pol != null)
 			polarity = pol;
 		else
@@ -477,6 +486,9 @@ window.Sentiment = {
 		
 		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
 		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+
+		if (context)
+			annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
 		
 		if (context)
 			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
@@ -504,7 +516,7 @@ window.Sentiment = {
 		$('#labelPopUp').hide();
 		current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
 		current_connection.addOverlay(["Custom", { create: function(component) {
-								return $('<div id="node_' + node_count + '" class="edge_label target">'+text_anchor+'</div>');
+								return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
 							},
 							location: 0.5,
 							cssClass: "edge_label target",
