@@ -43,6 +43,7 @@ public class ResourceHandler extends HttpServlet {
 		fileMap.put("2", "EU-Schweiz");
 		
 		File[] source_files = get_files(".");
+		System.err.println(System.getProperty("user.dir"));
 		for (File file : source_files) {
 			System.err.println(file.getAbsolutePath());
 			System.err.println(file.getName());
