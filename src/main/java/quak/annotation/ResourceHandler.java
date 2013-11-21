@@ -49,7 +49,7 @@ public class ResourceHandler extends HttpServlet {
 			System.err.println(imageFile.getAbsolutePath());
 			System.err.println(imageFile.getName());			
 		} catch (Exception e) {
-			System.err.println(e.getStackTrace());
+			e.printStackTrace();
 		}
 		
 		File[] source_files = get_files(".");
