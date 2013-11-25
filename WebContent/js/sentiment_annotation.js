@@ -374,7 +374,16 @@ window.Sentiment = {
 
         var allMovables = $(".movable");            
         // make them draggable
-        jsPlumb.draggable(allMovables);
+        jsPlumb.draggable(allMovables, {
+			start : function (event, ui) {
+			},
+			drag : function (event, ui) {
+				changed = true;
+				jsPlumb.repaintEverything();
+			},
+			stop : function (event, ui) {
+			}
+		});
         
         var wordDivs = $(".word");
         jsPlumb.makeSource(wordDivs, {
@@ -389,9 +398,9 @@ window.Sentiment = {
         	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
         	if (!(i.connection.sourceId in annotations.edges))
         		annotations.edges[i.connection.sourceId] = {};
-        	if (!(i.connection.targeId in annotations.edges[i.connection.sourceId]))
+        	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
         		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
-        	var sentence_id = sentence_order[current_sentence_idx];
+        	//var sentence_id = sentence_order[current_sentence_idx];
         	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
         																				"label_node_id": null,
         																				"polarity": null, 
@@ -670,19 +679,6 @@ window.Sentiment = {
 			});
 			$("#node_"+node_count).fadeIn(2000);
 			$("#node_"+node_count).addClass('node');
-			
-			$("#node_"+node_count).draggable({
-				start : function () {
-					console.log('started drag');
-				},
-				drag : function () {
-					changed = true;
-					console.log('dragged a node');
-				},
-				stop : function () {
-					console.log('ended drop');
-				}
-			});
 			
 			++node_count;
                 window.Sentiment.update();
