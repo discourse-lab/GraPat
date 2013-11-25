@@ -670,6 +670,9 @@ window.Sentiment = {
 			});
 			$("#node_"+node_count).fadeIn(2000);
 			$("#node_"+node_count).addClass('node');
+			jQuery("#node_"+node_count).bind('move', function(e) {
+				console.log('moved node');
+			});
 			++node_count;
                 window.Sentiment.update();
         });
@@ -704,12 +707,15 @@ window.Sentiment = {
                 }
             };
 
-
+            
             jsPlumb.bind("dblclick", function(c) {
             	window.Sentiment.showAttrsPopUp(c);
             });
             jsPlumb.bind("ready", function () {
                 jsPlumb.addEndpoint($(".node"), ent_endpoints);
+            });
+            jsPlumb.bind("connectionMoved", function(info, orig_event) {
+            	console.log("moving connections endpoints");
             });
 
             $('#rmenu').click(function() {
