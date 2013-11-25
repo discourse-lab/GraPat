@@ -672,9 +672,15 @@ window.Sentiment = {
 			$("#node_"+node_count).addClass('node');
 			
 			$("#node_"+node_count).draggable({
-				drag: function () {
+				start : function () {
+					console.log('started drag');
+				},
+				drag : function () {
 					changed = true;
 					console.log('dragged a node');
+				},
+				stop : function () {
+					console.log('ended drop');
 				}
 			});
 			
