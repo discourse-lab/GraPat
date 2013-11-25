@@ -670,9 +670,14 @@ window.Sentiment = {
 			});
 			$("#node_"+node_count).fadeIn(2000);
 			$("#node_"+node_count).addClass('node');
-			jQuery("#node_"+node_count).bind('move', function(e) {
-				console.log('moved node');
+			
+			$("#node_"+node_count).draggable({
+				drag: function () {
+					changed = true;
+					console.log('dragged a node');
+				}
 			});
+			
 			++node_count;
                 window.Sentiment.update();
         });
