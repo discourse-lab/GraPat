@@ -14,6 +14,7 @@ var current_source = null;
 var current_connection = null;
 var text = {};
 var sentence_order = [];
+var sentence_id_to_order = {};
 var rclick = null;
 var annotator_id = -1;
 
@@ -30,11 +31,15 @@ window.Sentiment = {
 		return $('.target').length + $('.node').length ;
 	},
 		
-	load_data : function(bundle_id, sentence_id) {
-		annotations = {
-				"nodes": {},
-				"edges": {} 
-		};
+	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
+		if (add_to_word_connections == null)
+			add_to_word_connections = true;
+		
+		var sent_ord = sentence_id_to_order[sentence_id];
+		if (sent_ord > 0) {
+			window.Sentiment.load_data(bundle_id, sentence_order[sent_ord - 1]);
+		}
+
 		var req_data = {
 				"bundle_id": bundle_id,
 				"sentence_id": sentence_order[current_sentence_idx]
@@ -57,17 +62,19 @@ window.Sentiment = {
                     $.each(edges, function(conn_id, attrs) {
                     	
                         if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
-                            delayed.push([ source_id, target_id, attrs ]);
+                        	if (!add_to_word_connections && (source_id.beginsWith("word_") || target_id.begingsWith("word_")))
+                        		delayed.push([ source_id, target_id, attrs ]);
                             // continue
                             return true;
                         }
-                    	
-                        current_connection = jsPlumb.connect({source: source_id, target: target_id});
-                        current_source = current_connection.sourceId;
-                        current_target = current_connection.targetId;
-                        if (current_connection.source.nodeName != "SPAN") {
-                        	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
-                        }
+                        if (!add_to_word_connections && (source_id.beginsWith("word_") || target_id.begingsWith("word_"))) {
+	                        current_connection = jsPlumb.connect({source: source_id, target: target_id});
+	                        current_source = current_connection.sourceId;
+	                        current_target = current_connection.targetId;
+	                        if (current_connection.source.nodeName != "SPAN") {
+	                        	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+	                        }
+                    	}
                     });
                 });
             });
@@ -95,6 +102,7 @@ window.Sentiment = {
             changed = false;
             
 		});
+		window.Sentiment.update();
 	},
 	
 	add_node : function(node_id, x, y, label) {
@@ -178,16 +186,20 @@ window.Sentiment = {
 	    });
 	},
 	next_sentence : function (sa) {
+		annotations = {
+				"nodes": {},
+				"edges": {} 
+		};
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
 		if (sa && changed)
 			window.Sentiment.save();
 		
-		annotations = {
-				"nodes": {},
-				"edges": {} 
-		};
 	    if (current_sentence_idx < sentence_count-1) {
+			annotations = {
+					"nodes": {},
+					"edges": {} 
+			};
 	    	++current_sentence_idx;
 	    	window.Sentiment.word_update();
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
@@ -198,6 +210,10 @@ window.Sentiment = {
 	    	--current_sentence_idx;
 	    	window.Sentiment.word_update();
 	    	window.Sentiment.clear();
+			annotations = {
+					"nodes": {},
+					"edges": {} 
+			};
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
@@ -255,6 +271,7 @@ window.Sentiment = {
 				var sentence_id = current_sentence.attr('id');
 				text[sentence_id] = [];
 				sentence_order.push(sentence_id);
+				sentence_id_to_order[sentence_id] = sentence_idx;
 				++sentence_count;
 				var words = current_sentence.find('token_range');
 				jQuery.each(words, function() {
