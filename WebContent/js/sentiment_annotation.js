@@ -117,23 +117,26 @@ window.Sentiment = {
 	},
 	
 	add_node : function(node_id, x, y, label) {
-		annotations.nodes[node_id] = "";
-        jQuery('<div/>', {
-            class: 'window movable invisible',
-            id: node_id,
-            node_id: node_count,
-            text: label
-	    }).appendTo('#graph_part');
-	            
-		$("#"+node_id).css({
-		    top: y ,
-		    left: x ,
-		    visibility: 'visible'
-		});
-		++node_count;
-		$("#"+node_id).addClass("node");
-		window.Sentiment.update();
-		changed = true;
+		if ($('#' + node_id).length == 0) {
+		
+			annotations.nodes[node_id] = "";
+	        jQuery('<div/>', {
+	            class: 'window movable invisible',
+	            id: node_id,
+	            node_id: node_count,
+	            text: label
+		    }).appendTo('#graph_part');
+		            
+			$("#"+node_id).css({
+			    top: y ,
+			    left: x ,
+			    visibility: 'visible'
+			});
+			++node_count;
+			$("#"+node_id).addClass("node");
+			window.Sentiment.update();
+			changed = true;
+		}
 	},
 		
 	init_globals : function() {
@@ -175,11 +178,13 @@ window.Sentiment = {
 	},
 		
 	add_word : function(to_add, wid) {
-		jQuery('<span/>', {
-			class: 'word window',
-			id: 'word_' + wid,
-			text: to_add
-		}).appendTo($("#sentence"));
+		if ($('#word_' + wid).length == 0) {
+			jQuery('<span/>', {
+				class: 'word window',
+				id: 'word_' + wid,
+				text: to_add
+			}).appendTo($("#sentence"));
+		}
 	},
 	word_update : function () {
 	    var sentence_div = $("#sentence");
@@ -197,10 +202,6 @@ window.Sentiment = {
 	    });
 	},
 	next_sentence : function (sa) {
-		annotations = {
-				"nodes": {},
-				"edges": {} 
-		};
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
 		if (sa && changed)
