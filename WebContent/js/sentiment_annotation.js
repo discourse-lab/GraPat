@@ -32,7 +32,11 @@ window.Sentiment = {
 	},
 		
 	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
-		var loaded_annotations = null;
+		var loaded_annotations = annotations = {
+				"nodes": {},
+				"edges": {} 
+		};
+
 		if (add_to_word_connections == null)
 			add_to_word_connections = true;
 		
