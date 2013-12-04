@@ -119,7 +119,8 @@ window.Sentiment = {
         changed = false;
 		
 		window.Sentiment.update();
-		annotations = loaded_annotations;
+		if (add_to_word_connections)
+			annotations = loaded_annotations;
 	},
 	
 	add_node : function(node_id, x, y, label) {
