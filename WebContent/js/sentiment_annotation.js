@@ -44,6 +44,7 @@ window.Sentiment = {
 				"bundle_id": bundle_id,
 				"sentence_id": sentence_id
 		};
+		var delayed = [];
 		$.getJSON( "Loader", req_data, function(data) {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
@@ -56,7 +57,7 @@ window.Sentiment = {
 				var y = layout[key]["y"];
 				window.Sentiment.add_node(key, x, y, value);
 			});
-			var delayed = [];
+			
             $.each(graph.edges, function(source_id, value) {
                 $.each(value, function(target_id, edges) {
                     $.each(edges, function(conn_id, attrs) {
@@ -84,29 +85,34 @@ window.Sentiment = {
                 });
             });
             
-            while (delayed.length > 0) {
-            	var entry = delayed.pop();
-                var source_id = entry[0];
-                var target_id = entry[1];
-                var attrs = entry[2];
-                
-                if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
-                    delayed.push([ source_id, target_id, attrs ]);
-                    // js continue
-                    continue;
-                }
-                
-                current_connection = jsPlumb.connect({source: source_id, target: target_id});
-                current_source = current_connection.sourceId;
-                current_target = current_connection.targetId;
-                if (current_connection.source.nodeName != "SPAN")
-                	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
-                
-            
-            }
-            changed = false;
-            
 		});
+		
+        var it_count = 0;
+        while (delayed.length > 0) {
+        	var entry = delayed.pop();
+            var source_id = entry[0];
+            var target_id = entry[1];
+            var attrs = entry[2];
+            ++it_count;
+            if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
+                delayed.push([ source_id, target_id, attrs ]);
+                // js continue
+                if (it_count < 1000)
+                	continue;
+                else
+                	alert('Loading error. Your saved data is fine! Please just reload the sentence.');
+            }
+            
+            current_connection = jsPlumb.connect({source: source_id, target: target_id});
+            current_source = current_connection.sourceId;
+            current_target = current_connection.targetId;
+            if (current_connection.source.nodeName != "SPAN")
+            	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+            
+        
+        }
+        changed = false;
+		
 		window.Sentiment.update();
 	},
 	
