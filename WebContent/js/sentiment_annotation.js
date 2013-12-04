@@ -32,6 +32,7 @@ window.Sentiment = {
 	},
 		
 	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
+		var loaded_annotations = null;
 		if (add_to_word_connections == null)
 			add_to_word_connections = true;
 		
@@ -48,7 +49,7 @@ window.Sentiment = {
 		$.getJSON( "Loader", req_data, function(data) {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
-			
+			loaded_annotations = graph;
             if (graph == null)
             	return;
             node_count = window.Sentiment.update_node_count();
@@ -114,6 +115,7 @@ window.Sentiment = {
         changed = false;
 		
 		window.Sentiment.update();
+		annotations = loaded_annotations;
 	},
 	
 	add_node : function(node_id, x, y, label) {
