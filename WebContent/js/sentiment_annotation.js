@@ -37,7 +37,7 @@ window.Sentiment = {
 		
 		var sent_ord = sentence_id_to_order[sentence_id];
 		if (sent_ord > 0) {
-			window.Sentiment.load_data(bundle_id, sentence_order[sent_ord - 1]);
+			window.Sentiment.load_data(bundle_id, sentence_order[sent_ord - 1], false);
 		}
 
 		var req_data = {
@@ -67,7 +67,7 @@ window.Sentiment = {
                         	}
                         	else
                         		delayed.push([ source_id, target_id, attrs ]);
-                            // continue
+                            // jquery continue
                             return true;
                         }
                         if (!add_to_word_connections && (source_id.indexOf("word_") == 0 || target_id.indexOf("word_") == 0)) {
@@ -92,8 +92,8 @@ window.Sentiment = {
                 
                 if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
                     delayed.push([ source_id, target_id, attrs ]);
-                    // continue
-                    return true;
+                    // js continue
+                    continue;
                 }
                 
                 current_connection = jsPlumb.connect({source: source_id, target: target_id});
