@@ -42,7 +42,7 @@ window.Sentiment = {
 
 		var req_data = {
 				"bundle_id": bundle_id,
-				"sentence_id": sentence_order[current_sentence_idx]
+				"sentence_id": sentence_id
 		};
 		$.getJSON( "Loader", req_data, function(data) {
             var graph = jQuery.parseJSON( data.graph );
@@ -62,12 +62,17 @@ window.Sentiment = {
                     $.each(edges, function(conn_id, attrs) {
                     	
                         if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
-                        	if (!add_to_word_connections && (source_id.beginsWith("word_") || target_id.begingsWith("word_")))
+                        	if (!add_to_word_connections && (source_id.indexOf("word_") == 0 || target_id.indexOf("word_") == 0)) {
+                        		
+                        	}
+                        	else
                         		delayed.push([ source_id, target_id, attrs ]);
                             // continue
                             return true;
                         }
-                        if (!add_to_word_connections && (source_id.beginsWith("word_") || target_id.begingsWith("word_"))) {
+                        if (!add_to_word_connections && (source_id.indexOf("word_") == 0 || target_id.indexOf("word_") == 0)) {
+                        }
+                        else {
 	                        current_connection = jsPlumb.connect({source: source_id, target: target_id});
 	                        current_source = current_connection.sourceId;
 	                        current_target = current_connection.targetId;
@@ -202,6 +207,7 @@ window.Sentiment = {
 			};
 	    	++current_sentence_idx;
 	    	window.Sentiment.word_update();
+	    	window.Sentiment.clear();
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
