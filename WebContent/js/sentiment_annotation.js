@@ -56,7 +56,13 @@ window.Sentiment = {
 		$.getJSON( "Loader", req_data, function(data) {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
-			loaded_annotations = graph;
+			
+            if (add_to_word_connections) {
+                if (graph != null)
+                	loaded_annotations = graph;
+            }
+            
+            
             if (graph == null)
             	return;
             node_count = window.Sentiment.update_node_count();
