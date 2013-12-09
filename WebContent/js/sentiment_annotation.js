@@ -42,7 +42,10 @@ window.Sentiment = {
 		
 		var sent_ord = sentence_id_to_order[sentence_id];
 		if (sent_ord > 0) {
-			window.Sentiment.load_data(bundle_id, sentence_order[sent_ord - 1], false);
+            var done = false;
+            while (!done) {
+                    $.when( window.Sentiment.load_data(bundle_id, sentence_order[sent_ord - 1], false) ).then( function() { done=true; } );
+            }
 		}
 
 		var req_data = {
@@ -118,6 +121,7 @@ window.Sentiment = {
         }
         changed = false;
 		
+     // due to async, this happens before the connections have been made
 		window.Sentiment.update();
 		if (add_to_word_connections)
 			annotations = loaded_annotations;
