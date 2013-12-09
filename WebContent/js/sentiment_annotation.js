@@ -98,39 +98,41 @@ window.Sentiment = {
                     });
                 });
             });
+           
+            
+            
+            var it_count = 0;
+            while (delayed.length > 0) {
+            	var entry = delayed.pop();
+                var source_id = entry[0];
+                var target_id = entry[1];
+                var attrs = entry[2];
+                ++it_count;
+                if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
+                    delayed.push([ source_id, target_id, attrs ]);
+                    // js continue
+                    if (it_count < 1000)
+                    	continue;
+                    else
+                    	alert('Loading error. Your saved data is fine! Please just reload the sentence.');
+                }
+                
+                current_connection = jsPlumb.connect({source: source_id, target: target_id});
+                current_source = current_connection.sourceId;
+                current_target = current_connection.targetId;
+                if (current_connection.source.nodeName != "SPAN")
+                	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+                
+            
+            }
+            changed = false;
+    		
+         // due to async, this happens before the connections have been made
+    		window.Sentiment.update();
+    		if (add_to_word_connections)
+    			annotations = loaded_annotations;
             
 		});
-		
-        var it_count = 0;
-        while (delayed.length > 0) {
-        	var entry = delayed.pop();
-            var source_id = entry[0];
-            var target_id = entry[1];
-            var attrs = entry[2];
-            ++it_count;
-            if ($('#' + target_id)[0] == null || $('#' + source_id)[0] == null) {
-                delayed.push([ source_id, target_id, attrs ]);
-                // js continue
-                if (it_count < 1000)
-                	continue;
-                else
-                	alert('Loading error. Your saved data is fine! Please just reload the sentence.');
-            }
-            
-            current_connection = jsPlumb.connect({source: source_id, target: target_id});
-            current_source = current_connection.sourceId;
-            current_target = current_connection.targetId;
-            if (current_connection.source.nodeName != "SPAN")
-            	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
-            
-        
-        }
-        changed = false;
-		
-     // due to async, this happens before the connections have been made
-		window.Sentiment.update();
-		if (add_to_word_connections)
-			annotations = loaded_annotations;
 	},
 	
 	add_node : function(node_id, x, y, label) {
