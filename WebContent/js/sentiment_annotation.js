@@ -32,10 +32,6 @@ window.Sentiment = {
 	},
 		
 	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
-		var loaded_annotations = annotations = {
-				"nodes": {},
-				"edges": {} 
-		};
 
 		if (add_to_word_connections == null)
 			add_to_word_connections = true;
@@ -61,6 +57,11 @@ window.Sentiment = {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
 			
+            var loaded_annotations = {
+    				"nodes": {},
+    				"edges": {} 
+    		};
+            
             if (add_to_word_connections) {
                 if (graph != null)
                 	loaded_annotations = graph;
