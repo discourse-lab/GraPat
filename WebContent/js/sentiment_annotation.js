@@ -446,53 +446,7 @@ window.Sentiment = {
             	lineWidth: 0
             }
         }); 
-        jsPlumb.bind("connection", function(i,c) {
-        	changed = true;
-        	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
-        	if (!(i.connection.sourceId in annotations.edges))
-        		annotations.edges[i.connection.sourceId] = {};
-        	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
-        		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
-        	//var sentence_id = sentence_order[current_sentence_idx];
-        	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
-        																				"label_node_id": null,
-        																				"polarity": null, 
-        																				"text_anchor": null,
-        																				"context": false,
-        																				"world_knowledge": false,
-        																				"ironic": false,
-        																				"rhetoric": false
-        																				};
 
-        	++edge_count;
-        	
-			if (i.connection.source.nodeName != 'SPAN')
-				i.connection.toggleType('default');
-			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
-				i.connection.target.innerHTML = i.connection.source.innerHTML;
-				//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-			}
-			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
-				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
-			}
-
-			// only do this for non-edge nodes
-			if (i.connection.targetId in annotations.nodes) {
-	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
-	                annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-	            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
-	                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
-			}
-			
-		// the connection and if not already there, the connected nodes have to be added to the internal model
-
-			var loading = false;
-			if (c == null)
-				loading = true;
-			if (!loading)
-				window.Sentiment.showAttrsPopUp(i.connection);
-        }); 
 	    /*jsPlumb.bind("dblclick", function(c) {
 		if (c.source.nodeName == "SPAN")
 			return false;
@@ -503,9 +457,6 @@ window.Sentiment = {
 		$('#labelPopUp').show();
 		return false;
 	    });*/
-	    jsPlumb.bind("ready", function () {
-		jsPlumb.addEndpoint($(".node"), ent_endpoints);
-		    });
         },
 	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc) {
 		changed = true;
@@ -767,7 +718,53 @@ window.Sentiment = {
                 }
             };
 
-            
+            jsPlumb.bind("connection", function(i,c) {
+            	changed = true;
+            	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
+            	if (!(i.connection.sourceId in annotations.edges))
+            		annotations.edges[i.connection.sourceId] = {};
+            	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
+            		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
+            	//var sentence_id = sentence_order[current_sentence_idx];
+            	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
+            																				"label_node_id": null,
+            																				"polarity": null, 
+            																				"text_anchor": null,
+            																				"context": false,
+            																				"world_knowledge": false,
+            																				"ironic": false,
+            																				"rhetoric": false
+            																				};
+
+            	++edge_count;
+            	
+    			if (i.connection.source.nodeName != 'SPAN')
+    				i.connection.toggleType('default');
+    			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
+    				i.connection.target.innerHTML = i.connection.source.innerHTML;
+    				//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+    			}
+    			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
+    				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+    				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+    			}
+
+    			// only do this for non-edge nodes
+    			if (i.connection.targetId in annotations.nodes) {
+    	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
+    	                annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+    	            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
+    	                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+    			}
+    			
+    		// the connection and if not already there, the connected nodes have to be added to the internal model
+
+    			var loading = false;
+    			if (c == null)
+    				loading = true;
+    			if (!loading)
+    				window.Sentiment.showAttrsPopUp(i.connection);
+            }); 
             jsPlumb.bind("dblclick", function(c) {
             	window.Sentiment.showAttrsPopUp(c);
             });
@@ -777,6 +774,9 @@ window.Sentiment = {
             jsPlumb.bind("connectionMoved", function(info, orig_event) {
             	console.log("moving connections endpoints");
             });
+    	    jsPlumb.bind("ready", function () {
+    			jsPlumb.addEndpoint($(".node"), ent_endpoints);
+		    });
 
             $('#rmenu').click(function() {
                 $('#rmenu').hide();
