@@ -160,6 +160,23 @@ window.Sentiment = {
 			$("#"+node_id).addClass("node");
 			window.Sentiment.update();
 			changed = true;
+
+                var ent_endpoints = {
+                        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+                        endpoint: ["Dot", {radius: 5}],
+                        isSource: true,
+                        /*connectorOverlays: [
+                                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+                                ],*/
+                        paintStyle: {
+                                gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+                                strokeStyle: "black",
+                                fillStyle: "#004F66",
+                                lineWidth: 1.5
+                        }
+            };
+                jsPlumb.addEndpoint($("#" + node_id), ent_endpoints);
+
 		}
 	},
 		
@@ -468,13 +485,21 @@ window.Sentiment = {
 		var irony = null;
 		var rhetoric = null;
 		var ln_id = null;
-		
+		var old = false;
+		if (annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] != null)
+                        old = true;	
+
+	
 		//var sentence_id = sentence_order[current_sentence_idx];
 		
 		if (label_node_id != null)
 			ln_id = label_node_id;
-		else
-			ln_id = 'node_' + node_count;
+		else {
+		        if (old)
+                                ln_id = annotations.edges[current_source][current_target][current_connection.id]["label_node_id"];
+                        else
+                                ln_id = 'node_' + node_count;
+		}
 			
 		if (pol != null)
 			polarity = pol;
@@ -544,7 +569,8 @@ window.Sentiment = {
 							cssClass: "edge_label target",
 							id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 							}]);
-		++node_count;
+		if (!old)
+			++node_count;
 		window.Sentiment.update();
 	},
 	showAttrsPopUp : function(c) {
@@ -667,26 +693,9 @@ window.Sentiment = {
         });
 
         $("#add_ent").bind("click", function() {
-        	changed = true;
         	var node_id = 'node_' + node_count;
 			annotations.nodes[node_id] = "";
-            jQuery('<div/>', {
-                    class: 'window movable invisible',
-                    id: node_id,
-                    node_id: node_count,
-                    text: 'new node'
-            }).appendTo('#graph_part');
-	                
-			$("#node_"+node_count).css({
-			    top: rclick.pageY + 'px',
-			    left: rclick.pageX + 'px',
-			    visibility: 'visible'
-			});
-			$("#node_"+node_count).fadeIn(2000);
-			$("#node_"+node_count).addClass('node');
-			
-			++node_count;
-                window.Sentiment.update();
+		window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
         });
             
             $("#del_ele").bind("click", function(e) {
