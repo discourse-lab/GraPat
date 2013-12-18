@@ -554,10 +554,10 @@ window.Sentiment = {
 		else
 			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
 		
-		if (polarity == 'negative') {
+		if (polarity == 'negative' && !current_connection.hasType('negative')) {
 			current_connection.toggleType('negative');
 		}
-		else if (polarity == 'positive') {
+		else if (polarity == 'positive' && && !current_connection.hasType('positive')) {
 			current_connection.toggleType('positive');
 		}
 		$('#labelPopUp').hide();
@@ -730,6 +730,11 @@ window.Sentiment = {
 
             jsPlumb.bind("connection", function(i,c) {
             	changed = true;
+
+		// connection is re-dragged
+                if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
+                        return;
+
             	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
             	if (!(i.connection.sourceId in annotations.edges))
             		annotations.edges[i.connection.sourceId] = {};
