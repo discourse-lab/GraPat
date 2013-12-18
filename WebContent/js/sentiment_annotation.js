@@ -731,6 +731,23 @@ window.Sentiment = {
             jsPlumb.bind("connection", function(i,c) {
             	changed = true;
 
+            var ent_endpoints = {
+                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+                endpoint: ["Dot", {radius: 5}],
+                isSource: true,
+                /*connectorOverlays: [
+                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+                ],*/
+                paintStyle: {
+                        gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+                        strokeStyle: "black",
+                        fillStyle: "#004F66",
+                        lineWidth: 1.5
+                }
+            };
+
+                jsPlumb.addEndpoint($('#' + i.connection.sourceId), ent_endpoints);
+
 		// connection is re-dragged
                 if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
                         return;
