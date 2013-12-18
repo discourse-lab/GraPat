@@ -557,7 +557,7 @@ window.Sentiment = {
 		if (polarity == 'negative' && !current_connection.hasType('negative')) {
 			current_connection.toggleType('negative');
 		}
-		else if (polarity == 'positive' && && !current_connection.hasType('positive')) {
+		else if (polarity == 'positive' && !current_connection.hasType('positive')) {
 			current_connection.toggleType('positive');
 		}
 		$('#labelPopUp').hide();
