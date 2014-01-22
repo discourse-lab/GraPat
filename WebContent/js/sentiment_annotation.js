@@ -277,12 +277,6 @@ window.Sentiment = {
 		jsPlumb.deleteEveryEndpoint();
 		
 		$('.node').remove();
-        jQuery('<div/>', {
-            class: 'node extra_sentential_node window',
-            id: 'author',
-            node_id: 'node_0',
-            text: 'Autor'
-        }).appendTo('#graph_part');
 	},
 	
 	save : function () {
@@ -695,27 +689,45 @@ window.Sentiment = {
         $("#add_ent").bind("click", function() {
         	var node_id = 'node_' + node_count;
 			annotations.nodes[node_id] = "";
-		window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
+			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
         });
             
-            $("#del_ele").bind("click", function(e) {
-            	alert("Deleting elements is not supported at the moment.");
-            	return;
-            	
-            	jsPlumb.removeAllEndpoints(rclick.target);
-            	jsPlumb.detachAllConnections(rclick.target);
-            	
-            	// also remove everything from annotations which includes rclick.target.id
-            	// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
-            	
-            	rclick.target.remove();
-            });            
+        $("#del_ele").bind("click", function(e) {
+        	alert("Deleting elements is not supported at the moment.");
+        	return;
+        	
+        	jsPlumb.removeAllEndpoints(rclick.target);
+        	jsPlumb.detachAllConnections(rclick.target);
+        	
+        	// also remove everything from annotations which includes rclick.target.id
+        	// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
+        	
+        	rclick.target.remove();
+        });            
 
+        
 
+        var ent_endpoints = {
+            anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+            endpoint: ["Dot", {radius: 5}],
+            isSource: true,
+            /*connectorOverlays: [
+                    [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+            ],*/
+            paintStyle: {
+                    gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+                    strokeStyle: "black",
+                    fillStyle: "#004F66",
+                    lineWidth: 1.5
+            }
+        };
+
+        jsPlumb.bind("connection", function(i,c) {
+        	changed = true;
 
             var ent_endpoints = {
                 anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                endpoint: ["Dot", {radius: 5}],
+                endpoint: ["Dot", {radius: 0.5}],
                 isSource: true,
                 /*connectorOverlays: [
                         [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
@@ -728,25 +740,7 @@ window.Sentiment = {
                 }
             };
 
-            jsPlumb.bind("connection", function(i,c) {
-            	changed = true;
-
-            var ent_endpoints = {
-                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                endpoint: ["Dot", {radius: 5}],
-                isSource: true,
-                /*connectorOverlays: [
-                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-                ],*/
-                paintStyle: {
-                        gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-                        strokeStyle: "black",
-                        fillStyle: "#004F66",
-                        lineWidth: 1.5
-                }
-            };
-
-                jsPlumb.addEndpoint($('#' + i.connection.sourceId), ent_endpoints);
+            //jsPlumb.addEndpoint($('#' + i.connection.sourceId), ent_endpoints);
 
 		// connection is re-dragged
                 if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
@@ -827,6 +821,15 @@ window.Sentiment = {
 	    	$(window).resize();
 			window.Sentiment.update();
 	    });
+	    
+        jQuery('<div/>', {
+            class: 'extra_sentential_node window',
+            id: 'author',
+            node_id: 'node_0',
+            text: 'Autor'
+        }).appendTo('#graph_part');
+        jsPlumb.makeSource( $('#author'));
+	    
         }
 
 	};
