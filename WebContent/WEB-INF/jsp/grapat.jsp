@@ -62,7 +62,6 @@
 				<input type="button" id="attrs_button" class="menu_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 			</div>
 			</div>
-			<div id="author" class="node extra_sentential_node window" node_id='node_0'>Autor</div>
 			<div id="rmenu">
 				<div id="add_ent" class="rmenu_element"> add entity/event </div>
 				<div id="del_ele" class="rmenu_element"> delete element </div>
