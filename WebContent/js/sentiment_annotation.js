@@ -53,7 +53,7 @@ window.Sentiment = {
 				"sentence_id": sentence_id
 		};
 		var delayed = [];
-		var jreq = $.getJSON( "Loader", req_data, function(data) {
+		var jreq = $.ajax({ type: 'GET', url: "Loader", data: req_data, dataType: "json", async: false, success: function(data) {
             var graph = jQuery.parseJSON( data.graph );
             var layout = jQuery.parseJSON( data.layout );
 			
@@ -136,7 +136,7 @@ window.Sentiment = {
     		if (add_to_word_connections)
     			annotations = loaded_annotations;
             
-		});
+		}});
 		return jreq;
 	},
 	
