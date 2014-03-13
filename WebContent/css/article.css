@@ -19,6 +19,18 @@
     margin: 0 auto;
 }
 
+.sentence_sent {
+    display: table;
+    margin: 0 auto;
+}
+
+.sentence_arg {
+    display: table;
+    margin: 0 auto;
+    float: left;
+    width: 3em;
+}
+
 .invisible {
     visibility: hidden;
 }

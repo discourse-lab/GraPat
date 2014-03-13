@@ -325,6 +325,8 @@ window.Sentiment = {
             id: 'del_ele',
             text: 'delete element'
 	    }).appendTo('#rmenu');
+		
+		$( "#sentence" ).switchClass( "sentence_arg sentence_sent", "sentence_arg");
 	},
 	
 	init_sent : function () {
@@ -341,6 +343,8 @@ window.Sentiment = {
           id: 'del_ele',
           text: 'delete element'
 	    }).appendTo('#rmenu');
+	  
+	  $( "#sentence" ).switchClass( "sentence_arg sentence_sent", "sentence_sent");
 	},
 	
 	read_input_file : function (filename) {
@@ -354,6 +358,7 @@ window.Sentiment = {
 			// argumentation, sentiment
 			annotation_type = $(data).find('annotation_bundle').attr('semantics');
 			
+			$('#rmenu').empty();
 			if (annotation_type == 'argumentation')
 				window.Sentiment.init_arg();
 			else if (annotation_type == 'sentiment')
