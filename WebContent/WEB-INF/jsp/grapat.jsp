@@ -63,8 +63,6 @@
 			</div>
 			</div>
 			<div id="rmenu">
-				<div id="add_ent" class="rmenu_element"> add entity/event </div>
-				<div id="del_ele" class="rmenu_element"> delete element </div>
 			</div>
 		</div>
 		<input id="psentence_button" class="sentence_button" type="button" onclick="window.Sentiment.previous_sentence();">

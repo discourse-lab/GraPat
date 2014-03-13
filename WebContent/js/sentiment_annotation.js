@@ -19,6 +19,7 @@ var rclick = null;
 var annotator_id = -1;
 
 var annotation_bundle_id = null;
+var annotation_type = null;
 
 window.XMLParser = {
 		
@@ -306,11 +307,58 @@ window.Sentiment = {
 	logout : function() {
 	},
 
+	init_arg : function () {
+		// to add
+		// 
+		jQuery('<div/>', {
+            class: 'rmenu_element',
+            id: 'add_square_ent',
+            text: 'add square entity'
+	    }).appendTo('#rmenu');
+		jQuery('<div/>', {
+            class: 'rmenu_element',
+            id: 'add_circle_ent',
+            text: 'add circle entity'
+	    }).appendTo('#rmenu');
+		jQuery('<div/>', {
+            class: 'rmenu_element',
+            id: 'del_ele',
+            text: 'delete element'
+	    }).appendTo('#rmenu');
+	},
+	
+	init_sent : function () {
+		// to add
+		// 				<div id="add_ent" class="rmenu_element"> add entity/event </div>
+		//				<div id="del_ele" class="rmenu_element"> delete element </div>
+	  jQuery('<div/>', {
+            class: 'rmenu_element',
+            id: 'add_ent',
+            text: 'add entity'
+	    }).appendTo('#rmenu');
+	  jQuery('<div/>', {
+          class: 'rmenu_element',
+          id: 'del_ele',
+          text: 'delete element'
+	    }).appendTo('#rmenu');
+	},
+	
 	read_input_file : function (filename) {
 		//var filename = "sentences.txt";
+		
+		// if annot type == arg 
+		// 		then css .word += float: left
 		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
 			annotation_bundle_id = $(data).find('annotation_bundle').attr('id');
+			// argumentation, sentiment
+			annotation_type = $(data).find('annotation_bundle').attr('semantics');
+			
+			if (annotation_type == 'argumentation')
+				window.Sentiment.init_arg();
+			else if (annotation_type == 'sentiment')
+				window.Sentiment.init_sent();
+			
 		    var all_sentences = $(data).find('entity');
 		    var sentence_idx = 0;
 		    jQuery.each(all_sentences, function() {
