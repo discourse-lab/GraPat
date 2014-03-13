@@ -331,12 +331,12 @@ window.Sentiment = {
 		jQuery('<div/>', {
             class: 'rmenu_element',
             id: 'add_square_ent',
-            text: 'add square entity'
+            text: 'add opponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
             id: 'add_circle_ent',
-            text: 'add circle entity'
+            text: 'add proponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
@@ -396,6 +396,14 @@ window.Sentiment = {
       add_to_node_text = true;
       $("#popUpTable_arg").hide();
       $("#popUpTable_sent").show();
+      
+      jQuery('<div/>', {
+          class: 'extra_sentential_node window',
+          id: 'author',
+          node_id: 'node_0',
+          text: 'Autor'
+      }).appendTo('#graph_part');
+      jsPlumb.makeSource( $('#author'));
 	},
 	
 	read_input_file : function (filename) {
@@ -510,7 +518,27 @@ window.Sentiment = {
 			paintStyle: {strokeStyle: red, lineWidth: 3.5}, 
 			hoverPaintStyle: {strokeStyle: red, lineWidth: 5},
 			//overlays: [ ["Label", {label: "", id: "label", cssClass: "test" }] ]
-			}
+			},
+		"support": {
+				//Pfeilkopf, durchgezogen
+				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+			},
+		"support_by_example": {
+				//Pfeilkopf, gestrichelt
+				paintStyle: {dashStyle:"2 4", strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+			},
+		"rebut": {
+				//Kreiskopf, durchgezogen
+				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+			},
+		"undercut": {
+				//Kreiskopf, durchgezogen
+				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+			},
 		});
 
         var ent_endpoints = {
@@ -604,6 +632,11 @@ window.Sentiment = {
 		else
 			polarity = $('input[name="polarity"]:checked').val();
 		
+		if (pol != null)
+			c_type = pol;
+		else
+			c_type = $('input[name="c_type"]:checked').val();
+		
 		if (text != null)
 			text_anchor = text;
 		else
@@ -657,6 +690,18 @@ window.Sentiment = {
 		}
 		else if (polarity == 'positive' && !current_connection.hasType('positive')) {
 			current_connection.toggleType('positive');
+		}
+		if (polarity == 'support' && !current_connection.hasType('support')) {
+			current_connection.toggleType('support');
+		}
+		else if (polarity == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
+			current_connection.toggleType('support_by_example');
+		}
+		else if (polarity == 'rebut' && !current_connection.hasType('rebut')) {
+			current_connection.toggleType('rebut');
+		}
+		else if (polarity == 'undercut' && !current_connection.hasType('undercut')) {
+			current_connection.toggleType('undercut');
 		}
 		$('#labelPopUp').hide();
 		current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
@@ -908,14 +953,6 @@ window.Sentiment = {
 	    	$(window).resize();
 			window.Sentiment.update();
 	    });
-	    
-        jQuery('<div/>', {
-            class: 'extra_sentential_node window',
-            id: 'author',
-            node_id: 'node_0',
-            text: 'Autor'
-        }).appendTo('#graph_part');
-        jsPlumb.makeSource( $('#author'));
 	    
         }
 
