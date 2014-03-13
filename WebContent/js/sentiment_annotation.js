@@ -357,6 +357,10 @@ window.Sentiment = {
 	      });
 	      add_to_node_text = false;
 	      alt_node_text = 'ADU';
+	      
+	      $("#popUpTable_arg").show();
+	      $("#popUpTable_sent").hide();
+
 	},
 	
 	init_sent : function () {
@@ -390,7 +394,8 @@ window.Sentiment = {
       	rclick.target.remove();
       });   
       add_to_node_text = true;
-	  
+      $("#popUpTable_arg").hide();
+      $("#popUpTable_sent").show();
 	},
 	
 	read_input_file : function (filename) {

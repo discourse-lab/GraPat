@@ -35,7 +35,7 @@
 			<div class="popUpContent">
 				<h2 class="attrsHeadline">Attributes</h2>
 				<div class="attrsContent">
-					<table class="popUpTable">
+					<table id="popUpTable_sent" class="popUpTable">
 					<tr>
 						<td><b>text anchor</b></td>	<td> <textarea id="text_anchor_input" rows="1" cols="25"></textarea></td>
 					</tr>
@@ -59,6 +59,17 @@
 					</tr>
 					</table>
 				</div>
+				<div class="attrsContent">
+					<table id="popUpTable_arg" class="popUpTable">
+					<tr>
+						<td><b>connection type</b></td>	<td> 	<form action=""> 	<input type="radio" name="c_type" value="support"> support <br>
+													<input type="radio" name="polarity" value="support_by_ex"> support by example <br>
+													<input type="radio" name="polarity" value="rebut"> rebut <br>
+													<input type="radio" name="polarity" value="undercut"> undercut
+										</form></td>
+					</tr>
+					</table>
+				</div>				
 				<input type="button" id="attrs_button" class="menu_button" value="close" onclick="window.Sentiment.labelPopUpButton_click();">
 			</div>
 			</div>
