@@ -21,6 +21,9 @@ var annotator_id = -1;
 var annotation_bundle_id = null;
 var annotation_type = null;
 
+var add_to_node_text = false;
+var alt_node_text = '';
+
 window.XMLParser = {
 		
 },
@@ -352,7 +355,8 @@ window.Sentiment = {
 				annotations.nodes[node_id] = "";
 				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'circle');
 	      });
-		
+	      add_to_node_text = false;
+	      alt_node_text = 'ADU';
 	},
 	
 	init_sent : function () {
@@ -385,6 +389,7 @@ window.Sentiment = {
       	
       	rclick.target.remove();
       });   
+      add_to_node_text = true;
 	  
 	},
 	
@@ -544,7 +549,7 @@ window.Sentiment = {
 			}
 		});
         
-        var wordDivs = $(".word");
+        var wordDivs = $(".word, .word_arg, .word_sent");
         jsPlumb.makeSource(wordDivs, {
             anchor: ["TopCenter"],
             endpoint: ["Dot", {radius: 0}],
@@ -840,11 +845,15 @@ window.Sentiment = {
     			if (i.connection.source.nodeName != 'SPAN')
     				i.connection.toggleType('default');
     			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
-    				i.connection.target.innerHTML = i.connection.source.innerHTML;
+    				if (add_to_node_text) 
+    					i.connection.target.innerHTML = i.connection.source.innerHTML;
+    				else
+    					i.connection.target.innerHTML = alt_node_text;
     				//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
     			}
     			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
-    				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+    				if (add_to_node_text)
+    					i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
     				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
     			}
 
