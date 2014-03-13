@@ -19,18 +19,6 @@
     margin: 0 auto;
 }
 
-.sentence_sent {
-    display: table;
-    margin: 0 auto;
-}
-
-.sentence_arg {
-    display: table;
-    margin: 0 auto;
-    float: left;
-    width: 3em;
-}
-
 .invisible {
     visibility: hidden;
 }
@@ -141,6 +129,18 @@
 .word {
     margin: 3em;
     z-index: 27;
+}
+
+.word_sent {
+    margin: 3em;
+    z-index: 27;
+}
+
+.word_arg {
+    margin: 3em;
+    z-index: 27;
+    float: left;
+    width: 4em;
 }
 
 .popUp {

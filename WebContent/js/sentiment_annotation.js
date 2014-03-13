@@ -221,8 +221,13 @@ window.Sentiment = {
 		
 	add_word : function(to_add, wid) {
 		if ($('#word_' + wid).length == 0) {
+			var word_type = "";
+			if (annotation_type == 'sentiment')
+				word_type = 'word_sent';
+			else if (annotation_type == 'argumentation')
+				word_type = 'word_arg';
 			jQuery('<span/>', {
-				class: 'word window',
+				class: word_type + ' window',
 				id: 'word_' + wid,
 				text: to_add
 			}).appendTo($("#sentence"));
@@ -326,7 +331,7 @@ window.Sentiment = {
             text: 'delete element'
 	    }).appendTo('#rmenu');
 		
-		$( "#sentence" ).switchClass( "sentence_arg sentence_sent", "sentence_arg");
+		//$( ".word" ).switchClass( "word_sent", "word_arg");
 	},
 	
 	init_sent : function () {
@@ -344,7 +349,7 @@ window.Sentiment = {
           text: 'delete element'
 	    }).appendTo('#rmenu');
 	  
-	  $( "#sentence" ).switchClass( "sentence_arg sentence_sent", "sentence_sent");
+	  //$( ".word" ).switchClass( "word_arg", "word_sent");
 	},
 	
 	read_input_file : function (filename) {
