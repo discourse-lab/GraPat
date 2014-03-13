@@ -141,7 +141,9 @@ window.Sentiment = {
 		return jreq;
 	},
 	
-	add_node : function(node_id, x, y, label) {
+	add_node : function(node_id, x, y, label, type) {
+		if (type == null)
+			type = 'default'
 		if ($('#' + node_id).length == 0) {
 		
 			annotations.nodes[node_id] = "";
@@ -159,6 +161,10 @@ window.Sentiment = {
 			});
 			++node_count;
 			$("#"+node_id).addClass("node");
+			
+			if (type == 'circle')
+				$("#"+node_id).addClass("circle");
+			
 			window.Sentiment.update();
 			changed = true;
 
@@ -231,7 +237,11 @@ window.Sentiment = {
 				id: 'word_' + wid,
 				text: to_add
 			}).appendTo($("#sentence"));
+			
+            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 50 + 'px');
+			
 		}
+		
 	},
 	word_update : function () {
 	    var sentence_div = $("#sentence");
@@ -331,13 +341,21 @@ window.Sentiment = {
             text: 'delete element'
 	    }).appendTo('#rmenu');
 		
-		//$( ".word" ).switchClass( "word_sent", "word_arg");
+
+	      $("#add_square_ent").bind("click", function() {
+	      		var node_id = 'node_' + node_count;
+				annotations.nodes[node_id] = "";
+				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
+	      });
+	      $("#add_circle_ent").bind("click", function() {
+	      		var node_id = 'node_' + node_count;
+				annotations.nodes[node_id] = "";
+				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'circle');
+	      });
+		
 	},
 	
 	init_sent : function () {
-		// to add
-		// 				<div id="add_ent" class="rmenu_element"> add entity/event </div>
-		//				<div id="del_ele" class="rmenu_element"> delete element </div>
 	  jQuery('<div/>', {
             class: 'rmenu_element',
             id: 'add_ent',
@@ -349,7 +367,25 @@ window.Sentiment = {
           text: 'delete element'
 	    }).appendTo('#rmenu');
 	  
-	  //$( ".word" ).switchClass( "word_arg", "word_sent");
+      $("#add_ent").bind("click", function() {
+      		var node_id = 'node_' + node_count;
+			annotations.nodes[node_id] = "";
+			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
+      });
+          
+      $("#del_ele").bind("click", function(e) {
+      	alert("Deleting elements is not supported at the moment.");
+      	return;
+      	
+      	jsPlumb.removeAllEndpoints(rclick.target);
+      	jsPlumb.detachAllConnections(rclick.target);
+      	
+      	// also remove everything from annotations which includes rclick.target.id
+      	// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
+      	
+      	rclick.target.remove();
+      });   
+	  
 	},
 	
 	read_input_file : function (filename) {
@@ -742,29 +778,8 @@ window.Sentiment = {
                 left: e.pageX + 'px'
             }).show();
             return false;
-        });
-
-        $("#add_ent").bind("click", function() {
-        	var node_id = 'node_' + node_count;
-			annotations.nodes[node_id] = "";
-			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
-        });
-            
-        $("#del_ele").bind("click", function(e) {
-        	alert("Deleting elements is not supported at the moment.");
-        	return;
-        	
-        	jsPlumb.removeAllEndpoints(rclick.target);
-        	jsPlumb.detachAllConnections(rclick.target);
-        	
-        	// also remove everything from annotations which includes rclick.target.id
-        	// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
-        	
-        	rclick.target.remove();
-        });            
-
+        });         
         
-
         var ent_endpoints = {
             anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
             endpoint: ["Dot", {radius: 5}],

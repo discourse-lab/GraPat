@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div id="main">
-		<div id="graph_part" class="full_size">
+		<div id="graph_part">
 			<div id="labelPopUp" class="popUp">
 			<div class="popUpContent">
 				<h2 class="attrsHeadline">Attributes</h2>
@@ -67,7 +67,7 @@
 		</div>
 		<input id="psentence_button" class="sentence_button" type="button" onclick="window.Sentiment.previous_sentence();">
 		<input id="nsentence_button" class="sentence_button" type="button" onclick="window.Sentiment.next_sentence();">
-		<div id="source_text" class="full_size">
+		<div id="source_text">
 			<div id="sentence" >
 			</div>
 		</div>

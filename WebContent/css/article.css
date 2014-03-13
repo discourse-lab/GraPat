@@ -19,6 +19,10 @@
     margin: 0 auto;
 }
 
+.circle {
+	border-radius: 50%;
+}
+
 .invisible {
     visibility: hidden;
 }
@@ -140,7 +144,7 @@
     margin: 3em;
     z-index: 27;
     float: left;
-    width: 4em;
+    width: 15em;
 }
 
 .popUp {
