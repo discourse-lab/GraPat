@@ -716,7 +716,7 @@ window.Sentiment = {
 			current_connection.toggleType('undercut');
 		}
 		$('#labelPopUp').hide();
-		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
+		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_ex' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
@@ -736,7 +736,7 @@ window.Sentiment = {
 			arc_label = 'undercut';
 		if (c_type == 'support') 
 			arc_label = 'support';
-		if (c_type == 'support_by_example') 
+		if (c_type == 'support_by_ex') 
 			arc_label = 'example';
 		
 		current_connection.addOverlay(["Custom", { create: function(component) {
