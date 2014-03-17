@@ -718,24 +718,8 @@ window.Sentiment = {
 		$('#labelPopUp').hide();
 		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
-			if (polarity == 'negative' || polarity == 'positive') {
-				current_connection.addOverlay(["Custom", { create: function(component) {
-										return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
-									},
-									location: 0.5,
-									cssClass: "edge_label target",
-									id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
-									}]);
-			}
-			else {
-				if (c_type == 'support')
-					current_connection.addOverlay(["Label", {label: c_type, cssClass: 'label'}]);
-				else if (c_type == 'support_by_example')
-					current_connection.addOverlay(["Label", {label: 'example', cssClass: 'label'}]);
-			}
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
-			current_connection.addOverlay(["Label", {label: c_type, cssClass: 'label'}]);
 			current_connection.addOverlay(["Custom", { create: function(component) {
 					return $('<div id="' + ln_id + '">'+text_anchor+'</div>');
 				},
@@ -744,6 +728,27 @@ window.Sentiment = {
 				//id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 			}]);
 		}
+		
+		var arc_label = text_anchor;
+		if (c_type == 'rebut') 
+			arc_label = 'rebut';
+		if (c_type == 'undercut') 
+			arc_label = 'undercut';
+		if (c_type == 'support') 
+			arc_label = 'support';
+		if (c_type == 'support_by_example') 
+			arc_label = 'example';
+		
+		current_connection.addOverlay(["Custom", { create: function(component) {
+								return $('<div id="' + ln_id + '" class="edge_label target">'+arc_label+'</div>');
+							},
+							location: 0.5,
+							cssClass: "edge_label target",
+							id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
+							}]);
+	
+		
+		
 		if (!old)
 			++node_count;
 		window.Sentiment.update();
