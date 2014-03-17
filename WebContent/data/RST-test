@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<annotation_bundle id="zoning-exp-dataset" semantics="argumentation">
+  <entity id="040620.pro">
+      <token_range id="1"><![CDATA[When the neighbours,]]></token_range>
+      <token_range id="2"><![CDATA[even though they had been warned beforehand]]></token_range>
+      <token_range id="3"><![CDATA[walked through my garden again,]]></token_range>
+      <token_range id="4"><![CDATA[I threw several stones at them.]]></token_range>
+      <token_range id="5"><![CDATA[They immediately called the police.]]></token_range>
+  </entity>
+</annotation_bundle>
