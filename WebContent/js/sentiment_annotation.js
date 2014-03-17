@@ -718,13 +718,15 @@ window.Sentiment = {
 		$('#labelPopUp').hide();
 		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
-			current_connection.addOverlay(["Custom", { create: function(component) {
-									return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
-								},
-								location: 0.5,
-								cssClass: "edge_label target",
-								id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
-								}]);
+			if (polarity == 'negative' || polarity == 'positive') {
+				current_connection.addOverlay(["Custom", { create: function(component) {
+										return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
+									},
+									location: 0.5,
+									cssClass: "edge_label target",
+									id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
+									}]);
+			}
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
 			current_connection.addOverlay(["Custom", { create: function(component) {
@@ -875,7 +877,12 @@ window.Sentiment = {
 
         jsPlumb.bind("connection", function(i,c) {
         	changed = true;
-
+        	if (i.connection.source.innerHTML == '+' || i.connection.target.innerHTML == '+') {
+        		if (i.connection.source.innerHTML == '+') {
+        			i.connection.target.innerHTML = alt_node_text;
+        		}
+        		return;
+        	}
 //            var ent_endpoints = {
 //                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
 //                endpoint: ["Dot", {radius: 0.5}],
