@@ -45,6 +45,7 @@ public class UQuery
 				bean.setLastName(lastName);
 				bean.setValid(true);
 			}
+			currentCon.close();
 		} 
 		catch (Exception ex) 
 		{
