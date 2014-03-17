@@ -727,8 +727,15 @@ window.Sentiment = {
 									id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 									}]);
 			}
+			else {
+				if (c_type == 'support')
+					current_connection.addOverlay(["Label", {label: c_type, cssClass: 'label'}]);
+				else if (c_type == 'support_by_example')
+					current_connection.addOverlay(["Label", {label: 'example', cssClass: 'label'}]);
+			}
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
+			current_connection.addOverlay(["Label", {label: c_type, cssClass: 'label'}]);
 			current_connection.addOverlay(["Custom", { create: function(component) {
 					return $('<div id="' + ln_id + '">'+text_anchor+'</div>');
 				},
