@@ -720,7 +720,7 @@ window.Sentiment = {
 			current_connection.addOverlay(["Custom", { create: function(component) {
 					return $('<div id="' + ln_id + '">'+text_anchor+'</div>');
 				},
-				location: 0.9,
+				location: 0.97,
 				cssClass: "circle rebut_undercut_circle"
 				//id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 			}]);
