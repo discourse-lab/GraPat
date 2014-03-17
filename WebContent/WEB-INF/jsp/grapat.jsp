@@ -63,9 +63,9 @@
 					<table id="popUpTable_arg" class="popUpTable">
 					<tr>
 						<td><b>connection type</b></td>	<td> 	<form action=""> 	<input type="radio" name="c_type" value="support"> support <br>
-													<input type="radio" name="polarity" value="support_by_ex"> support by example <br>
-													<input type="radio" name="polarity" value="rebut"> rebut <br>
-													<input type="radio" name="polarity" value="undercut"> undercut
+													<input type="radio" name="c_type" value="support_by_ex"> support by example <br>
+													<input type="radio" name="c_type" value="rebut"> rebut <br>
+													<input type="radio" name="c_type" value="undercut"> undercut
 										</form></td>
 					</tr>
 					</table>

@@ -613,6 +613,7 @@ window.Sentiment = {
 		var rhetoric = null;
 		var ln_id = null;
 		var old = false;
+		var c_type = null;
 		if (annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] != null)
                         old = true;	
 
@@ -633,7 +634,7 @@ window.Sentiment = {
 		else
 			polarity = $('input[name="polarity"]:checked').val();
 		
-		if (c_type != null)
+		if (c_t != null)
 			c_type = c_t;
 		else
 			c_type = $('input[name="c_type"]:checked').val();
