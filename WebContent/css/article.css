@@ -149,17 +149,17 @@
 }
 
 .word {
-    margin: 3em;
+    margin: 50px;
     z-index: 27;
 }
 
 .word_sent {
-    margin: 3em;
+    margin: 50px;
     z-index: 27;
 }
 
 .word_arg {
-    margin: 3em;
+    margin: 50px;
     z-index: 27;
     float: left;
     width: 15em;

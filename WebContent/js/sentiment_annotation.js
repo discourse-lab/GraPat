@@ -241,7 +241,7 @@ window.Sentiment = {
 				text: to_add
 			}).appendTo($("#sentence"));
 			
-            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 50 + 'px');
+            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 50 + 10 + 'px');
 			
 		}
 		
@@ -273,6 +273,8 @@ window.Sentiment = {
 					"edges": {} 
 			};
 	    	++current_sentence_idx;
+	    	// resetting the width to avoid increasingly big left and right margins
+	    	$( 'body' ).css('width', 100);
 	    	window.Sentiment.word_update();
 	    	window.Sentiment.clear();
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
@@ -330,13 +332,13 @@ window.Sentiment = {
 		// 
 		jQuery('<div/>', {
             class: 'rmenu_element',
-            id: 'add_square_ent',
-            text: 'add opponent'
+            id: 'add_circle_ent',
+            text: 'add proponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
-            id: 'add_circle_ent',
-            text: 'add proponent'
+            id: 'add_square_ent',
+            text: 'add opponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
