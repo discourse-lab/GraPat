@@ -23,6 +23,11 @@
 	border-radius: 50%;
 }
 
+.rebut_undercut_circle {
+	width: 10px;
+	height: 10px;
+}
+
 .invisible {
     visibility: hidden;
 }

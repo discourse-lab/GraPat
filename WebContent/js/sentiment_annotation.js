@@ -146,7 +146,7 @@ window.Sentiment = {
 	
 	add_node : function(node_id, x, y, label, type) {
 		if (type == null)
-			type = 'default'
+			type = 'default';
 		if ($('#' + node_id).length == 0) {
 		
 			annotations.nodes[node_id] = "";
@@ -220,7 +220,7 @@ window.Sentiment = {
 	
 	change_annot_file : function() {
 		var flist = $("#annot_file_select")[0];
-		var key = flist.options[flist.selectedIndex].value;
+		//var key = flist.options[flist.selectedIndex].value;
 		var value = flist.options[flist.selectedIndex].text;
 		// console.log("file selection changed to " + key + ":" + value);
 		
@@ -470,7 +470,8 @@ window.Sentiment = {
 
         update : function () {
             // list of possible anchor locations for the blue source element
-            var sourceAnchors = [
+            var sourceAnchors;
+            sourceAnchors = [
                 [ 0, 1, 0, 1 ],
                 [ 0.25, 1, 0, 1 ],
                 [ 0.5, 1, 0, 1 ],
@@ -526,8 +527,8 @@ window.Sentiment = {
 			},
 		"support_by_example": {
 				//Pfeilkopf, gestrichelt
-				paintStyle: {dashStyle:"2 4", strokeStyle: "black", lineWidth: 3.5}, 
-				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+				paintStyle: {dashstyle:"2 4", strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {dashstyle:"2 4", strokeStyle: "black", lineWidth: 5},
 			},
 		"rebut": {
 				//Kreiskopf, durchgezogen
@@ -541,20 +542,20 @@ window.Sentiment = {
 			},
 		});
 
-        var ent_endpoints = {
-        		anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-        		endpoint: ["Dot", {radius: 5}],
-        		isSource: true,
-        		/*connectorOverlays: [
-					[ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-				],*/
-        		paintStyle: {
-        			gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-        			strokeStyle: "black",
-        			fillStyle: "#004F66",
-        			lineWidth: 1.5
-        		}
-	    };
+//        var ent_endpoints = {
+//        		anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+//        		endpoint: ["Dot", {radius: 5}],
+//        		isSource: true,
+//        		/*connectorOverlays: [
+//					[ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+//				],*/
+//        		paintStyle: {
+//        			gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+//        			strokeStyle: "black",
+//        			fillStyle: "#004F66",
+//        			lineWidth: 1.5
+//        		}
+//	    };
         
         //var allNodes = $(".node");
         $(".node").each( function(index) {
@@ -602,7 +603,7 @@ window.Sentiment = {
 		return false;
 	    });*/
         },
-	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc) {
+	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc, c_t) {
 		changed = true;
 		var polarity = null;
 		var text_anchor = null;
@@ -632,8 +633,8 @@ window.Sentiment = {
 		else
 			polarity = $('input[name="polarity"]:checked').val();
 		
-		if (pol != null)
-			c_type = pol;
+		if (c_type != null)
+			c_type = c_t;
 		else
 			c_type = $('input[name="c_type"]:checked').val();
 		
@@ -691,27 +692,38 @@ window.Sentiment = {
 		else if (polarity == 'positive' && !current_connection.hasType('positive')) {
 			current_connection.toggleType('positive');
 		}
-		if (polarity == 'support' && !current_connection.hasType('support')) {
+		if (c_type == 'support' && !current_connection.hasType('support')) {
 			current_connection.toggleType('support');
 		}
-		else if (polarity == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
+		else if (c_type == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
 			current_connection.toggleType('support_by_example');
 		}
-		else if (polarity == 'rebut' && !current_connection.hasType('rebut')) {
+		else if (c_type == 'rebut' && !current_connection.hasType('rebut')) {
 			current_connection.toggleType('rebut');
 		}
-		else if (polarity == 'undercut' && !current_connection.hasType('undercut')) {
+		else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
 			current_connection.toggleType('undercut');
 		}
 		$('#labelPopUp').hide();
-		current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
-		current_connection.addOverlay(["Custom", { create: function(component) {
-								return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
-							},
-							location: 0.5,
-							cssClass: "edge_label target",
-							id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
-							}]);
+		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
+			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
+			current_connection.addOverlay(["Custom", { create: function(component) {
+									return $('<div id="' + ln_id + '" class="edge_label target">'+text_anchor+'</div>');
+								},
+								location: 0.5,
+								cssClass: "edge_label target",
+								id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
+								}]);
+		}
+		else if (c_type == 'rebut' || c_type == 'undercut') {
+			current_connection.addOverlay(["Custom", { create: function(component) {
+					return $('<div id="' + ln_id + '">'+text_anchor+'</div>');
+				},
+				location: 0.9,
+				cssClass: "circle rebut_undercut_circle"
+				//id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
+			}]);
+		}
 		if (!old)
 			++node_count;
 		window.Sentiment.update();
@@ -853,20 +865,20 @@ window.Sentiment = {
         jsPlumb.bind("connection", function(i,c) {
         	changed = true;
 
-            var ent_endpoints = {
-                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                endpoint: ["Dot", {radius: 0.5}],
-                isSource: true,
-                /*connectorOverlays: [
-                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-                ],*/
-                paintStyle: {
-                        gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-                        strokeStyle: "black",
-                        fillStyle: "#004F66",
-                        lineWidth: 1.5
-                }
-            };
+//            var ent_endpoints = {
+//                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+//                endpoint: ["Dot", {radius: 0.5}],
+//                isSource: true,
+//                /*connectorOverlays: [
+//                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+//                ],*/
+//                paintStyle: {
+//                        gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+//                        strokeStyle: "black",
+//                        fillStyle: "#004F66",
+//                        lineWidth: 1.5
+//                }
+//            };
 
             //jsPlumb.addEndpoint($('#' + i.connection.sourceId), ent_endpoints);
 
