@@ -340,6 +340,11 @@ window.Sentiment = {
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
+            id: 'add_join_edus',
+            text: 'add EDU join'
+	    }).appendTo('#rmenu');
+		jQuery('<div/>', {
+            class: 'rmenu_element',
             id: 'del_ele',
             text: 'delete element'
 	    }).appendTo('#rmenu');
@@ -354,6 +359,11 @@ window.Sentiment = {
 	      		var node_id = 'node_' + node_count;
 				annotations.nodes[node_id] = "";
 				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'circle');
+	      });
+	      $("#add_join_edus").bind("click", function() {
+	      		var node_id = 'node_' + node_count;
+				annotations.nodes[node_id] = "";
+				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'circle');
 	      });
 	      add_to_node_text = false;
 	      alt_node_text = 'ADU';
