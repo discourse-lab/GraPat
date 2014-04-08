@@ -737,7 +737,7 @@ window.Sentiment = {
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
 			current_connection.addOverlay(["Custom", { create: function(component) {
-					return $('<div id="' + ln_id + '">'+text_anchor+'</div>');
+					return $('<div></div>');
 				},
 				location: 0.97,
 				cssClass: "circle rebut_undercut_circle"
