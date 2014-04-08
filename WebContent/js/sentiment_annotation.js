@@ -646,87 +646,91 @@ window.Sentiment = {
                         else
                                 ln_id = 'node_' + node_count;
 		}
-			
-		if (pol != null)
-			polarity = pol;
-		else
-			polarity = $('input[name="polarity"]:checked').val();
-		
-		if (c_t != null)
-			c_type = c_t;
-		else
-			c_type = $('input[name="c_type"]:checked').val();
 		
 		if (text != null)
 			text_anchor = text;
 		else
 			text_anchor = $('textarea#text_anchor_input').val();
 		
-		if (ctxt != null)
-			context = ctxt;
-		else
-			context = $('input[name="context"]:checked').val();
-		
-		if (wk != null)
-			worldknowledge = wk;
-		else
-			worldknowledge = $('input[name="wknow"]:checked').val();
-		
-		if (irn != null)
-			irony = irn;
-		else
-			irony = $('input[name="ironic"]:checked').val();
-		
-		if (rhtrc != null)
-			rhetoric = rhtrc;
-		else
-			rhetoric = $('input[name="rhetoric"]:checked').val();
-		
-		annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
-		annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
-
-		
 		annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
 		
-		if (context)
-			annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
-		else
-			annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
-		if (worldknowledge)
-			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
-		else
-			annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
-		if (irony)
-			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
-		else
-			annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
-		if (rhetoric)
-			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
-		else
-			annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
-		
-		if (polarity == 'negative' && !current_connection.hasType('negative')) {
-			current_connection.toggleType('negative');
+		if (annotation_type == 'sentiment') {
+			if (pol != null)
+				polarity = pol;
+			else
+				polarity = $('input[name="polarity"]:checked').val();
+			
+			if (ctxt != null)
+				context = ctxt;
+			else
+				context = $('input[name="context"]:checked').val();
+			
+			if (wk != null)
+				worldknowledge = wk;
+			else
+				worldknowledge = $('input[name="wknow"]:checked').val();
+			
+			if (irn != null)
+				irony = irn;
+			else
+				irony = $('input[name="ironic"]:checked').val();
+			
+			if (rhtrc != null)
+				rhetoric = rhtrc;
+			else
+				rhetoric = $('input[name="rhetoric"]:checked').val();
+			
+			annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
+			annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+			
+			if (context)
+				annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
+			else
+				annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
+			if (worldknowledge)
+				annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
+			else
+				annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
+			if (irony)
+				annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
+			else
+				annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
+			if (rhetoric)
+				annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
+			else
+				annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
+			
+			if (polarity == 'negative' && !current_connection.hasType('negative')) {
+				current_connection.toggleType('negative');
+			}
+			else if (polarity == 'positive' && !current_connection.hasType('positive')) {
+				current_connection.toggleType('positive');
+			}
 		}
-		else if (polarity == 'positive' && !current_connection.hasType('positive')) {
-			current_connection.toggleType('positive');
+		else if (annotation_type == 'argumentation') {
+			if (c_t != null)
+				c_type = c_t;
+			else
+				c_type = $('input[name="c_type"]:checked').val();
+			
+			annotations.edges[current_source][current_target][current_connection.id]["c_type"] = c_type;
+			
+			if (c_type == 'support' && !current_connection.hasType('support')) {
+				current_connection.toggleType('support');
+			}
+			else if (c_type == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
+				current_connection.toggleType('support_by_example');
+			}
+			else if (c_type == 'rebut' && !current_connection.hasType('rebut')) {
+				current_connection.toggleType('rebut');
+			}
+			else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
+				current_connection.toggleType('undercut');
+			}
+			else if (c_type == 'additional source' && !current_connection.hasType('undercut')) {
+				current_connection.toggleType('add_source');
+			}
 		}
-		if (c_type == 'support' && !current_connection.hasType('support')) {
-			current_connection.toggleType('support');
-		}
-		else if (c_type == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
-			current_connection.toggleType('support_by_example');
-		}
-		else if (c_type == 'rebut' && !current_connection.hasType('rebut')) {
-			current_connection.toggleType('rebut');
-		}
-		else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
-			current_connection.toggleType('undercut');
-		}
-		else if (c_type == 'additional source' && !current_connection.hasType('undercut')) {
-			current_connection.toggleType('add_source');
-		}
-		
 		$('#labelPopUp').hide();
 		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_ex' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
@@ -751,20 +755,22 @@ window.Sentiment = {
 		if (c_type == 'support_by_ex') 
 			arc_label = 'example';
 		
-		current_connection.addOverlay(["Custom", { create: function(component) {
-								return $('<div id="' + ln_id + '" class="edge_label target">'+arc_label+'</div>');
-							},
-							location: 0.5,
-							cssClass: "edge_label target",
-							id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
-							}]);
-	
+		if (c_type != 'additional source') {
+			current_connection.addOverlay(["Custom", { create: function(component) {
+									return $('<div id="' + ln_id + '" class="edge_label target">'+arc_label+'</div>');
+								},
+								location: 0.5,
+								cssClass: "edge_label target",
+								id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
+								}]);
+		}
 		
 		
-		if (!old)
+		if (!old && c_type != 'additional source')
 			++node_count;
 		window.Sentiment.update();
 	},
+	
 	showAttrsPopUp : function(c) {
 	        if (c.source.nodeName == "SPAN")
 	            return false;
@@ -791,7 +797,7 @@ window.Sentiment = {
             
             $(document.body).keydown( function(event) {
                 var pressed = event.keyCode || event.which;
-                if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus'))) {
+                if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'sentiment') {
 	                    // c
 	                    if (pressed == 67) {
 	                    	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
@@ -824,6 +830,41 @@ window.Sentiment = {
                         if (pressed == 13) {
                                 $("#attrs_button").click();
                         }
+                }
+                else if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'argumentation') {
+                	// TODO: this is just copy pasted. create key press assignments here.
+                    // c
+                    if (pressed == 67) {
+                    	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
+                    }
+                 // w
+                    if (pressed == 87) {
+                    	document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
+                    }
+                 // i
+                    if (pressed == 73) {
+                    	document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
+                    }
+                 // r
+                    if (pressed == 82) {
+                    	document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
+                    }
+                    // n
+                    if (pressed == 78) {
+                            $('input[name="polarity"]').val(['negative']);
+                    }
+                    // o
+                    if (pressed == 79) {
+                            $('input[name="polarity"]').val(['other']);
+                    }
+                    // p
+                    if (pressed == 80) {
+                            $('input[name="polarity"]').val(['positive']);
+                    }
+                    // return
+                    if (pressed == 13) {
+                            $("#attrs_button").click();
+                    }
                 }
             });    
             
@@ -918,7 +959,8 @@ window.Sentiment = {
             	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
             		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
             	//var sentence_id = sentence_order[current_sentence_idx];
-            	annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
+            	if (annotation_type == 'sentiment') {
+            		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
             																				"label_node_id": null,
             																				"polarity": null, 
             																				"text_anchor": null,
@@ -927,6 +969,14 @@ window.Sentiment = {
             																				"ironic": false,
             																				"rhetoric": false
             																				};
+            	}
+            	else if (annotation_type == 'argumentation') {
+            		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
+							"label_node_id": null,
+							"arc_type": null
+							};
+            		
+            	}
 
             	++edge_count;
             	
