@@ -22,7 +22,7 @@ public class ConnectionManager {
          
          try
          {            	
-            con = DriverManager.getConnection(db,"grapat_user_auth","donaldduckisteineenteausentenhausen");
+            con = DriverManager.getConnection(db,"grapat_user_auth","supersecret");
          }
          
          catch (SQLException ex)
