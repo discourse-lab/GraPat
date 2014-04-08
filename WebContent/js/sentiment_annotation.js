@@ -367,6 +367,7 @@ window.Sentiment = {
 				annotations.nodes[node_id] = "";
 				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'circle');
 	      });
+	      
 	      add_to_node_text = false;
 	      alt_node_text = 'ADU';
 	      
@@ -552,6 +553,11 @@ window.Sentiment = {
 				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
+		"add_source": {
+				// kein kopf, durchgezogen
+				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
+			},
 		});
 
 //        var ent_endpoints = {
@@ -717,6 +723,10 @@ window.Sentiment = {
 		else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
 			current_connection.toggleType('undercut');
 		}
+		else if (c_type == 'additional source' && !current_connection.hasType('undercut')) {
+			current_connection.toggleType('add_source');
+		}
+		
 		$('#labelPopUp').hide();
 		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_ex' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
@@ -897,24 +907,8 @@ window.Sentiment = {
         		}
         		return;
         	}
-//            var ent_endpoints = {
-//                anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-//                endpoint: ["Dot", {radius: 0.5}],
-//                isSource: true,
-//                /*connectorOverlays: [
-//                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-//                ],*/
-//                paintStyle: {
-//                        gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-//                        strokeStyle: "black",
-//                        fillStyle: "#004F66",
-//                        lineWidth: 1.5
-//                }
-//            };
 
-            //jsPlumb.addEndpoint($('#' + i.connection.sourceId), ent_endpoints);
-
-		// connection is re-dragged
+        		// connection is re-dragged
                 if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
                         return;
 

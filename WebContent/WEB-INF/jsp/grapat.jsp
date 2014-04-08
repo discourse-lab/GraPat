@@ -65,7 +65,8 @@
 						<td><b>connection type</b></td>	<td> 	<form action=""> 	<input type="radio" name="c_type" value="support"> support <br>
 													<input type="radio" name="c_type" value="support_by_ex"> support by example <br>
 													<input type="radio" name="c_type" value="rebut"> rebut <br>
-													<input type="radio" name="c_type" value="undercut"> undercut
+													<input type="radio" name="c_type" value="undercut"> undercut <br>
+													<input type="radio" name="c_type" value="additional source"> additional source
 										</form></td>
 					</tr>
 					</table>
