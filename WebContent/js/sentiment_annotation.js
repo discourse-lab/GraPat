@@ -227,8 +227,9 @@ window.Sentiment = {
 		window.Sentiment.read_input_file(value);
 		window.Sentiment.update();
 	},
-		
-	add_word : function(to_add, wid) {
+	
+	// trid: token range id
+	add_word : function(to_add, wid, trid) {
 		if ($('#word_' + wid).length == 0) {
 			var word_type = "";
 			if (annotation_type == 'sentiment')
@@ -238,7 +239,8 @@ window.Sentiment = {
 			jQuery('<span/>', {
 				class: word_type + ' window',
 				id: 'word_' + wid,
-				text: to_add
+				text: to_add,
+				token_range_id: trid
 			}).appendTo($("#sentence"));
 			
             $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 50 + 10 + 'px');
@@ -257,7 +259,7 @@ window.Sentiment = {
 	    
 	    var idx = 0;
 	    jQuery.each(text[sentence_order[current_sentence_idx]], function() {
-	    	window.Sentiment.add_word(this, idx);
+	    	window.Sentiment.add_word(this['token'], idx, this['trid']);
 	    	++idx;
 	    });
 	},
@@ -317,7 +319,9 @@ window.Sentiment = {
 							"sentence": sentence_order[current_sentence_idx], 
 							"layout": JSON.stringify(layout),
 							"graph": JSON.stringify(annotations), 
-							"annotator": JSON.stringify({ "id": annotator_id })}, 
+							"annotator": JSON.stringify({ "id": annotator_id })
+							}, 
+							
 							function(data) {
 			$("#saved").hide().fadeIn(1500);
 			$("#saved").fadeOut(2500);
@@ -420,10 +424,7 @@ window.Sentiment = {
 	},
 	
 	read_input_file : function (filename) {
-		//var filename = "sentences.txt";
-		
-		// if annot type == arg 
-		// 		then css .word += float: left
+
 		window.Sentiment.init_globals();
 		jQuery.get('data/' + filename, function(data) {
 			annotation_bundle_id = $(data).find('annotation_bundle').attr('id');
@@ -448,7 +449,8 @@ window.Sentiment = {
 				++sentence_count;
 				var words = current_sentence.find('token_range');
 				jQuery.each(words, function() {
-					text[sentence_id].push($(this).text());
+					var t_id = $(this).id();
+					text[sentence_id].push({token: $(this).text(), trid: t_id});
 				});
 				++sentence_idx;
 			});
@@ -833,33 +835,25 @@ window.Sentiment = {
                 }
                 else if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'argumentation') {
                 	// TODO: this is just copy pasted. create key press assignments here.
-                    // c
+                    // s
                     if (pressed == 67) {
                     	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
                     }
-                 // w
+                 // e
                     if (pressed == 87) {
                     	document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
                     }
-                 // i
+                 // r
                     if (pressed == 73) {
                     	document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
                     }
-                 // r
+                 // u
                     if (pressed == 82) {
                     	document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
                     }
-                    // n
+                    // a
                     if (pressed == 78) {
                             $('input[name="polarity"]').val(['negative']);
-                    }
-                    // o
-                    if (pressed == 79) {
-                            $('input[name="polarity"]').val(['other']);
-                    }
-                    // p
-                    if (pressed == 80) {
-                            $('input[name="polarity"]').val(['positive']);
                     }
                     // return
                     if (pressed == 13) {
@@ -946,6 +940,7 @@ window.Sentiment = {
         		if (i.connection.source.innerHTML == '+') {
         			i.connection.target.innerHTML = alt_node_text;
         		}
+        		i.connection.target.token_range_id += ";" + i.connection.source.token_range_id;
         		return;
         	}
 
