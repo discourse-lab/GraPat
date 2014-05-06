@@ -27,6 +27,7 @@ public class ConnectionManager {
          
          catch (SQLException ex)
          {
+        	 System.err.println(ex);
          }
       }
 
