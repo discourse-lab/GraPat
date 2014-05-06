@@ -449,7 +449,7 @@ window.Sentiment = {
 				++sentence_count;
 				var words = current_sentence.find('token_range');
 				jQuery.each(words, function() {
-					var t_id = $(this).id();
+					var t_id = $(this).attr('id');
 					text[sentence_id].push({token: $(this).text(), trid: t_id});
 				});
 				++sentence_idx;
