@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<annotation_bundle id="zoning-exp-dataset" semantics="argumentation">
-  <entity id="040620.pro">
+<annotation_bundle id="demo-arg" semantics="argumentation">
+  <entity id="testing1">
       <token_range id="1"><![CDATA[Energy-saving lamp contain toxic substances.]]></token_range>
       <token_range id="2"><![CDATA[Example: customary lamps contain 15 mg mercury.]]></token_range>
       <token_range id="3"><![CDATA[Therefore, energy-saving lamps should be forbidden,]]></token_range>
