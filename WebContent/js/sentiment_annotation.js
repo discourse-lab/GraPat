@@ -246,11 +246,24 @@ window.Sentiment = {
 				token_range_id: trid
 			}).appendTo($("#sentence"));
 			
-            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 10 + 'px');
-			
-		}
-		
-	},
+	        var required_width = 0;
+	        jQuery.each( $('.word_arg') , function() {
+	                required_width += $(this).width() + parseInt($(this).css('margin-left')) + parseInt($(this).css('margin-right')) + parseInt($(this).css('padding-left')) + parseInt($(this).css('padding-right')) + parseInt($(this).css('border-width')) * 2;
+	        });
+
+	        jQuery.each( $('.word_sent') , function() {
+	                required_width += $(this).width() + parseInt($(this).css('margin-left')) + parseInt($(this).css('margin-right')) + parseInt($(this).css('padding-left')) + parseInt($(this).css('padding-right')) + parseInt($(this).css('border-width')) * 2;
+	        });
+
+	        if (required_width > $( document ).width() ) {
+	            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + parseInt($( '#word_' + wid ).css('margin-left')) + parseInt($( '#word_' + wid ).css('margin-right')) + parseInt($('#word_' + wid).css('padding-left')) + parseInt($('#word_' + wid).css('padding-right')) + parseInt($('#word_' + wid).css('border-width')) * 2 + 'px');
+	        }
+	        else {
+	            $( 'body' ).css( 'width', $(document).width() );
+	}
+
+        }
+    },
 	word_update : function () {
 	    var sentence_div = $("#sentence");
 	    $("#counter")[0].innerHTML = current_sentence_idx+1 + " of " + sentence_count; $("#counter")[0].innerText = current_sentence_idx+1 + " of " + sentence_count;
