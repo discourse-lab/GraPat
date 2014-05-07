@@ -100,7 +100,10 @@ window.Sentiment = {
 		                        current_source = current_connection.sourceId;
 		                        current_target = current_connection.targetId;
 		                        if (current_connection.source.nodeName != "SPAN") {
-		                        	window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+		                        	if (annotation_type == 'sentiment')
+		                        		window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
+		                        	else if (annotation_type == 'argumentation')
+		                        		window.Sentiment.labelPopUpButton_click(attrs.label_node_id, null, null, null, null, null, null, attrs.c_type);
 		                        }
 	                    	}
 	                    });
