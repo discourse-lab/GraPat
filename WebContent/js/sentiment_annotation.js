@@ -243,7 +243,7 @@ window.Sentiment = {
 				token_range_id: trid
 			}).appendTo($("#sentence"));
 			
-            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 50 + 10 + 'px');
+            $( 'body' ).css( 'width', $( document ).width() + $( '#word_' + wid ).width() + 10 + 'px');
 			
 		}
 		
@@ -714,7 +714,7 @@ window.Sentiment = {
 				c_type = c_t;
 			else
 				c_type = $('input[name="c_type"]:checked').val();
-			
+			c_type = c_type.replace('(', '').replace(')','');
 			annotations.edges[current_source][current_target][current_connection.id]["c_type"] = c_type;
 			
 			if (c_type == 'support' && !current_connection.hasType('support')) {
@@ -992,8 +992,12 @@ window.Sentiment = {
 
     			// only do this for non-edge nodes
     			if (i.connection.targetId in annotations.nodes) {
-    	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN")
-    	                annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+    	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN") {
+    	            	if (add_to_node_text)
+    	            		annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+    	            	else
+    	            		annotations.nodes[i.connection.targetId] = alt_node_text;
+    	            }
     	            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
     	                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
     			}
