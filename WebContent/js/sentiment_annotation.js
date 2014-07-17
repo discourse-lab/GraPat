@@ -1,3 +1,8 @@
+/* TODO:
+ * - ADU Rolle wird nicht abgespeichert und auch nicht geladen.
+ * - Bei EDU-joins werden keine Relationen gespeichert (nicht die von w->+ noch +->adu) und die Knoten haben kein Label.
+ */
+
 var annotations = {
 		"nodes": {},
 		"edges": {} 
