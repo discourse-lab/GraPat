@@ -62,12 +62,16 @@
 				<div class="attrsContent">
 					<table id="popUpTable_arg" class="popUpTable">
 					<tr>
-						<td><b>connection type</b></td>	<td> 	<form action=""> 	<input type="radio" name="c_type" value="(s)upport"> support <br>
-													<input type="radio" name="c_type" value="support_by_(e)x"> support by example <br>
-													<input type="radio" name="c_type" value="(r)ebut"> rebut <br>
-													<input type="radio" name="c_type" value="(u)ndercut"> undercut <br>
-													<input type="radio" name="c_type" value="(a)dditional source"> additional source
-										</form></td>
+						<td><b>connection type</b></td>
+						<td>
+							<form action="">
+							 	<input type="radio" name="c_type" value="support"> (s)upport <br>
+								<input type="radio" name="c_type" value="support_by_example"> support by (e)xample <br>
+								<input type="radio" name="c_type" value="rebut"> (r)ebut <br>
+								<input type="radio" name="c_type" value="undercut"> (u)ndercut <br>
+								<input type="radio" name="c_type" value="additional_source"> (a)dditional source
+							</form>
+						</td>
 					</tr>
 					</table>
 				</div>				

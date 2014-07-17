@@ -34,7 +34,8 @@ window.Sentiment = {
 		// since we want the first unused number, we can ommit the -1 which had to be there due to the author node being counted
 		return $('.target').length + $('.node').length ;
 	},
-		
+
+	
 	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
 
 		if (add_to_word_connections == null)
@@ -50,6 +51,7 @@ window.Sentiment = {
 		else
 			return window.Sentiment._request_and_add(bundle_id, sentence_id, add_to_word_connections);
 	},
+
 	
 	_request_and_add : function(bundle_id, sentence_id, add_to_word_connections) {
 		var req_data = {
@@ -109,8 +111,6 @@ window.Sentiment = {
 	                    });
 	                });
 	            });
-	           
-	            
 	            
 	            var it_count = 0;
 	            while (delayed.length > 0) {
@@ -146,6 +146,7 @@ window.Sentiment = {
 		}});
 		return jreq;
 	},
+
 	
 	add_node : function(node_id, x, y, label, type) {
 		if (type == null)
@@ -174,25 +175,26 @@ window.Sentiment = {
 			window.Sentiment.update();
 			changed = true;
 
-                var ent_endpoints = {
-                        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                        endpoint: ["Dot", {radius: 5}],
-                        isSource: true,
-                        /*connectorOverlays: [
-                                        [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-                                ],*/
-                        paintStyle: {
-                                gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-                                strokeStyle: "black",
-                                fillStyle: "#004F66",
-                                lineWidth: 1.5
-                        }
+            var ent_endpoints = {
+                    anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+                    endpoint: ["Dot", {radius: 5}],
+                    isSource: true,
+                    /*connectorOverlays: [
+                                    [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+                            ],*/
+                    paintStyle: {
+                            gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+                            strokeStyle: "black",
+                            fillStyle: "#004F66",
+                            lineWidth: 1.5
+                    }
             };
-                jsPlumb.addEndpoint($("#" + node_id), ent_endpoints);
+            jsPlumb.addEndpoint($("#" + node_id), ent_endpoints);
 
 		}
 	},
-		
+
+	
 	init_globals : function() {
 		annotations = {
 				"nodes": {},
@@ -210,7 +212,8 @@ window.Sentiment = {
 		rclick = null;
 		annotator_id = -1;
 	},
-		
+
+	
 	get_files_to_be_annotated : function() {
 		$.getJSON( "ResourceHandler", function(data) {
 			$.each(data, function(key, value) {
@@ -220,6 +223,7 @@ window.Sentiment = {
 			});
 		});
 	},
+
 	
 	change_annot_file : function() {
 		var flist = $("#annot_file_select")[0];
@@ -230,6 +234,7 @@ window.Sentiment = {
 		window.Sentiment.read_input_file(value);
 		window.Sentiment.update();
 	},
+
 	
 	// trid: token range id
 	add_word : function(to_add, wid, trid) {
@@ -260,10 +265,11 @@ window.Sentiment = {
 	        }
 	        else {
 	            $( 'body' ).css( 'width', $(document).width() );
-	}
-
+	        }
         }
     },
+    
+    
 	word_update : function () {
 	    var sentence_div = $("#sentence");
 	    $("#counter")[0].innerHTML = current_sentence_idx+1 + " of " + sentence_count; $("#counter")[0].innerText = current_sentence_idx+1 + " of " + sentence_count;
@@ -279,6 +285,8 @@ window.Sentiment = {
 	    	++idx;
 	    });
 	},
+	
+	
 	next_sentence : function (sa) {
 		sa = (typeof sa === 'undefined') ? true : sa;
 		
@@ -298,6 +306,8 @@ window.Sentiment = {
 	    	window.Sentiment.load_data(annotation_bundle_id, sentence_order[current_sentence_idx]);
 	    }
 	},
+	
+	
 	previous_sentence : function () {
 	    if (current_sentence_idx > 0) {
 	    	--current_sentence_idx;
@@ -311,12 +321,14 @@ window.Sentiment = {
 	    }
 	},
 	
+	
 	clear : function () {
 		jsPlumb.detachEveryConnection();
 		jsPlumb.deleteEveryEndpoint();
 		
 		$('.node').remove();
 	},
+	
 	
 	save : function () {
 		if (!changed)
@@ -344,8 +356,11 @@ window.Sentiment = {
 		});
 		changed = false;
 	},
+	
+	
 	logout : function() {
 	},
+	
 
 	init_arg : function () {
 		// to add
@@ -396,6 +411,7 @@ window.Sentiment = {
 
 	},
 	
+	
 	init_sent : function () {
 	  jQuery('<div/>', {
             class: 'rmenu_element',
@@ -439,6 +455,7 @@ window.Sentiment = {
       jsPlumb.makeSource( $('#author'));
 	},
 	
+	
 	read_input_file : function (filename) {
 
 		window.Sentiment.init_globals();
@@ -474,6 +491,7 @@ window.Sentiment = {
 		});
 	},
 	
+	
 	read_plain_input_file : function (filename) {
 		//var filename = "sentences.txt";
 		window.Sentiment.init_globals();
@@ -498,40 +516,41 @@ window.Sentiment = {
 		});
 		
 	},
+	
 
-        update : function () {
-            // list of possible anchor locations for the blue source element
-            var sourceAnchors;
-            sourceAnchors = [
-                [ 0, 1, 0, 1 ],
-                [ 0.25, 1, 0, 1 ],
-                [ 0.5, 1, 0, 1 ],
-                [ 0.75, 1, 0, 1 ],
-                [ 1, 1, 0, 1 ],
-		"TopCenter", "RightMiddle", "LeftMiddle"              
-            ];
+    update : function () {
+	    // list of possible anchor locations for the blue source element
+	    var sourceAnchors;
+	    sourceAnchors = [
+	        [ 0, 1, 0, 1 ],
+	        [ 0.25, 1, 0, 1 ],
+	        [ 0.5, 1, 0, 1 ],
+	        [ 0.75, 1, 0, 1 ],
+	        [ 1, 1, 0, 1 ],
+	        "TopCenter", "RightMiddle", "LeftMiddle"              
+        ];
            
-            jsPlumb.importDefaults({
-                // set default anchors.  the 'connect' calls below will pick these up, and in fact setting these means
-                // that you also do not need to supply anchor definitions to the makeSource or makeTarget functions. 
-                Anchors : [ sourceAnchors ],
-                // drag options
-                DragOptions : { cursor: "pointer", zIndex:2000 },
-                // default to blue at source and green at target
-                EndpointStyles : [{ fillStyle:"black" }, { fillStyle:"#black" }],
-                // blue endpoints 7 px; green endpoints 11.
-                Endpoints : [ ["Dot", { radius:2 } ], [ "Dot", { radius:2 } ] ],
-                // default to a gradient stroke from blue to green.  for IE provide all green fallback.
-                PaintStyle : {
-                    //gradient:{ stops:[ [ 0, "black" ], [ 1, "black" ] ] },
-                    strokeStyle: "black",
-                    lineWidth:1.5
-                },
-		hoverPaintStyle: {
-		    strokeStyle: "black",
-		    lineWidth: 5
-		},
-            });
+        jsPlumb.importDefaults({
+            // set default anchors.  the 'connect' calls below will pick these up, and in fact setting these means
+            // that you also do not need to supply anchor definitions to the makeSource or makeTarget functions. 
+            Anchors : [ sourceAnchors ],
+            // drag options
+            DragOptions : { cursor: "pointer", zIndex:2000 },
+            // default to blue at source and green at target
+            EndpointStyles : [{ fillStyle:"black" }, { fillStyle:"#black" }],
+            // blue endpoints 7 px; green endpoints 11.
+            Endpoints : [ ["Dot", { radius:2 } ], [ "Dot", { radius:2 } ] ],
+            // default to a gradient stroke from blue to green.  for IE provide all green fallback.
+            PaintStyle : {
+                //gradient:{ stops:[ [ 0, "black" ], [ 1, "black" ] ] },
+                strokeStyle: "black",
+                lineWidth:1.5
+            },
+			hoverPaintStyle: {
+			    strokeStyle: "black",
+			    lineWidth: 5
+			},
+        });
 
 	    var red = "#680707";
 	    var green = "#1D6807";
@@ -638,7 +657,9 @@ window.Sentiment = {
 		$('#labelPopUp').show();
 		return false;
 	    });*/
-        },
+    },
+        
+        
 	labelPopUpButton_click : function (label_node_id, pol, text, ctxt, wk, irn, rhtrc, c_t) {
 		changed = true;
 		var polarity = null;
@@ -789,6 +810,7 @@ window.Sentiment = {
 		window.Sentiment.update();
 	},
 	
+	
 	showAttrsPopUp : function(c) {
 	        if (c.source.nodeName == "SPAN")
 	            return false;
@@ -816,60 +838,59 @@ window.Sentiment = {
             $(document.body).keydown( function(event) {
                 var pressed = event.keyCode || event.which;
                 if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'sentiment') {
-	                    // c
-	                    if (pressed == 67) {
-	                    	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
-	                    }
-	                 // w
-	                    if (pressed == 87) {
-	                    	document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
-	                    }
-	                 // i
-	                    if (pressed == 73) {
-	                    	document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
-	                    }
-	                 // r
-	                    if (pressed == 82) {
-	                    	document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
-	                    }
-                        // n
-                        if (pressed == 78) {
-                                $('input[name="polarity"]').val(['negative']);
-                        }
-                        // o
-                        if (pressed == 79) {
-                                $('input[name="polarity"]').val(['other']);
-                        }
-                        // p
-                        if (pressed == 80) {
-                                $('input[name="polarity"]').val(['positive']);
-                        }
-                        // return
-                        if (pressed == 13) {
-                                $("#attrs_button").click();
-                        }
+					// c
+					if (pressed == 67) {
+						document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
+					    }
+					 // w
+					if (pressed == 87) {
+						document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
+					    }
+					 // i
+					if (pressed == 73) {
+						document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
+					    }
+					 // r
+					if (pressed == 82) {
+						document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
+					}
+					// n
+					if (pressed == 78) {
+					    $('input[name="polarity"]').val(['negative']);
+					}
+					// o
+					if (pressed == 79) {
+					    $('input[name="polarity"]').val(['other']);
+					}
+					// p
+					if (pressed == 80) {
+					    $('input[name="polarity"]').val(['positive']);
+					}
+					// return
+					if (pressed == 13) {
+					    $("#attrs_button").click();
+					}
                 }
-                else if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'argumentation') {
-                	// TODO: this is just copy pasted. create key press assignments here.
+                else if ( $('#labelPopUp').is(":visible") && annotation_type == 'argumentation') {
                     // s
-                    if (pressed == 67) {
-                    	document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
+                    if (pressed == 83) {
+                    	$('input[name="c_type"]').val(['support']);
                     }
-                 // e
-                    if (pressed == 87) {
-                    	document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
+                    // e
+                    if (pressed == 69) {
+                    	$('input[name="c_type"]').val(['support_by_example']);
                     }
-                 // r
-                    if (pressed == 73) {
-                    	document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
-                    }
-                 // u
+                    // r
                     if (pressed == 82) {
-                    	document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
+                    	$('input[name="c_type"]').val(['rebut']);
+                    }
+                    // u
+                    if (pressed == 85) {
+                    	$('input[name="c_type"]').val(['undercut']);
                     }
                     // a
-                    if (pressed == 78) {
-                            $('input[name="polarity"]').val(['negative']);
+                    if (pressed == 65) {
+                    	$('input[name="c_type"]').val(['additional_source']);
                     }
                     // return
                     if (pressed == 13) {
