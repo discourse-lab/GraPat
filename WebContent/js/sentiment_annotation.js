@@ -795,7 +795,6 @@ window.Sentiment = {
 			} else {
 				c_type = $('input[name="c_type"]:checked').val();
 			}
-			//c_type = c_type.replace('(', '').replace(')',''); // obsolete, no parentheses in the c_type values anymore
 			annotations.edges[current_source][current_target][current_connection.id]["c_type"] = c_type;
 			
 			if (c_type == 'support' && !current_connection.hasType('support')) {
@@ -1135,28 +1134,28 @@ window.Sentiment = {
             }
             else if ( $('#labelPopUp').is(":visible") && annotation_type == 'argumentation') {
                 // s
-                if (pressed == 83 && $('#c_type_support').not(":disabled")) {
+                if (pressed == 83) {
                 	$('input[name="c_type"]').val(['support']);
                 }
                 // e
-                if (pressed == 69 && $('#c_type_support_by_example').not(":disabled")) {
+                if (pressed == 69) {
                 	$('input[name="c_type"]').val(['support_by_example']);
                 }
                 // r
-                if (pressed == 82 && $('#c_type_rebut').not(":disabled")) {
+                if (pressed == 82) {
                 	$('input[name="c_type"]').val(['rebut']);
                 }
                 // u
-                if (pressed == 85 && $('#c_type_undercut').not(":disabled")) {
+                if (pressed == 85) {
                 	$('input[name="c_type"]').val(['undercut']);
                 }
                 // a
-                if (pressed == 65 && $('#c_type_additional_source').not(":disabled")) {
+                if (pressed == 65) {
                 	$('input[name="c_type"]').val(['additional_source']);
                 }
                 // return
                 if (pressed == 13) {
-                        $("#attrs_button").click();
+                	$("#attrs_button").click();
                 }
             }
         });    
