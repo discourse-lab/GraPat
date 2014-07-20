@@ -30,15 +30,43 @@
     padding: 3px;
 }
 
+.node_type_proponent {
+    border-radius: 50%;
+    line-height:2em;
+    border: 2pt solid #000000;
+    background-color: white;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.node_type_opponent {
+    border-radius: 0%;
+    line-height:2em;
+    border: 2pt solid #000000;
+    background-color: white;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.node_type_edu_join {
+    border-radius: 20%;
+    line-height:1em;
+    background-color: #eee;
+}
+
 .circle {
-	border-radius: 50%;
+    border-radius: 50%;
 }
 
 .rebut_undercut_circle {
-	width: 20px;
-	height: 20px;
+	width: 15px;
+	height: 15px;
 	background-color: white;
-	border: 1px solid black;
+	border: 2px solid black;
 }
 
 .invisible {
@@ -162,6 +190,8 @@
     z-index: 27;
     float: left;
     width: 15em;
+    line-height: 2em; 
+    background-color: #eee;
 }
 
 .popUp {

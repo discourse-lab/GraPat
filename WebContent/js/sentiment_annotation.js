@@ -1,6 +1,16 @@
 /* TODO:
- * - ADU Rolle wird nicht abgespeichert und auch nicht geladen.
- * - Bei EDU-joins werden keine Relationen gespeichert (nicht die von w->+ noch +->adu) und die Knoten haben kein Label.
+ * x example relation wird neuerdings nicht mehr richtig formatiert
+ * x ADU Rolle wird nicht abgespeichert und auch nicht geladen.
+ * x Bei EDU-joins werden keine Relationen gespeichert (nicht die von w->+ noch +->adu) und die Knoten haben kein Label.
+ * x beim laden werden die gespeicherten knotennamen dynamisch miterweitert.
+ *   [umgangen, indem die knotennamen nur in der gui angezeigt, aber nicht im model gespeichert werden. beim laden werden sie wieder richtig rekonstruiert]
+ * x umstellen auf fertig einfache modale dialoge
+ * - Löschen von Knoten und Relationen geht nicht
+ * - ein Knopf zum Zurücksetzen (komplett löschen) der Annotation dieses Textes wäre gut
+ * - support pfeileköpfe nicht an pfeilende
+ * - additional sources edges werden beim erstellen nicht richtig formatiert, nach dem laden aber schon.
+ * - edujoin>adu edges haben handles in der mitte?
+ * - wenn adu>edge und adu-role=edge-source-role, dann braucht keine class-entscheidung abgefragt zu werden.
  */
 
 var annotations = {
@@ -28,6 +38,15 @@ var annotation_type = null;
 
 var add_to_node_text = false;
 var alt_node_text = '';
+
+
+// endswith function for strings
+// from: http://stackoverflow.com/a/2548133
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
 
 window.XMLParser = {
 		
@@ -81,10 +100,10 @@ window.Sentiment = {
             
             if (graph != null) {
 	            node_count = window.Sentiment.update_node_count() + 1;
-				$.each(graph.nodes, function(key, value) {
+				$.each(graph.nodes, function(key, attrs) {
 					var x = layout[key]["x"];
 					var y = layout[key]["y"];
-					window.Sentiment.add_node(key, x, y, value);
+					window.Sentiment.add_node(key, x, y, attrs.label, attrs.n_type);
 				});
 				
 	            $.each(graph.edges, function(source_id, value) {
@@ -154,11 +173,13 @@ window.Sentiment = {
 
 	
 	add_node : function(node_id, x, y, label, type) {
+		if (label == null)
+			label = '';
 		if (type == null)
 			type = 'default';
 		if ($('#' + node_id).length == 0) {
-		
-			annotations.nodes[node_id] = "";
+			// potentially overwriting something here?
+			annotations.nodes[node_id] = { "label":label, "n_type":type };
 	        jQuery('<div/>', {
 	            class: 'window movable invisible',
 	            id: node_id,
@@ -176,6 +197,15 @@ window.Sentiment = {
 			
 			if (type == 'circle')
 				$("#"+node_id).addClass("circle");
+			
+			// argumentation node types:
+			if (type == 'node_type_proponent')
+				$("#"+node_id).addClass("node_type_proponent");
+			else if (type == 'node_type_opponent')
+				$("#"+node_id).addClass("node_type_opponent");
+			else if (type == 'node_type_edu_join')
+				$("#"+node_id).addClass("node_type_edu_join");
+			
 			
 			window.Sentiment.update();
 			changed = true;
@@ -245,10 +275,13 @@ window.Sentiment = {
 	add_word : function(to_add, wid, trid) {
 		if ($('#word_' + wid).length == 0) {
 			var word_type = "";
-			if (annotation_type == 'sentiment')
+			if (annotation_type == 'sentiment') {
 				word_type = 'word_sent';
-			else if (annotation_type == 'argumentation')
+			}
+			else if (annotation_type == 'argumentation') {
 				word_type = 'word_arg';
+				to_add = '[' + trid + '] ' + to_add;
+			}
 			jQuery('<span/>', {
 				class: word_type + ' window',
 				id: 'word_' + wid,
@@ -353,12 +386,12 @@ window.Sentiment = {
 							"layout": JSON.stringify(layout),
 							"graph": JSON.stringify(annotations), 
 							"annotator": JSON.stringify({ "id": annotator_id })
-							}, 
-							
-							function(data) {
-			$("#saved").hide().fadeIn(1500);
-			$("#saved").fadeOut(2500);
-		});
+						 }, 
+						 function(data) {
+							$("#saved").hide().fadeIn(1500);
+							$("#saved").fadeOut(2500);
+						 }
+		);
 		changed = false;
 	},
 	
@@ -390,29 +423,29 @@ window.Sentiment = {
             id: 'del_ele',
             text: 'delete element'
 	    }).appendTo('#rmenu');
-		
 
-	      $("#add_square_ent").bind("click", function() {
-	      		var node_id = 'node_' + node_count;
-				annotations.nodes[node_id] = "";
-				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node');
-	      });
-	      $("#add_circle_ent").bind("click", function() {
-	      		var node_id = 'node_' + node_count;
-				annotations.nodes[node_id] = "";
-				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'circle');
-	      });
-	      $("#add_join_edus").bind("click", function() {
-	      		var node_id = 'node_' + node_count;
-				annotations.nodes[node_id] = "";
-				window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'circle');
-	      });
-	      
-	      add_to_node_text = false;
-	      alt_node_text = 'ADU';
-	      
-	      $("#popUpTable_arg").show();
-	      $("#popUpTable_sent").hide();
+
+		$("#add_square_ent").bind("click", function() {
+			var node_id = 'node_' + node_count;
+			annotations.nodes[node_id] = {};
+			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'node_type_opponent');
+		});
+		$("#add_circle_ent").bind("click", function() {
+			var node_id = 'node_' + node_count;
+			annotations.nodes[node_id] = {};
+			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, 'new node', 'node_type_proponent');
+		});
+		$("#add_join_edus").bind("click", function() {
+			var node_id = 'node_' + node_count;
+			annotations.nodes[node_id] = {};
+			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'node_type_edu_join');
+		});
+		  
+		add_to_node_text = false;
+		alt_node_text = 'ADU';
+		  
+		$("#popUpTable_arg").show();
+		$("#popUpTable_sent").hide();
 
 	},
 	
@@ -575,29 +608,34 @@ window.Sentiment = {
 			hoverPaintStyle: {strokeStyle: red, lineWidth: 5},
 			//overlays: [ ["Label", {label: "", id: "label", cssClass: "test" }] ]
 			},
+		"segmentation": {
+				paintStyle: {strokeStyle:"#DDD", lineWidth: 2.5 },
+				hoverPaintStyle: {strokeStyle: "#DDD", lineWidth: 5},
+				//overlays: [ ["Label", {label: "default", id: "label", cssClass: "edge_label node" }] ]
+				},
 		"support": {
 				//Pfeilkopf, durchgezogen
-				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
 		"support_by_example": {
 				//Pfeilkopf, gestrichelt
-				paintStyle: {dashstyle:"2 4", strokeStyle: "black", lineWidth: 3.5}, 
+				paintStyle: {dashstyle:"2 4", strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {dashstyle:"2 4", strokeStyle: "black", lineWidth: 5},
 			},
 		"rebut": {
 				//Kreiskopf, durchgezogen
-				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
 		"undercut": {
 				//Kreiskopf, durchgezogen
-				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
-		"add_source": {
+		"additional_source": {
 				// kein kopf, durchgezogen
-				paintStyle: {strokeStyle: "black", lineWidth: 3.5}, 
+				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
 		});
@@ -752,17 +790,18 @@ window.Sentiment = {
 			}
 		}
 		else if (annotation_type == 'argumentation') {
-			if (c_t != null)
+			if (c_t != null) {
 				c_type = c_t;
-			else
+			} else {
 				c_type = $('input[name="c_type"]:checked').val();
-			c_type = c_type.replace('(', '').replace(')','');
+			}
+			//c_type = c_type.replace('(', '').replace(')',''); // obsolete, no parentheses in the c_type values anymore
 			annotations.edges[current_source][current_target][current_connection.id]["c_type"] = c_type;
 			
 			if (c_type == 'support' && !current_connection.hasType('support')) {
 				current_connection.toggleType('support');
 			}
-			else if (c_type == 'support_by_ex' && !current_connection.hasType('support_by_example')) {
+			else if (c_type == 'support_by_example' && !current_connection.hasType('support_by_example')) {
 				current_connection.toggleType('support_by_example');
 			}
 			else if (c_type == 'rebut' && !current_connection.hasType('rebut')) {
@@ -771,12 +810,12 @@ window.Sentiment = {
 			else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
 				current_connection.toggleType('undercut');
 			}
-			else if (c_type == 'additional source' && !current_connection.hasType('undercut')) {
-				current_connection.toggleType('add_source');
+			else if (c_type == 'additional_source' && !current_connection.hasType('undercut')) {
+				current_connection.toggleType('additional_source');
 			}
 		}
 		$('#labelPopUp').hide();
-		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_ex' || c_type == 'support') {
+		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
 		}
 		else if (c_type == 'rebut' || c_type == 'undercut') {
@@ -796,10 +835,10 @@ window.Sentiment = {
 			arc_label = 'undercut';
 		if (c_type == 'support') 
 			arc_label = 'support';
-		if (c_type == 'support_by_ex') 
+		if (c_type == 'support_by_example') 
 			arc_label = 'example';
 		
-		if (c_type != 'additional source') {
+		if (c_type != 'additional_source') {
 			current_connection.addOverlay(["Custom", { create: function(component) {
 									return $('<div id="' + ln_id + '" class="edge_label target">'+arc_label+'</div>');
 								},
@@ -810,122 +849,340 @@ window.Sentiment = {
 		}
 		
 		
-		if (!old && c_type != 'additional source')
+		if (!old && c_type != 'additional_source')
 			++node_count;
 		window.Sentiment.update();
 	},
 	
 	
 	showAttrsPopUp : function(c) {
-	        if (c.source.nodeName == "SPAN")
-	            return false;
-	    current_source = c.sourceId;
-	    current_target = c.targetId;
-	    current_connection = c;
-	    $('#labelPopUp').show();
-	    $(window).resize();
-	    $('textarea#text_anchor_input').val('');
-	    setTimeout(function() {
-	    	  $('#text_anchor_input').focus();
-	    	}, 0);
-	    
-	    
-	    return false;
+		if (c.source.nodeName == "SPAN")
+			return false;
+		current_source = c.sourceId;
+		current_target = c.targetId;
+		current_connection = c;
+		$('#labelPopUp').show();
+		$(window).resize();
+		$('textarea#text_anchor_input').val('');
+		setTimeout(function() {
+			$('#text_anchor_input').focus();
+		}, 0);
+		return false;
 	},
+	
+	
+	connection_sent : function(i,c) {
+    	changed = true;
+    	
+    	// TODO: is this still needed for sentiment?
+    	if (i.connection.source.innerHTML == '+' || i.connection.target.innerHTML == '+') {
+    		if (i.connection.source.innerHTML == '+') {
+    			i.connection.target.innerHTML = alt_node_text;
+    		}
+    		i.connection.target.token_range_id += ";" + i.connection.source.token_range_id;
+    		return;
+    	}
+
+		// connection is re-dragged
+        if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
+                return;
+
+    	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
+    	if (!(i.connection.sourceId in annotations.edges))
+    		annotations.edges[i.connection.sourceId] = {};
+    	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
+    		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
+    	//var sentence_id = sentence_order[current_sentence_idx];
+  		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
+    																				"label_node_id": null,
+    																				"polarity": null, 
+    																				"text_anchor": null,
+    																				"context": false,
+    																				"world_knowledge": false,
+    																				"ironic": false,
+    																				"rhetoric": false
+    																				};
+
+    	++edge_count;
+    	
+    	// span components correspond to word nodes
+		if (i.connection.source.nodeName != 'SPAN')
+			i.connection.toggleType('default');
+		if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
+			if (add_to_node_text) 
+				i.connection.target.innerHTML = i.connection.source.innerHTML;
+			else
+				i.connection.target.innerHTML = alt_node_text;
+			//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
+		}
+		if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
+			if (add_to_node_text)
+				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+			//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
+		}
+
+		// only do this for non-edge nodes
+		if (i.connection.targetId in annotations.nodes) {
+            if (annotations.nodes[i.connection.targetId]['label'] == "" && i.connection.source.nodeName == "SPAN") { //TODO: unclear what to do with the first condition
+            	if (add_to_node_text)
+            		annotations.nodes[i.connection.targetId]['label'] = i.connection.source.innerHTML;
+            	else
+            		annotations.nodes[i.connection.targetId]['label'] = alt_node_text;
+            }
+            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId]['label'].indexOf(i.connection.source.innerHTML) < 0)
+                annotations.nodes[i.connection.targetId]['label'] += ";" + i.connection.source.innerHTML;
+		}
+    		
+		// the connection and if not already there, the connected nodes have to be added to the internal model
+
+		var loading = false;
+		if (c == null)
+			loading = true;
+		if (!loading)
+			window.Sentiment.showAttrsPopUp(i.connection);
+	},
+	
+	
+	_get_arg_semantic_type_of_element : function (e) {
+		if (e.classList.contains('word_arg')) return "EDU";
+		else if (e.classList.contains('node_type_edu_join')) return "EDU-JOIN";
+		else if (e.classList.contains('edge_label')) return "EDGE";
+		else if (e.classList.contains('node_type_proponent')) return "ADU";
+		else if (e.classList.contains('node_type_opponent')) return "ADU";
+		else return "unknown";
+	},
+	
+	
+	_get_arg_semantic_role_of_element : function (e) {
+		if (e.classList.contains('node_type_proponent')) return "pro";
+		else if (e.classList.contains('node_type_opponent')) return "opp";
+		else return null;
+	},
+	
+	
+	_modal_choice_dialog : function (message, option1, option2, connection) {
+		bootbox.dialog({
+			"message": message,
+				"closeButton": false,
+				"buttons": {
+					choice1: {
+						"label": option1,
+						"className": "btn-primary",
+						"callback": function() { 
+							connection.toggleType(option1);
+							window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, option1);
+						}
+					},
+					choice2: {
+						"label": option2,
+						"className": "btn-primary",
+						"callback": function() { 
+							connection.toggleType(option2);
+							window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, option2);
+						}
+					},
+			  }
+  		});
+	},
+	
+	
+	connection_arg : function(i,c) {
+    	changed = true;
+    	
+    	// connection is re-dragged
+        if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
+        	return;
         
-        init : function() {         
-            $('#rmenu').hide();
-            $('#labelPopUp').hide();
-            $('#saved').hide();
-            window.Sentiment.get_files_to_be_annotated();
-            window.Sentiment.update();
-            
-            $(document.body).keydown( function(event) {
-                var pressed = event.keyCode || event.which;
-                if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'sentiment') {
-					// c
-					if (pressed == 67) {
-						document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
-					    }
-					 // w
-					if (pressed == 87) {
-						document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
-					    }
-					 // i
-					if (pressed == 73) {
-						document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
-					    }
-					 // r
-					if (pressed == 82) {
-						document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
-					}
-					// n
-					if (pressed == 78) {
-					    $('input[name="polarity"]').val(['negative']);
-					}
-					// o
-					if (pressed == 79) {
-					    $('input[name="polarity"]').val(['other']);
-					}
-					// p
-					if (pressed == 80) {
-					    $('input[name="polarity"]').val(['positive']);
-					}
-					// return
-					if (pressed == 13) {
-					    $("#attrs_button").click();
-					}
-                }
-                else if ( $('#labelPopUp').is(":visible") && annotation_type == 'argumentation') {
-                    // s
-                    if (pressed == 83) {
-                    	$('input[name="c_type"]').val(['support']);
-                    }
-                    // e
-                    if (pressed == 69) {
-                    	$('input[name="c_type"]').val(['support_by_example']);
-                    }
-                    // r
-                    if (pressed == 82) {
-                    	$('input[name="c_type"]').val(['rebut']);
-                    }
-                    // u
-                    if (pressed == 85) {
-                    	$('input[name="c_type"]').val(['undercut']);
-                    }
-                    // a
-                    if (pressed == 65) {
-                    	$('input[name="c_type"]').val(['additional_source']);
-                    }
-                    // return
-                    if (pressed == 13) {
-                            $("#attrs_button").click();
-                    }
-                }
-            });    
-            
-            $('#text_anchor_input').keydown( function(event) {
-                var pressed = event.keyCode || event.which;
-                if (pressed == 13 && ($('#text_anchor_input').is(':focus'))) {
-                        $('#text_anchor_input').blur();
-                }
-                event.stopPropagation();
-            });
+        // get semantic types of source and target element and its role (for ADUs)
+        var source_type = window.Sentiment._get_arg_semantic_type_of_element(i.connection.source);
+        var source_role = window.Sentiment._get_arg_semantic_role_of_element(i.connection.source);
+        var target_type = window.Sentiment._get_arg_semantic_type_of_element(i.connection.target);
+        var target_role = window.Sentiment._get_arg_semantic_role_of_element(i.connection.target);
+    	
+        // test whether connection is valid
+        var valid_connections = ["EDU>ADU", "EDU>EDU-JOIN", "EDU-JOIN>ADU", "ADU>ADU", "ADU>EDGE" ];
+        var connection_description = source_type+'>'+target_type;
+        if (valid_connections.indexOf(connection_description) < 0) {
+        	console.warn("Not a valid connection:" + connection_description);
+        	jsPlumb.detach(i.connection);
+        	return;
+        }
+        
+        // add the edge to the model
+    	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
+    	if (!(i.connection.sourceId in annotations.edges))
+    		annotations.edges[i.connection.sourceId] = {};
+    	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
+    		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
+		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = { "label_node_id": null, "c_type": null };
+    	++edge_count;
 
-            // make 'window1' a connection source. notice the filter parameter: it tells jsPlumb to ignore drags
-            // that started on the 'enable/disable' link on the blue window.
-            //jsPlumb.makeTarget("window1", {
-            //    anchor:sourceAnchors,     // you could supply this if yoddu want, but it was set in the defaults above.                         
-            //    filter:function(evt, el) {
-            //        var t = evt.target || evt.srcElement;
-            //        return t.tagName !== "A";
-            //    }
-            //});
-            //jsPlumb.makeTarget("window2", {});   
-            //jsPlumb.makeSource("window2", {});
-                
+		// eventually, we don't need to actually popup the edge classification
+    	// but in order to make labelPopUpButton_click work silently, we need to set the current connection
+		current_source = i.connection.sourceId;
+		current_target = i.connection.targetId;
+		current_connection = i.connection;
+		
+		// don't show dialogues when loading
+		var loading = false;
+		if (c == null)
+			loading = true;
+        
+    	// depending on the type of edge, the target nodes description may change, or c_type choice is restricted
+    	if (connection_description == "EDU>ADU" || connection_description == "EDU-JOIN>ADU") {
+			i.connection.toggleType('segmentation');
+			var source_label = "";
+			if (connection_description == "EDU>ADU") {
+				source_label = i.connection.source.getAttribute('token_range_id');
+			} else {
+				source_label = i.connection.source.innerHTML;
+			}
+			if (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node') { //TODO: hardcoded hack
+				// ground the ADU in one EDU or EDU-JOIN
+				i.connection.target.innerHTML = source_label;
+			}
+			else {
+				// add a restatement
+				i.connection.target.innerHTML += '='+source_label;
+			}
+    	}
+    	
+    	else if (connection_description == "EDU>EDU-JOIN") {
+			i.connection.toggleType('segmentation');
+			var source_trid = i.connection.source.getAttribute('token_range_id');
+			if (i.connection.target.innerHTML == '+') {
+				// add the first edu to the join node
+				i.connection.target.innerHTML = source_trid+'+';
+			}
+			else if (i.connection.target.innerHTML.endsWith('+')) {
+				// add a second edu to the join node 
+				i.connection.target.innerHTML = i.connection.target.innerHTML+source_trid;	
+			}
+			else {
+				// add another edu to the join node 
+				i.connection.target.innerHTML = i.connection.target.innerHTML+'+'+source_trid;
+			}
+    	}
+    	
+    	else if (connection_description == "ADU>ADU") {
+    		if (source_role != null && target_role != null && source_role == target_role) {
+    			// its either pro->pro or opp->opp: restrict popup to sup or ex c_type
+    			if (!loading) {
+    				window.Sentiment._modal_choice_dialog("Choose ADU>ADU class", "support", "support_by_example", i.connection);
+    			}
+    		}
+    		else if (source_role != null && target_role != null && source_role != target_role) {
+    			// its either pro->opp or opp->pro: thus the c_type is a rebutting one, no popup needed
+    			i.connection.toggleType('rebut');
+    			window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, 'rebut');
+    		}
+    		else {
+    			console.warn("Could establish ADU->ADU link because the role of source or target ADU was null.");
+    		}
+    	}
+    	
+    	else if (connection_description == "ADU>EDGE") {
+    		// restrict popup to undercut or add_source 
+    		if (!loading) {
+	    		window.Sentiment._modal_choice_dialog("Choose ADU>EDGE class", "undercut", "additional_source", i.connection);
+    		}
+    	}
+	},
+	
+	
+    init : function() {         
+        $('#rmenu').hide();
+        $('#labelPopUp').hide();
+        $('#saved').hide();
+        window.Sentiment.get_files_to_be_annotated();
+        window.Sentiment.update();
+        
+        $(document.body).keydown( function(event) {
+            var pressed = event.keyCode || event.which;
+            if ( $('#labelPopUp').is(":visible") && !($('#text_anchor_input').is(':focus')) && annotation_type == 'sentiment') {
+				// c
+				if (pressed == 67) {
+					document.getElementById("context_chbox").checked = !document.getElementById("context_chbox").checked;
+				}
+				// w
+				if (pressed == 87) {
+					document.getElementById("wknow_chbox").checked = !document.getElementById("wknow_chbox").checked;
+				}
+				// i
+				if (pressed == 73) {
+					document.getElementById("ironic_chbox").checked = !document.getElementById("ironic_chbox").checked;
+				}
+				// r
+				if (pressed == 82) {
+					document.getElementById("rhetoric_chbox").checked = !document.getElementById("rhetoric_chbox").checked;
+				}
+				// n
+				if (pressed == 78) {
+				    $('input[name="polarity"]').val(['negative']);
+				}
+				// o
+				if (pressed == 79) {
+				    $('input[name="polarity"]').val(['other']);
+				}
+				// p
+				if (pressed == 80) {
+				    $('input[name="polarity"]').val(['positive']);
+				}
+				// return
+				if (pressed == 13) {
+				    $("#attrs_button").click();
+				}
+            }
+            else if ( $('#labelPopUp').is(":visible") && annotation_type == 'argumentation') {
+                // s
+                if (pressed == 83 && $('#c_type_support').not(":disabled")) {
+                	$('input[name="c_type"]').val(['support']);
+                }
+                // e
+                if (pressed == 69 && $('#c_type_support_by_example').not(":disabled")) {
+                	$('input[name="c_type"]').val(['support_by_example']);
+                }
+                // r
+                if (pressed == 82 && $('#c_type_rebut').not(":disabled")) {
+                	$('input[name="c_type"]').val(['rebut']);
+                }
+                // u
+                if (pressed == 85 && $('#c_type_undercut').not(":disabled")) {
+                	$('input[name="c_type"]').val(['undercut']);
+                }
+                // a
+                if (pressed == 65 && $('#c_type_additional_source').not(":disabled")) {
+                	$('input[name="c_type"]').val(['additional_source']);
+                }
+                // return
+                if (pressed == 13) {
+                        $("#attrs_button").click();
+                }
+            }
+        });    
+        
+        $('#text_anchor_input').keydown( function(event) {
+            var pressed = event.keyCode || event.which;
+            if (pressed == 13 && ($('#text_anchor_input').is(':focus'))) {
+                    $('#text_anchor_input').blur();
+            }
+            event.stopPropagation();
+        });
 
-            // get the list of ".smallWindow" elements.            
+        // make 'window1' a connection source. notice the filter parameter: it tells jsPlumb to ignore drags
+        // that started on the 'enable/disable' link on the blue window.
+        //jsPlumb.makeTarget("window1", {
+        //    anchor:sourceAnchors,     // you could supply this if yoddu want, but it was set in the defaults above.                         
+        //    filter:function(evt, el) {
+        //        var t = evt.target || evt.srcElement;
+        //        return t.tagName !== "A";
+        //    }
+        //});
+        //jsPlumb.makeTarget("window2", {});   
+        //jsPlumb.makeSource("window2", {});
+            
+
+        // get the list of ".smallWindow" elements.            
 //             var smallWindows = $(".word");
 //             
 //             // configure them as targets.
@@ -934,17 +1191,17 @@ window.Sentiment = {
 //                 //dropOptions:{ hoverClass:"hover" }
 //             }); 
 
-            // and finally connect a couple of small windows, just so its obvious what's going on when this demo loads.           
-            //jsPlumb.connect({ source:"window1", target:"window5" });
-            //jsPlumb.connect({ source:"window1", target:"window2" });
-            //jsPlumb.connect({ source:"window1", target:"window3" });
+        // and finally connect a couple of small windows, just so its obvious what's going on when this demo loads.           
+        //jsPlumb.connect({ source:"window1", target:"window5" });
+        //jsPlumb.connect({ source:"window1", target:"window2" });
+        //jsPlumb.connect({ source:"window1", target:"window3" });
 
-            // click listener for the enable/disable link.
-            //$("#enableDisableSource").bind("click", function() {
-            //    var state = jsPlumb.toggleSourceEnabled("window1");
-            //    $(this).html(state ? "disable" : "enable");
-            //});
-            $("#psentence_button")[0].value = "←\nprevious\n←";
+        // click listener for the enable/disable link.
+        //$("#enableDisableSource").bind("click", function() {
+        //    var state = jsPlumb.toggleSourceEnabled("window1");
+        //    $(this).html(state ? "disable" : "enable");
+        //});
+        $("#psentence_button")[0].value = "←\nprevious\n←";
 	    $("#psentence_button").css({
 			float: "left"
 		});
@@ -952,137 +1209,70 @@ window.Sentiment = {
 	    $("#nsentence_button").css({
 			float: "right"
 		});
-        $("#graph_part").bind("contextmenu", function(e) {
-        	rclick = e;
-            $('#rmenu').css({
-                top: e.pageY + 'px',
-                left: e.pageX + 'px'
-            }).show();
-            return false;
-        });         
-        
-        var ent_endpoints = {
-            anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-            endpoint: ["Dot", {radius: 5}],
-            isSource: true,
-            /*connectorOverlays: [
-                    [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-            ],*/
-            paintStyle: {
-                    gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-                    strokeStyle: "black",
-                    fillStyle: "#004F66",
-                    lineWidth: 1.5
-            }
-        };
+	    $("#graph_part").bind("contextmenu", function(e) {
+	    	rclick = e;
+	        $('#rmenu').css({
+	            top: e.pageY + 'px',
+	            left: e.pageX + 'px'
+	        }).show();
+	        return false;
+	    });         
+    
+	    var ent_endpoints = {
+	        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+	        endpoint: ["Dot", {radius: 5}],
+	        isSource: true,
+	        /*connectorOverlays: [
+	                [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+	        ],*/
+	        paintStyle: {
+	                gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+	                strokeStyle: "black",
+	                fillStyle: "#004F66",
+	                lineWidth: 1.5
+	        }
+	    };
 
-        jsPlumb.bind("connection", function(i,c) {
-        	changed = true;
-        	if (i.connection.source.innerHTML == '+' || i.connection.target.innerHTML == '+') {
-        		if (i.connection.source.innerHTML == '+') {
-        			i.connection.target.innerHTML = alt_node_text;
-        		}
-        		i.connection.target.token_range_id += ";" + i.connection.source.token_range_id;
-        		return;
+	    jsPlumb.bind("connection", function(i,c) {
+        	if (annotation_type == 'sentiment') {
+        		window.Sentiment.connection_sent(i,c);
         	}
+        	else if (annotation_type == 'argumentation') {
+        		window.Sentiment.connection_arg(i,c);
+        	}
+        }); 
+	    
+        jsPlumb.bind("dblclick", function(c) {
+        	window.Sentiment.showAttrsPopUp(c);
+        });
+        jsPlumb.bind("ready", function () {
+            jsPlumb.addEndpoint($(".node"), ent_endpoints);
+        });
+        jsPlumb.bind("connectionMoved", function(info, orig_event) {
+        	console.log("moving connections endpoints");
+        });
+	    jsPlumb.bind("ready", function () {
+			jsPlumb.addEndpoint($(".node"), ent_endpoints);
+	    });
 
-        		// connection is re-dragged
-                if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
-                        return;
-
-            	// of the form "edges": {"node_0": {"node_1": "node_0_to_1_weight"}, ...}
-            	if (!(i.connection.sourceId in annotations.edges))
-            		annotations.edges[i.connection.sourceId] = {};
-            	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
-            		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
-            	//var sentence_id = sentence_order[current_sentence_idx];
-            	if (annotation_type == 'sentiment') {
-            		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
-            																				"label_node_id": null,
-            																				"polarity": null, 
-            																				"text_anchor": null,
-            																				"context": false,
-            																				"world_knowledge": false,
-            																				"ironic": false,
-            																				"rhetoric": false
-            																				};
-            	}
-            	else if (annotation_type == 'argumentation') {
-            		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = {
-							"label_node_id": null,
-							"arc_type": null
-							};
-            		
-            	}
-
-            	++edge_count;
-            	
-    			if (i.connection.source.nodeName != 'SPAN')
-    				i.connection.toggleType('default');
-    			if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
-    				if (add_to_node_text) 
-    					i.connection.target.innerHTML = i.connection.source.innerHTML;
-    				else
-    					i.connection.target.innerHTML = alt_node_text;
-    				//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-    			}
-    			if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
-    				if (add_to_node_text)
-    					i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
-    				//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
-    			}
-
-    			// only do this for non-edge nodes
-    			if (i.connection.targetId in annotations.nodes) {
-    	            if (annotations.nodes[i.connection.targetId] == "" && i.connection.source.nodeName == "SPAN") {
-    	            	if (add_to_node_text)
-    	            		annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
-    	            	else
-    	            		annotations.nodes[i.connection.targetId] = alt_node_text;
-    	            }
-    	            else if (i.connection.source.nodeName == "SPAN" && annotations.nodes[i.connection.targetId].indexOf(i.connection.source.innerHTML) < 0)
-    	                annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
-    			}
-    			
-    		// the connection and if not already there, the connected nodes have to be added to the internal model
-
-    			var loading = false;
-    			if (c == null)
-    				loading = true;
-    			if (!loading)
-    				window.Sentiment.showAttrsPopUp(i.connection);
-            }); 
-            jsPlumb.bind("dblclick", function(c) {
-            	window.Sentiment.showAttrsPopUp(c);
-            });
-            jsPlumb.bind("ready", function () {
-                jsPlumb.addEndpoint($(".node"), ent_endpoints);
-            });
-            jsPlumb.bind("connectionMoved", function(info, orig_event) {
-            	console.log("moving connections endpoints");
-            });
-    	    jsPlumb.bind("ready", function () {
-    			jsPlumb.addEndpoint($(".node"), ent_endpoints);
-		    });
-
-            $('#rmenu').click(function() {
-                $('#rmenu').hide();
-            });
-            $(document).click(function() {
-                $('#rmenu').hide();
-            });
-	    $(window).resize( function() {
+        $('#rmenu').click(function() {
+            $('#rmenu').hide();
+        });
+        $(document).click(function() {
+            $('#rmenu').hide();
+        });
+        $(window).resize( function() {
 			$('.popUpContent').css({
 			    position: 'absolute',
 			    left: ($(window).width() - $('.popUpContent').width())/2,
 			    top: ($(window).height() - $('.popUpContent').height())/2
 			});
-	    });
+        });
 	    $(document).ready( function() {
 	    	$(window).resize();
 			window.Sentiment.update();
 	    });
-	    
-        }
+    
+    }
 
-	};
+};

@@ -12,7 +12,11 @@
   <script type='text/javascript' src='js/jquery.ui.touch-punch.min.js'></script>
   <script type='text/javascript' src='js/jquery.jsPlumb-1.5.1-min.js'></script>
   <script src="js/sentiment_annotation.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="css/bootstrap-3.2.0.min.css">
+  <script src="js/bootstrap-3.2.0.min.js"></script>
+  <script src="js/bootbox-4.2.0.min.js"></script>
 </head>
+
 
 <body>
 	<div class="menu">
@@ -65,11 +69,11 @@
 						<td><b>connection type</b></td>
 						<td>
 							<form action="">
-							 	<input type="radio" name="c_type" value="support"> (s)upport <br>
-								<input type="radio" name="c_type" value="support_by_example"> support by (e)xample <br>
-								<input type="radio" name="c_type" value="rebut"> (r)ebut <br>
-								<input type="radio" name="c_type" value="undercut"> (u)ndercut <br>
-								<input type="radio" name="c_type" value="additional_source"> (a)dditional source
+							 	<input type="radio" name="c_type_" id="c_type_support" value="support"> (s)upport <br>
+								<input type="radio" name="c_type" id="c_type_support_by_example" value="support_by_example"> support by (e)xample <br>
+								<input type="radio" name="c_type" id="c_type_rebut" value="rebut"> (r)ebut <br>
+								<input type="radio" name="c_type" id="c_type_undercut" value="undercut"> (u)ndercut <br>
+								<input type="radio" name="c_type" id="c_type_additional_source" value="additional_source"> (a)dditional source
 							</form>
 						</td>
 					</tr>
