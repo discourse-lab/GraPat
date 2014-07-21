@@ -7,10 +7,10 @@
  * x umstellen auf fertig einfache modale dialoge
  * - Löschen von Knoten und Relationen geht nicht
  * - ein Knopf zum Zurücksetzen (komplett löschen) der Annotation dieses Textes wäre gut
- * - support pfeileköpfe nicht an pfeilende
- * - additional sources edges werden beim erstellen nicht richtig formatiert, nach dem laden aber schon.
+ * x support pfeileköpfe nicht an pfeilende
+ * x additional sources edges werden beim erstellen nicht richtig formatiert, nach dem laden aber schon.
  * - edujoin>adu edges haben handles in der mitte?
- * - wenn adu>edge und adu-role=edge-source-role, dann braucht keine class-entscheidung abgefragt zu werden.
+ * x wenn adu>edge und adu-role=edge-source-role, dann braucht keine class-entscheidung abgefragt zu werden.
  */
 
 var annotations = {
@@ -406,12 +406,12 @@ window.Sentiment = {
 		jQuery('<div/>', {
             class: 'rmenu_element',
             id: 'add_circle_ent',
-            text: 'add proponent'
+            text: 'add ADU proponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
             id: 'add_square_ent',
-            text: 'add opponent'
+            text: 'add ADU opponent'
 	    }).appendTo('#rmenu');
 		jQuery('<div/>', {
             class: 'rmenu_element',
@@ -572,6 +572,7 @@ window.Sentiment = {
             // set default anchors.  the 'connect' calls below will pick these up, and in fact setting these means
             // that you also do not need to supply anchor definitions to the makeSource or makeTarget functions. 
             Anchors : [ sourceAnchors ],
+            Connector : [ "Bezier", { curviness:50 } ],
             // drag options
             DragOptions : { cursor: "pointer", zIndex:2000 },
             // default to blue at source and green at target
@@ -611,11 +612,10 @@ window.Sentiment = {
 		"segmentation": {
 				paintStyle: {strokeStyle:"#DDD", lineWidth: 2.5 },
 				hoverPaintStyle: {strokeStyle: "#DDD", lineWidth: 5},
-				//overlays: [ ["Label", {label: "default", id: "label", cssClass: "edge_label node" }] ]
 				},
 		"support": {
 				//Pfeilkopf, durchgezogen
-				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
+				paintStyle: {strokeStyle: "black", lineWidth: 2.5},
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
 			},
 		"support_by_example": {
@@ -627,7 +627,7 @@ window.Sentiment = {
 				//Kreiskopf, durchgezogen
 				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
 				hoverPaintStyle: {strokeStyle: "black", lineWidth: 5},
-			},
+		},
 		"undercut": {
 				//Kreiskopf, durchgezogen
 				paintStyle: {strokeStyle: "black", lineWidth: 2.5}, 
@@ -809,24 +809,29 @@ window.Sentiment = {
 			else if (c_type == 'undercut' && !current_connection.hasType('undercut')) {
 				current_connection.toggleType('undercut');
 			}
-			else if (c_type == 'additional_source' && !current_connection.hasType('undercut')) {
+			else if (c_type == 'additional_source' && !current_connection.hasType('additional_source')) {
 				current_connection.toggleType('additional_source');
 			}
 		}
 		$('#labelPopUp').hide();
-		if (polarity == 'negative' || polarity == 'positive' || c_type == 'support_by_example' || c_type == 'support') {
+		
+		// add arrow heads as overlay
+		if (polarity == 'negative' || polarity == 'positive' ) {
 			current_connection.addOverlay(['Arrow', { foldback:0.2, location:0.75, width:10 }]);
 		}
+		else if (c_type == 'support_by_example' || c_type == 'support') {
+			current_connection.addOverlay(['Arrow', { foldback:0.66, location:1, width:10, length:12 }]);
+	    }
 		else if (c_type == 'rebut' || c_type == 'undercut') {
 			current_connection.addOverlay(["Custom", { create: function(component) {
 					return $('<div></div>');
 				},
-				location: 0.97,
+				location: 1,
 				cssClass: "circle rebut_undercut_circle"
-				//id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 			}]);
 		}
 		
+		// add edge node as overlay
 		var arc_label = text_anchor;
 		if (c_type == 'rebut') 
 			arc_label = 'rebut';
@@ -850,6 +855,7 @@ window.Sentiment = {
 		
 		if (!old && c_type != 'additional_source')
 			++node_count;
+		
 		window.Sentiment.update();
 	},
 	
@@ -967,21 +973,34 @@ window.Sentiment = {
 					choice1: {
 						"label": option1,
 						"className": "btn-primary",
-						"callback": function() { 
-							connection.toggleType(option1);
+						"callback": function() {
 							window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, option1);
 						}
 					},
 					choice2: {
 						"label": option2,
 						"className": "btn-primary",
-						"callback": function() { 
-							connection.toggleType(option2);
+						"callback": function() {
 							window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, option2);
 						}
 					},
 			  }
   		});
+	},
+	
+	
+	_findSourceOfEdgeWithLabelNode : function (label_node_id) {
+		// $.each doesnt work here, as i'd need to refer back to vars out of the inner callback function
+		for (source_id in annotations.edges) {
+			for (target_id in annotations.edges[source_id]) {
+				for (conn_id in annotations.edges[source_id][target_id]) {
+					if (annotations.edges[source_id][target_id][conn_id]["label_node_id"] == label_node_id) {
+						return source_id;
+					}
+				}
+			}
+		}
+		return null;
 	},
 	
 	
@@ -1072,18 +1091,28 @@ window.Sentiment = {
     		}
     		else if (source_role != null && target_role != null && source_role != target_role) {
     			// its either pro->opp or opp->pro: thus the c_type is a rebutting one, no popup needed
-    			i.connection.toggleType('rebut');
     			window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, 'rebut');
     		}
     		else {
-    			console.warn("Could establish ADU->ADU link because the role of source or target ADU was null.");
+    			console.warn("Could not establish ADU->ADU link because the role of source or target ADU was null.");
     		}
     	}
     	
     	else if (connection_description == "ADU>EDGE") {
-    		// restrict popup to undercut or add_source 
+    		// it's either an undercut or add_source, depending on the roles 
     		if (!loading) {
-	    		window.Sentiment._modal_choice_dialog("Choose ADU>EDGE class", "undercut", "additional_source", i.connection);
+    			// find the sourceId of the targeted edge
+    			var targetEdgeSourceId = window.Sentiment._findSourceOfEdgeWithLabelNode(i.connection.targetId);
+    			if (targetEdgeSourceId != null && targetEdgeSourceId in annotations.nodes) {
+    				// get the role of the edges sourceID, if targetEdgeSourceRole == sourceRole then add, else undercut
+    				if (annotations.nodes[targetEdgeSourceId]["n_type"] == annotations.nodes[i.connection.sourceId]["n_type"]) {
+    	    			window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, 'additional_source');
+    				} else {
+    	    			window.Sentiment.labelPopUpButton_click(null, null, null, null, null, null, null, 'undercut');
+    				}
+    			} else {
+    				window.Sentiment._modal_choice_dialog("Choose ADU>EDGE class", "undercut", "additional_source", i.connection);
+    			}
     		}
     	}
 	},
