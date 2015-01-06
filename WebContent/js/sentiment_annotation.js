@@ -1,16 +1,10 @@
 /* TODO:
- * x example relation wird neuerdings nicht mehr richtig formatiert
- * x ADU Rolle wird nicht abgespeichert und auch nicht geladen.
- * x Bei EDU-joins werden keine Relationen gespeichert (nicht die von w->+ noch +->adu) und die Knoten haben kein Label.
- * x beim laden werden die gespeicherten knotennamen dynamisch miterweitert.
- *   [umgangen, indem die knotennamen nur in der gui angezeigt, aber nicht im model gespeichert werden. beim laden werden sie wieder richtig rekonstruiert]
- * x umstellen auf fertig einfache modale dialoge
- * - Löschen von Knoten und Relationen geht nicht
- * x ein Knopf zum Zurücksetzen (komplett löschen) der Annotation dieses Textes wäre gut
- * x support pfeileköpfe nicht an pfeilende
- * x additional sources edges werden beim erstellen nicht richtig formatiert, nach dem laden aber schon.
- * - edujoin>adu edges haben handles in der mitte?
- * x wenn adu>edge und adu-role=edge-source-role, dann braucht keine class-entscheidung abgefragt zu werden.
+ * - delete nodes and relations
+ * - edujoin>adu edges have handles in the middle
+ * - make segmentation connections transparent and more in the background 
+ * - style all svg connection with cssClass
+ * - disallow changes of edges by doubleclick prop menu
+ * - logout functionality
  */
 
 var annotations = {
@@ -198,6 +192,9 @@ window.Sentiment = {
 			if (type == 'circle')
 				$("#"+node_id).addClass("circle");
 			
+			// all nodes created like this can be deleted
+			$("#"+node_id).addClass("deletable");
+			
 			// argumentation node types:
 			if (type == 'node_type_proponent')
 				$("#"+node_id).addClass("node_type_proponent");
@@ -380,8 +377,10 @@ window.Sentiment = {
 	
 	
 	save : function () {
-		if (!changed)
+		if (!changed) {
+			alert("Nothing changed.");
 			return;
+		}
 		// node_id -> x,y coordinates
 		var layout = {};
 		var nodes = $(".node");
@@ -429,12 +428,6 @@ window.Sentiment = {
             id: 'add_join_edus',
             text: 'add EDU join'
 	    }).appendTo('#rmenu');
-		jQuery('<div/>', {
-            class: 'rmenu_element',
-            id: 'del_ele',
-            text: 'delete element'
-	    }).appendTo('#rmenu');
-
 
 		$("#add_square_ent").bind("click", function() {
 			var node_id = 'node_' + node_count;
@@ -451,25 +444,28 @@ window.Sentiment = {
 			annotations.nodes[node_id] = {};
 			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'node_type_edu_join');
 		});
-		$("#del_ele").bind("click", function(e) {
-			console.log(e);
-			console.log(rclick);
-			//alert("Deleting elements is not supported at the moment.");
-			return;
+		$("#del_node").bind("click", function(e) {
+			node_id = rclick.target.id;			
+			// model: remove all connections to this node
+			for (source_id in annotations.edges) {
+				if (node_id in annotations.edges[source_id]) {
+					delete annotations.edges[source_id][node_id];
+				}
+				// TODO: if no targets for source_id are left, it could be wise to remove source_id from edges
+			}
+			// model: remove all connections from this node
+			delete annotations.edges[node_id];
+			// model: remove node
+			delete annotations.nodes[node_id];
+			// TODO: what about undercutters and join-support? we need to check for every deleted connection whether it was referenced
+			// TODO: what about all those counters
 			
+			// view: remove all connections from and to the element
 			jsPlumb.removeAllEndpoints(rclick.target);
 			jsPlumb.detachAllConnections(rclick.target);
-			
-			// also remove everything from annotations which includes rclick.target.id
-			// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
-			
+			// view: remove the element
 			rclick.target.remove();
-			
-			// if rclick.target is a node
-			//    remove all edges from this node, in model and elements
-			//    remove all edges to this node, in model and elements
-			// elif rclick.target is a connection
-			//    remove connection in model and elements
+			changed = true;
 	    }); 
 		
 		add_to_node_text = false;
@@ -1152,8 +1148,14 @@ window.Sentiment = {
 	},
 	
 	
-    init : function() {         
+	hide_all_context_menues : function() {
         $('#rmenu').hide();
+        $('#dmenu').hide();
+	},
+	
+	
+    init : function() {         
+    	window.Sentiment.hide_all_context_menues();
         $('#labelPopUp').hide();
         $('#saved').hide();
         window.Sentiment.get_files_to_be_annotated();
@@ -1271,15 +1273,30 @@ window.Sentiment = {
 	    $("#nsentence_button").css({
 			float: "right"
 		});
-	    $("#graph_part").bind("contextmenu", function(e) {
+
+	    // bring up the normal context menue when rightclicking in the graph part
+	    $("#graph_part").on("contextmenu", function(e) {
+	    	window.Sentiment.hide_all_context_menues();
 	    	rclick = e;
 	        $('#rmenu').css({
 	            top: e.pageY + 'px',
 	            left: e.pageX + 'px'
 	        }).show();
 	        return false;
-	    });         
-    
+	    });
+	    
+	    // bring up the noe deletion context menue when rightclicking on a node in the graph_part
+	    $("#graph_part").on("contextmenu", ".deletable", function(e){
+	    	window.Sentiment.hide_all_context_menues();
+	    	rclick = e;
+	        $('#dmenu').css({
+	            top: e.pageY + 'px',
+	            left: e.pageX + 'px'
+	        }).show();
+	        return false;
+	    });
+	    
+	    
 	    var ent_endpoints = {
 	        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
 	        endpoint: ["Dot", {radius: 5}],
@@ -1318,11 +1335,15 @@ window.Sentiment = {
 	    });
 
         $('#rmenu').click(function() {
-            $('#rmenu').hide();
+        	window.Sentiment.hide_all_context_menues();
+        });
+        $('#dmenu').click(function() {
+        	window.Sentiment.hide_all_context_menues();
         });
         $(document).click(function() {
-            $('#rmenu').hide();
+        	window.Sentiment.hide_all_context_menues();
         });
+        
         $(window).resize( function() {
 			$('.popUpContent').css({
 			    position: 'absolute',

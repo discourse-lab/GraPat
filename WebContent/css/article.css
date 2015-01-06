@@ -213,6 +213,18 @@
     border: 2px solid black;
 }
 
+#dmenu {
+    display: none;
+    position:absolute;
+    padding: 0.25em;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: white;
+    border: 1.5px solid black;
+    border-radius: 0.25em;
+    z-index: 5000000;
+}
+
 #rmenu {
     display: none;
     position:absolute;
