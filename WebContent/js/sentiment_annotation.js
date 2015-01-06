@@ -6,7 +6,7 @@
  *   [umgangen, indem die knotennamen nur in der gui angezeigt, aber nicht im model gespeichert werden. beim laden werden sie wieder richtig rekonstruiert]
  * x umstellen auf fertig einfache modale dialoge
  * - Löschen von Knoten und Relationen geht nicht
- * - ein Knopf zum Zurücksetzen (komplett löschen) der Annotation dieses Textes wäre gut
+ * x ein Knopf zum Zurücksetzen (komplett löschen) der Annotation dieses Textes wäre gut
  * x support pfeileköpfe nicht an pfeilende
  * x additional sources edges werden beim erstellen nicht richtig formatiert, nach dem laden aber schon.
  * - edujoin>adu edges haben handles in der mitte?
@@ -368,6 +368,17 @@ window.Sentiment = {
 	},
 	
 	
+	clear_annotation : function () {
+		bootbox.confirm("Do you really want to clear this annotation?", function(result) {
+			if (result == true) {
+				annotations = { "nodes": {}, "edges": {} };
+				window.Sentiment.clear();
+				changed = true;
+			}
+		}); 
+	},
+	
+	
 	save : function () {
 		if (!changed)
 			return;
@@ -398,8 +409,8 @@ window.Sentiment = {
 	
 	logout : function() {
 	},
-	
 
+	
 	init_arg : function () {
 		// to add
 		// 
@@ -440,7 +451,27 @@ window.Sentiment = {
 			annotations.nodes[node_id] = {};
 			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'node_type_edu_join');
 		});
-		  
+		$("#del_ele").bind("click", function(e) {
+			console.log(e);
+			console.log(rclick);
+			//alert("Deleting elements is not supported at the moment.");
+			return;
+			
+			jsPlumb.removeAllEndpoints(rclick.target);
+			jsPlumb.detachAllConnections(rclick.target);
+			
+			// also remove everything from annotations which includes rclick.target.id
+			// note that this is right click event and .target is the target of the click and nothing related to the annotation graph!
+			
+			rclick.target.remove();
+			
+			// if rclick.target is a node
+			//    remove all edges from this node, in model and elements
+			//    remove all edges to this node, in model and elements
+			// elif rclick.target is a connection
+			//    remove connection in model and elements
+	    }); 
+		
 		add_to_node_text = false;
 		alt_node_text = 'ADU';
 		  
@@ -850,6 +881,9 @@ window.Sentiment = {
 								cssClass: "edge_label target",
 								id: "labelNode"					//(["Label", {label: text_anchor, id: "label", cssClass: "edge_label target"}]);
 								}]);
+		} else {
+			// remove labelnode id
+			annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = null;
 		}
 		
 		

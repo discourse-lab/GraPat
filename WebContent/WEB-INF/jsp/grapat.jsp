@@ -21,6 +21,9 @@
 <body>
 	<div class="menu">
 		<div class="menu_container">
+			<input id="clear" class="menu_button" value="Clear" type="button" onclick="window.Sentiment.clear_annotation();">
+		</div>
+		<div class="menu_container">
 			<select id="annot_file_select" name="annot_file_select" onchange="window.Sentiment.change_annot_file();">
 			    <option value="" disabled="disabled" selected="selected">Please select a file for annotation</option>
 			</select>
