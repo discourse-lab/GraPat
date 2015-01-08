@@ -410,6 +410,31 @@ window.Sentiment = {
 	},
 
 	
+	recursively_remove_connection : function (source_id, target_id) {
+		if (source_id in annotations.edges) {
+			if (target_id in annotations.edges[source_id]) {
+				for (var connection_id in annotations.edges[source_id][target_id]) {
+					var label_node_id = annotations.edges[source_id][target_id][connection_id]['label_node_id'];
+					if (label_node_id != null) {
+						// recursively remove all connections to label node
+						for (var other_source_id in annotations.edges) {
+							if (label_node_id in annotations.edges[other_source_id]) {
+								window.Sentiment.recursively_remove_connection(other_source_id, label_node_id);
+							} 
+						}
+						// remove label node
+						jsPlumb.removeAllEndpoints(label_node_id);
+						jsPlumb.detachAllConnections(label_node_id);
+						//$('#'+label_node_id).remove();
+					}
+				}
+				delete annotations.edges[source_id][target_id];
+				//annotations.edges[source_id][target_id] = {};
+			} 
+		}
+	},
+	
+	
 	init_arg : function () {
 		// to add
 		// 
@@ -445,21 +470,23 @@ window.Sentiment = {
 			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'node_type_edu_join');
 		});
 		$("#del_node").bind("click", function(e) {
-			node_id = rclick.target.id;			
+			node_id = rclick.target.id;
 			// model: remove all connections to this node
-			for (source_id in annotations.edges) {
-				if (node_id in annotations.edges[source_id]) {
-					delete annotations.edges[source_id][node_id];
+			for (var other_source_id in annotations.edges) {
+				if (node_id in annotations.edges[other_source_id]) {
+					window.Sentiment.recursively_remove_connection(other_source_id, node_id);
 				}
-				// TODO: if no targets for source_id are left, it could be wise to remove source_id from edges
 			}
 			// model: remove all connections from this node
-			delete annotations.edges[node_id];
+			if (node_id in annotations.edges) {
+				for (var other_target_id in annotations.edges[node_id]) {
+					window.Sentiment.recursively_remove_connection(node_id, other_target_id);
+				}
+				delete annotations.edges[node_id];
+			}
 			// model: remove node
 			delete annotations.nodes[node_id];
-			// TODO: what about undercutters and join-support? we need to check for every deleted connection whether it was referenced
 			// TODO: what about all those counters
-			
 			// view: remove all connections from and to the element
 			jsPlumb.removeAllEndpoints(rclick.target);
 			jsPlumb.detachAllConnections(rclick.target);
