@@ -87,7 +87,11 @@
 			</div>
 			<div id="rmenu">
 			</div>
-			<div id="dmenu"><div class="rmenu_element" id="del_node">delete node</div></div>
+			<div id="dmenu">
+			    <div class="rmenu_element" id="del_node">delete node</div>
+			    <div class="rmenu_element" id="del_inarcs">delete incoming edges</div>
+			    <div class="rmenu_element" id="del_outarcs">delete outgoing edges</div>
+			</div>
 		</div>
 		<input id="psentence_button" class="sentence_button" type="button" onclick="window.Sentiment.previous_sentence();">
 		<input id="nsentence_button" class="sentence_button" type="button" onclick="window.Sentiment.next_sentence();">

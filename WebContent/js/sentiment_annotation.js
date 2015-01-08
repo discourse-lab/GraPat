@@ -1,5 +1,5 @@
 /* TODO:
- * - delete nodes and relations
+ * - delete specific relations by rightclick
  * - edujoin>adu edges have handles in the middle
  * - make segmentation connections transparent and more in the background 
  * - style all svg connection with cssClass
@@ -12,10 +12,12 @@ var annotations = {
 		"edges": {} 
 };
 
+var connections = {};
+
 var changed = false;
 
 var current_sentence_idx = -1;
-var edge_count = 0;
+var edge_count = 0;	// not really used in code, only for debug?
 var sentence_count = 0;
 var node_count = 1;
 var current_target = null;
@@ -51,8 +53,23 @@ window.Sentiment = {
 	update_node_count : function() {
 		// since we want the first unused number, we can ommit the -1 which had to be there due to the author node being counted
 		return $('.target').length + $('.node').length ;
+		// TODO: what if we have three nodes with ids 10, 11, 12 and the node_count is used to build new ids?
 	},
 
+	
+	update_max_node_id : function() {
+		// find the maximum node_id, following the id scheme "node_[int]"
+		var max_node_id = 0;
+		$.each( $('.node, .target'), function() {
+			if ('id' in this) {
+				var id = this.id;
+				var i = parseInt(id.split('_')[1]);
+				if (i > max_node_id) { max_node_id = i; }
+			}
+		});
+		return max_node_id;
+	},
+	
 	
 	load_data : function(bundle_id, sentence_id, add_to_word_connections) {
 
@@ -65,9 +82,9 @@ window.Sentiment = {
             		function() { 
             			return window.Sentiment._request_and_add(bundle_id, sentence_id, add_to_word_connections); 
         			});
-		}
-		else
+		} else {
 			return window.Sentiment._request_and_add(bundle_id, sentence_id, add_to_word_connections);
+		}
 	},
 
 	
@@ -90,7 +107,6 @@ window.Sentiment = {
                 if (graph != null)
                 	loaded_annotations = graph;
             }
-            
             
             if (graph != null) {
 	            node_count = window.Sentiment.update_node_count() + 1;
@@ -145,7 +161,6 @@ window.Sentiment = {
 	                    else
 	                    	alert('Loading error. Your saved data is fine! Please just reload the sentence.');
 	                }
-	                
 	                current_connection = jsPlumb.connect({source: source_id, target: target_id});
 	                current_source = current_connection.sourceId;
 	                current_target = current_connection.targetId;
@@ -158,10 +173,24 @@ window.Sentiment = {
 	    	 
 	    		window.Sentiment.update();
             }
-    		if (add_to_word_connections)
+    		if (add_to_word_connections && annotation_type != 'argumentation') {
+    			/* AP: this overwrites the annotations structure produced by calling jsPlumb.connect when loading,
+    			 *     with the result that connection_ids are not valid anymore and connections cannot be deleted anymore.
+    			 *     I guess this behaviour was intended for sentiment annotation over multiple sentence views.
+    			 *     Its not needed for argumentation annotation anymore and thus excluded in this annotation mode.    
+    			 */
     			annotations = loaded_annotations;
-            
+    		}
 		}});
+		
+		if (annotation_type == 'argumentation') {
+			/* somethings wrong with the node count after loading.
+			 * as a result no new nodes can be created. fix this by
+			 * starting from the highest node.
+			 */
+			node_count = window.Sentiment.update_max_node_id() + 1;
+		}
+		
 		return jreq;
 	},
 
@@ -232,6 +261,7 @@ window.Sentiment = {
 				"nodes": {},
 				"edges": {}
 		};
+		connections = {};
 		current_sentence_idx = -1;
 		edge_count = 0;
 		sentence_count = 0;
@@ -369,6 +399,7 @@ window.Sentiment = {
 		bootbox.confirm("Do you really want to clear this annotation?", function(result) {
 			if (result == true) {
 				annotations = { "nodes": {}, "edges": {} };
+				connections = {};
 				window.Sentiment.clear();
 				changed = true;
 			}
@@ -410,7 +441,29 @@ window.Sentiment = {
 	},
 
 	
+	remove_incoming_edges : function(node_id) {
+		// model: remove all connections to this node
+		for (var other_source_id in annotations.edges) {
+			if (node_id in annotations.edges[other_source_id]) {
+				window.Sentiment.recursively_remove_connection(other_source_id, node_id);
+			}
+		}
+	},
+	
+	
+	remove_outgoing_edges : function(node_id) {
+		// model: remove all connections from this node
+		if (node_id in annotations.edges) {
+			for (var other_target_id in annotations.edges[node_id]) {
+				window.Sentiment.recursively_remove_connection(node_id, other_target_id);
+			}
+			delete annotations.edges[node_id];
+		}
+	},
+	
+	
 	recursively_remove_connection : function (source_id, target_id) {
+		// this removes an edge from the model and from the view. if other edges point to this edge, they are recursively removed too.
 		if (source_id in annotations.edges) {
 			if (target_id in annotations.edges[source_id]) {
 				for (var connection_id in annotations.edges[source_id][target_id]) {
@@ -422,14 +475,16 @@ window.Sentiment = {
 								window.Sentiment.recursively_remove_connection(other_source_id, label_node_id);
 							} 
 						}
-						// remove label node
+						// remove seen connections from an to the label node
 						jsPlumb.removeAllEndpoints(label_node_id);
 						jsPlumb.detachAllConnections(label_node_id);
-						//$('#'+label_node_id).remove();
 					}
+					// remove seen conntection
+					jsPlumb.detach(connections[connection_id]);
+					delete connections[connection_id];
 				}
+				// remove edge from model
 				delete annotations.edges[source_id][target_id];
-				//annotations.edges[source_id][target_id] = {};
 			} 
 		}
 	},
@@ -471,19 +526,9 @@ window.Sentiment = {
 		});
 		$("#del_node").bind("click", function(e) {
 			node_id = rclick.target.id;
-			// model: remove all connections to this node
-			for (var other_source_id in annotations.edges) {
-				if (node_id in annotations.edges[other_source_id]) {
-					window.Sentiment.recursively_remove_connection(other_source_id, node_id);
-				}
-			}
-			// model: remove all connections from this node
-			if (node_id in annotations.edges) {
-				for (var other_target_id in annotations.edges[node_id]) {
-					window.Sentiment.recursively_remove_connection(node_id, other_target_id);
-				}
-				delete annotations.edges[node_id];
-			}
+			// model: remove edges
+			window.Sentiment.remove_incoming_edges(node_id);
+			window.Sentiment.remove_outgoing_edges(node_id);
 			// model: remove node
 			delete annotations.nodes[node_id];
 			// TODO: what about all those counters
@@ -494,6 +539,18 @@ window.Sentiment = {
 			rclick.target.remove();
 			changed = true;
 	    }); 
+		$("#del_inarcs").bind("click", function(e) {
+			node_id = rclick.target.id;
+			window.Sentiment.remove_incoming_edges(node_id);
+			changed = true;
+			
+		});
+		$("#del_outarcs").bind("click", function(e) {
+			node_id = rclick.target.id;
+			window.Sentiment.remove_outgoing_edges(node_id);
+			changed = true;
+		});
+		
 		
 		add_to_node_text = false;
 		alt_node_text = 'ADU';
@@ -768,25 +825,27 @@ window.Sentiment = {
 		var ln_id = null;
 		var old = false;
 		var c_type = null;
+		
 		if (annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] != null)
-                        old = true;	
-
-	
+			old = true;	
+		
 		//var sentence_id = sentence_order[current_sentence_idx];
 		
-		if (label_node_id != null)
+		if (label_node_id != null) {
 			ln_id = label_node_id;
-		else {
-		        if (old)
-                                ln_id = annotations.edges[current_source][current_target][current_connection.id]["label_node_id"];
-                        else
-                                ln_id = 'node_' + node_count;
+		} else {
+		        if (old) {
+		        	ln_id = annotations.edges[current_source][current_target][current_connection.id]["label_node_id"];
+		        } else {
+		        	ln_id = 'node_' + node_count;
+		        }
 		}
 		
-		if (text != null)
+		if (text != null) {
 			text_anchor = text;
-		else
+		} else {
 			text_anchor = $('textarea#text_anchor_input').val();
+		}
 		
 		annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
 		
@@ -1048,9 +1107,9 @@ window.Sentiment = {
 	
 	_findSourceOfEdgeWithLabelNode : function (label_node_id) {
 		// $.each doesnt work here, as i'd need to refer back to vars out of the inner callback function
-		for (source_id in annotations.edges) {
-			for (target_id in annotations.edges[source_id]) {
-				for (conn_id in annotations.edges[source_id][target_id]) {
+		for (var source_id in annotations.edges) {
+			for (var target_id in annotations.edges[source_id]) {
+				for (var conn_id in annotations.edges[source_id][target_id]) {
 					if (annotations.edges[source_id][target_id][conn_id]["label_node_id"] == label_node_id) {
 						return source_id;
 					}
@@ -1065,8 +1124,11 @@ window.Sentiment = {
     	changed = true;
     	
     	// connection is re-dragged
-        if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId])
+        if (i.connection.sourceId in annotations.edges && i.connection.targetId in annotations.edges[i.connection.sourceId] && i.connection.id in annotations.edges[i.connection.sourceId][i.connection.targetId]) {
+        	console.log("connection re-dragged", i.connection);
         	return;
+        }
+        	
         
         // get semantic types of source and target element and its role (for ADUs)
         var source_type = window.Sentiment._get_arg_semantic_type_of_element(i.connection.source);
@@ -1090,8 +1152,9 @@ window.Sentiment = {
     	if (!(i.connection.targetId in annotations.edges[i.connection.sourceId]))
     		annotations.edges[i.connection.sourceId][i.connection.targetId] = {};
 		annotations.edges[i.connection.sourceId][i.connection.targetId][i.connection.id] = { "label_node_id": null, "c_type": null };
-    	++edge_count;
-
+		connections[i.connection.id] = i.connection;
+		++edge_count;
+    	
 		// eventually, we don't need to actually popup the edge classification
     	// but in order to make labelPopUpButton_click work silently, we need to set the current connection
 		current_source = i.connection.sourceId;
