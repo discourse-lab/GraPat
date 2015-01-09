@@ -238,7 +238,7 @@ window.Sentiment = {
 
             var ent_endpoints = {
                     anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                    endpoint: ["Dot", {radius: 5}],
+                    endpoint: ["Dot", {radius: 10}],
                     isSource: true,
                     /*connectorOverlays: [
                                     [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
