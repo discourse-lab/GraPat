@@ -39,6 +39,7 @@
     padding-right: 1.5em;
     font-size: 15px;
     font-weight: bold;
+    cursor:move;
 }
 
 .node_type_opponent {
@@ -50,13 +51,28 @@
     padding-right: 1.5em;
     font-size: 15px;
     font-weight: bold;
+    cursor:move;
 }
 
 .node_type_edu_join {
     border-radius: 20%;
     line-height:1em;
     background-color: #eee;
+    cursor:move;
 }
+
+
+.source_handle {
+    position:absolute;
+    bottom: 90%;
+    left: 43%;
+    width: 1em;
+    height:1em;
+    background-color:orange;
+    cursor:pointer;
+}
+
+
 
 .circle {
     border-radius: 50%;

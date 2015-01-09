@@ -203,54 +203,70 @@ window.Sentiment = {
 		if ($('#' + node_id).length == 0) {
 			// potentially overwriting something here?
 			annotations.nodes[node_id] = { "label":label, "n_type":type };
-	        jQuery('<div/>', {
+	        var new_node = jQuery('<div/>', {
 	            class: 'window movable invisible',
 	            id: node_id,
 	            node_id: node_count,
-	            text: label
-		    }).appendTo('#graph_part');
-		            
-			$("#"+node_id).css({
+	            //text: label
+		    })
+		    new_node.appendTo('#graph_part');
+	        
+	        // add text span
+	        jQuery('<span/>', { text: label }).appendTo(new_node);      
+	        
+			new_node.css({
 			    top: y ,
 			    left: x ,
 			    visibility: 'visible'
 			});
 			++node_count;
-			$("#"+node_id).addClass("node");
+			new_node.addClass("node");
 			
 			if (type == 'circle')
-				$("#"+node_id).addClass("circle");
+				new_node.addClass("circle");
 			
 			// all nodes created like this can be deleted
-			$("#"+node_id).addClass("deletable");
+			new_node.addClass("deletable");
 			
 			// argumentation node types:
 			if (type == 'node_type_proponent')
-				$("#"+node_id).addClass("node_type_proponent");
+				new_node.addClass("node_type_proponent");
 			else if (type == 'node_type_opponent')
-				$("#"+node_id).addClass("node_type_opponent");
+				new_node.addClass("node_type_opponent");
 			else if (type == 'node_type_edu_join')
-				$("#"+node_id).addClass("node_type_edu_join");
+				new_node.addClass("node_type_edu_join");
+
+			// add a source handle, from which new connections can be drawn.
+			var source_handle = jQuery('<div/>', {
+				class: 'source_handle',
+			});
+			source_handle.appendTo(new_node);
+			jsPlumb.makeSource(source_handle, {
+				parent:new_node,
+				anchor:"Continuous",
+				connector:[ "StateMachine", { curviness:20 } ],
+				connectorStyle:{ strokeStyle:"#5c96bc",lineWidth:2, outlineColor:"transparent", outlineWidth:4 },
+			});
 			
 			
 			window.Sentiment.update();
 			changed = true;
 
-            var ent_endpoints = {
-                    anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-                    endpoint: ["Dot", {radius: 10}],
-                    isSource: true,
-                    /*connectorOverlays: [
-                                    [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-                            ],*/
-                    paintStyle: {
-                            gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-                            strokeStyle: "black",
-                            fillStyle: "#004F66",
-                            lineWidth: 1.5
-                    }
-            };
-            jsPlumb.addEndpoint($("#" + node_id), ent_endpoints);
+//            var ent_endpoints = {
+//                    anchor: ["BottomCenter", "RightMiddle", "LeftMiddle"], // "TopCenter", 
+//                    endpoint: ["Dot", {radius: 10}],
+//                    isSource: true,
+//                    /*connectorOverlays: [
+//                                    [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+//                            ],*/
+//                    paintStyle: {
+//                            gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+//                            strokeStyle: "black",
+//                            fillStyle: "#004F66",
+//                            lineWidth: 1.5
+//                    }
+//            };
+//            jsPlumb.addEndpoint($("#" + node_id), ent_endpoints);
 
 		}
 	},
@@ -700,6 +716,7 @@ window.Sentiment = {
 			    strokeStyle: "black",
 			    lineWidth: 5
 			},
+			ConnectionsDetachable:false,
         });
 
 	    var red = "#680707";
@@ -1165,7 +1182,11 @@ window.Sentiment = {
 		var loading = false;
 		if (c == null)
 			loading = true;
-        
+
+		// TODO:
+//		var source_span = $(i.connection.source).children('span')[0].innerHTML;
+//		var target_span = $(i.connection.target).children('span')[0].innerHTML;
+		
     	// depending on the type of edge, the target nodes description may change, or c_type choice is restricted
     	if (connection_description == "EDU>ADU" || connection_description == "EDU-JOIN>ADU") {
 			i.connection.toggleType('segmentation');
@@ -1173,15 +1194,18 @@ window.Sentiment = {
 			if (connection_description == "EDU>ADU") {
 				source_label = i.connection.source.getAttribute('token_range_id');
 			} else {
-				source_label = i.connection.source.innerHTML;
+				source_label = i.connection.source.innerHTML; // source_span; // TODO
 			}
 			if (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node') { //TODO: hardcoded hack
+			//if (target_span == 'new node') { // TODO
 				// ground the ADU in one EDU or EDU-JOIN
 				i.connection.target.innerHTML = source_label;
+				//target_span = source_label;
 			}
 			else {
 				// add a restatement
 				i.connection.target.innerHTML += '='+source_label;
+				//target_span += '='+source_label;
 			}
     	}
     	
@@ -1387,20 +1411,20 @@ window.Sentiment = {
 	    });
 	    
 	    
-	    var ent_endpoints = {
-	        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
-	        endpoint: ["Dot", {radius: 5}],
-	        isSource: true,
-	        /*connectorOverlays: [
-	                [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
-	        ],*/
-	        paintStyle: {
-	                gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
-	                strokeStyle: "black",
-	                fillStyle: "#004F66",
-	                lineWidth: 1.5
-	        }
-	    };
+//	    var ent_endpoints = {
+//	        anchor: ["TopCenter", "BottomCenter", "RightMiddle", "LeftMiddle"],
+//	        endpoint: ["Dot", {radius: 5}],
+//	        isSource: true,
+//	        /*connectorOverlays: [
+//	                [ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]
+//	        ],*/
+//	        paintStyle: {
+//	                gradient: { stops: [ [ 0, "#004F66" ], [1, "#004F66"] ] },
+//	                strokeStyle: "black",
+//	                fillStyle: "#004F66",
+//	                lineWidth: 1.5
+//	        }
+//	    };
 
 	    jsPlumb.bind("connection", function(i,c) {
         	if (annotation_type == 'sentiment') {
@@ -1410,19 +1434,21 @@ window.Sentiment = {
         		window.Sentiment.connection_arg(i,c);
         	}
         }); 
-	    
         jsPlumb.bind("dblclick", function(c) {
-        	window.Sentiment.showAttrsPopUp(c);
+        	if (annotation_type != 'argumentation') {
+        		window.Sentiment.showAttrsPopUp(c);
+        	}
         });
-        jsPlumb.bind("ready", function () {
-            jsPlumb.addEndpoint($(".node"), ent_endpoints);
-        });
-        jsPlumb.bind("connectionMoved", function(info, orig_event) {
-        	console.log("moving connections endpoints");
-        });
-	    jsPlumb.bind("ready", function () {
-			jsPlumb.addEndpoint($(".node"), ent_endpoints);
-	    });
+        
+//        jsPlumb.bind("ready", function () {
+//            jsPlumb.addEndpoint($(".node"), ent_endpoints);
+//        });
+//        jsPlumb.bind("connectionMoved", function(info, orig_event) {
+//        	console.log("moving connections endpoints");
+//        });
+//	    jsPlumb.bind("ready", function () {
+//			jsPlumb.addEndpoint($(".node"), ent_endpoints);
+//	    });
 
         $('#rmenu').click(function() {
         	window.Sentiment.hide_all_context_menues();
