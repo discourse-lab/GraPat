@@ -1,9 +1,7 @@
 /* TODO:
  * - delete specific relations by rightclick
- * - edujoin>adu edges have handles in the middle
  * - make segmentation connections transparent and more in the background 
  * - style all svg connection with cssClass
- * - disallow changes of edges by doubleclick prop menu
  * - logout functionality
  */
 
@@ -138,8 +136,12 @@ window.Sentiment = {
 		                        if (current_connection.source.nodeName != "SPAN") {
 		                        	if (annotation_type == 'sentiment')
 		                        		window.Sentiment.labelPopUpButton_click(attrs.label_node_id, attrs.polarity, attrs.text_anchor, attrs.context, attrs.world_knowledge, attrs.ironic, attrs.rhetoric);
-		                        	else if (annotation_type == 'argumentation')
-		                        		window.Sentiment.labelPopUpButton_click(attrs.label_node_id, null, null, null, null, null, null, attrs.c_type);
+		                        	else if (annotation_type == 'argumentation') {
+		                        		if (attrs.c_type != undefined && attrs.c_type != null) {
+		                        			// don't call the labelPopUp for segmentation edges (which are of c_type undefined or null)
+		                        			window.Sentiment.labelPopUpButton_click(attrs.label_node_id, null, null, null, null, null, null, attrs.c_type);
+		                        		}
+		                        	}
 		                        }
 	                    	}
 	                    });
@@ -204,15 +206,14 @@ window.Sentiment = {
 			// potentially overwriting something here?
 			annotations.nodes[node_id] = { "label":label, "n_type":type };
 	        var new_node = jQuery('<div/>', {
-	            class: 'window movable invisible',
+	            class: 'window movable invisible node deletable',
 	            id: node_id,
 	            node_id: node_count,
-	            //text: label
-		    })
+		    });
 		    new_node.appendTo('#graph_part');
 	        
 	        // add text span
-	        jQuery('<span/>', { text: label }).appendTo(new_node);      
+	        jQuery('<span/>', { id: node_id+'_span', text: label }).appendTo(new_node);      
 	        
 			new_node.css({
 			    top: y ,
@@ -220,13 +221,9 @@ window.Sentiment = {
 			    visibility: 'visible'
 			});
 			++node_count;
-			new_node.addClass("node");
 			
 			if (type == 'circle')
 				new_node.addClass("circle");
-			
-			// all nodes created like this can be deleted
-			new_node.addClass("deletable");
 			
 			// argumentation node types:
 			if (type == 'node_type_proponent')
@@ -237,15 +234,13 @@ window.Sentiment = {
 				new_node.addClass("node_type_edu_join");
 
 			// add a source handle, from which new connections can be drawn.
-			var source_handle = jQuery('<div/>', {
-				class: 'source_handle',
-			});
+			var source_handle = jQuery('<div/>', { id: node_id+'_source', class: 'source_handle' });
 			source_handle.appendTo(new_node);
 			jsPlumb.makeSource(source_handle, {
 				parent:new_node,
 				anchor:"Continuous",
-				connector:[ "StateMachine", { curviness:20 } ],
 				connectorStyle:{ strokeStyle:"#5c96bc",lineWidth:2, outlineColor:"transparent", outlineWidth:4 },
+				//endpoint:{ connectorOverlays: [[ "Arrow", {width:2, length: 3, location: 0.9, id: "arrow"} ]]},
 			});
 			
 			
@@ -406,7 +401,6 @@ window.Sentiment = {
 	clear : function () {
 		jsPlumb.detachEveryConnection();
 		jsPlumb.deleteEveryEndpoint();
-		
 		$('.node').remove();
 	},
 	
@@ -456,6 +450,17 @@ window.Sentiment = {
 	logout : function() {
 	},
 
+	
+	
+	verify_node_id : function(element) {
+		// the delete menu can be triggered by every element in a node, so lets make sure
+		// the id is really that of the node and not of the span or source handle
+		node_id = element.id;
+		if (node_id.endsWith('_span') || node_id.endsWith('_source')) {
+			node_id = rclick.target.parentNode.id;
+		}
+		return node_id;
+	}, 
 	
 	remove_incoming_edges : function(node_id) {
 		// model: remove all connections to this node
@@ -507,10 +512,9 @@ window.Sentiment = {
 	
 	
 	init_arg : function () {
-		// to add
-		// 
-		jQuery('<div/>', {
-            class: 'rmenu_element',
+		// initialize the context menue of the graph area (rmenu) with argumentation specific entries 
+		jQuery('<div/>', { 
+			class: 'rmenu_element',
             id: 'add_circle_ent',
             text: 'add ADU proponent'
 	    }).appendTo('#rmenu');
@@ -525,6 +529,7 @@ window.Sentiment = {
             text: 'add EDU join'
 	    }).appendTo('#rmenu');
 
+		// bind functions to the rmenu entries
 		$("#add_square_ent").bind("click", function() {
 			var node_id = 'node_' + node_count;
 			annotations.nodes[node_id] = {};
@@ -540,8 +545,10 @@ window.Sentiment = {
 			annotations.nodes[node_id] = {};
 			window.Sentiment.add_node(node_id, rclick.pageX, rclick.pageY, '+', 'node_type_edu_join');
 		});
+		
+		// bind functions to the node context menu (dmenu) 
 		$("#del_node").bind("click", function(e) {
-			node_id = rclick.target.id;
+			node_id = window.Sentiment.verify_node_id(rclick.target);
 			// model: remove edges
 			window.Sentiment.remove_incoming_edges(node_id);
 			window.Sentiment.remove_outgoing_edges(node_id);
@@ -551,22 +558,21 @@ window.Sentiment = {
 			// view: remove all connections from and to the element
 			jsPlumb.removeAllEndpoints(rclick.target);
 			jsPlumb.detachAllConnections(rclick.target);
-			// view: remove the element
-			rclick.target.remove();
+			// view: remove the element (and all its subelements)
+			$('#'+node_id).remove();
 			changed = true;
 	    }); 
 		$("#del_inarcs").bind("click", function(e) {
-			node_id = rclick.target.id;
+			node_id = window.Sentiment.verify_node_id(rclick.target);
 			window.Sentiment.remove_incoming_edges(node_id);
 			changed = true;
 			
 		});
 		$("#del_outarcs").bind("click", function(e) {
-			node_id = rclick.target.id;
+			node_id = window.Sentiment.verify_node_id(rclick.target);
 			window.Sentiment.remove_outgoing_edges(node_id);
 			changed = true;
 		});
-		
 		
 		add_to_node_text = false;
 		alt_node_text = 'ADU';
@@ -1183,10 +1189,6 @@ window.Sentiment = {
 		if (c == null)
 			loading = true;
 
-		// TODO:
-//		var source_span = $(i.connection.source).children('span')[0].innerHTML;
-//		var target_span = $(i.connection.target).children('span')[0].innerHTML;
-		
     	// depending on the type of edge, the target nodes description may change, or c_type choice is restricted
     	if (connection_description == "EDU>ADU" || connection_description == "EDU-JOIN>ADU") {
 			i.connection.toggleType('segmentation');
@@ -1194,35 +1196,43 @@ window.Sentiment = {
 			if (connection_description == "EDU>ADU") {
 				source_label = i.connection.source.getAttribute('token_range_id');
 			} else {
-				source_label = i.connection.source.innerHTML; // source_span; // TODO
+				//source_label = i.connection.source.innerHTML;
+				source_label = $('#'+i.connection.source.id+'_span')[0].innerHTML;
 			}
-			if (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node') { //TODO: hardcoded hack
-			//if (target_span == 'new node') { // TODO
+			var target_span = $('#'+i.connection.target.id+'_span')[0];
+			//if (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node') { //TODO: hardcoded hack
+			if (target_span.innerHTML == 'new node') {
 				// ground the ADU in one EDU or EDU-JOIN
-				i.connection.target.innerHTML = source_label;
-				//target_span = source_label;
+				//i.connection.target.innerHTML = source_label;
+				target_span.innerHTML = source_label;
 			}
 			else {
 				// add a restatement
-				i.connection.target.innerHTML += '='+source_label;
-				//target_span += '='+source_label;
+				//i.connection.target.innerHTML += '='+source_label;
+				target_span.innerHTML += '='+source_label;
 			}
     	}
     	
     	else if (connection_description == "EDU>EDU-JOIN") {
 			i.connection.toggleType('segmentation');
 			var source_trid = i.connection.source.getAttribute('token_range_id');
-			if (i.connection.target.innerHTML == '+') {
+			var target_span = $('#'+i.connection.target.id+'_span')[0];
+			//if (i.connection.target.innerHTML == '+') {
+			if (target_span.innerHTML == '+') {
 				// add the first edu to the join node
-				i.connection.target.innerHTML = source_trid+'+';
+				//i.connection.target.innerHTML = source_trid+'+';
+				target_span.innerHTML = source_trid+'+';
 			}
-			else if (i.connection.target.innerHTML.endsWith('+')) {
+			//else if (i.connection.target.innerHTML.endsWith('+')) {
+			else if (target_span.innerHTML.endsWith('+')) {
 				// add a second edu to the join node 
-				i.connection.target.innerHTML = i.connection.target.innerHTML+source_trid;	
+				//i.connection.target.innerHTML = i.connection.target.innerHTML+source_trid;	
+				target_span.innerHTML = target_span.innerHTML+source_trid;
 			}
 			else {
 				// add another edu to the join node 
-				i.connection.target.innerHTML = i.connection.target.innerHTML+'+'+source_trid;
+				//i.connection.target.innerHTML = i.connection.target.innerHTML+'+'+source_trid;
+				target_span.innerHTML = target_span.innerHTML+'+'+source_trid;
 			}
     	}
     	
@@ -1400,7 +1410,8 @@ window.Sentiment = {
 	    });
 	    
 	    // bring up the noe deletion context menue when rightclicking on a node in the graph_part
-	    $("#graph_part").on("contextmenu", ".deletable", function(e){
+	    //$("#graph_part").on("contextmenu", ".deletable", function(e){
+	    $("#graph_part").on("contextmenu", ".node", function(e){
 	    	window.Sentiment.hide_all_context_menues();
 	    	rclick = e;
 	        $('#dmenu').css({

@@ -42,6 +42,10 @@
     cursor:move;
 }
 
+.node_type_proponent:hover {
+    border: 2pt solid #000000;
+}
+
 .node_type_opponent {
     border-radius: 0%;
     line-height:2em;
@@ -54,6 +58,11 @@
     cursor:move;
 }
 
+.node_type_opponent:hover {
+    border: 2pt solid #000000;
+}
+
+
 .node_type_edu_join {
     border-radius: 20%;
     line-height:1em;
@@ -61,18 +70,18 @@
     cursor:move;
 }
 
-
 .source_handle {
-    position:absolute;
-    bottom: 90%;
-    left: 43%;
-    width: 1em;
-    height:1em;
-    background-color:orange;
-    cursor:pointer;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    width: 2em;
+    height: 2em;
+    background-color: #004F66;
+    opacity: .3;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
 }
-
-
 
 .circle {
     border-radius: 50%;
@@ -185,7 +194,7 @@
 }
 
 #graph_part {
-    height: 400px;
+    height: 550px;
     padding: 3em;
     margin: 5px;
     border: 1px solid #346789;
@@ -206,7 +215,8 @@
     z-index: 27;
     float: left;
     width: 15em;
-    line-height: 2em; 
+    padding: 4pt;
+    line-height: 1.5em; 
     background-color: #eee;
 }
 
