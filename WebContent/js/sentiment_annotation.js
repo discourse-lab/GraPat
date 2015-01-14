@@ -3,6 +3,7 @@
  * - make segmentation connections transparent and more in the background 
  * - style all svg connection with cssClass
  * - logout functionality
+ * - arg: disable the source-anchor for nodes with one outgoing arc. enable it after arc removal 
  */
 
 var annotations = {
@@ -1052,16 +1053,19 @@ window.Sentiment = {
     	// span components correspond to word nodes
 		if (i.connection.source.nodeName != 'SPAN')
 			i.connection.toggleType('default');
-		if (i.connection.source.nodeName == 'SPAN' && (i.connection.target.innerText == 'new node' || i.connection.target.innerHTML == 'new node')) {
+		
+		var target_span = $('#'+i.connection.target.id+'_span')[0];
+		
+		if (i.connection.source.nodeName == 'SPAN' && (target_span.innerText == 'new node' || target_span.innerHTML == 'new node')) {
 			if (add_to_node_text) 
-				i.connection.target.innerHTML = i.connection.source.innerHTML;
+				target_span.innerHTML = i.connection.source.innerHTML;
 			else
-				i.connection.target.innerHTML = alt_node_text;
+				target_span.innerHTML = alt_node_text;
 			//annotations.nodes[i.connection.targetId] = i.connection.source.innerHTML;
 		}
-		if (i.connection.source.nodeName == 'SPAN' && i.connection.target.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
+		if (i.connection.source.nodeName == 'SPAN' && target_span.innerHTML.indexOf(i.connection.source.innerHTML) < 0) {
 			if (add_to_node_text)
-				i.connection.target.innerHTML += ";" + i.connection.source.innerHTML;
+				target_span.innerHTML += ";" + i.connection.source.innerHTML;
 			//annotations.nodes[i.connection.targetId] += ";" + i.connection.source.innerHTML;
 		}
 
