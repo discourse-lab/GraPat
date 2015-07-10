@@ -1,44 +1,73 @@
-HOWTO
+GraPAT HOWTO
+============
 08.04.2014, Jonathan Sonntag, Andreas Peldszus
 
 
-*** Java 1.7 JDK (z.B. openjdk) installieren
-sudo apt-get install java-7-openjdk-amd64
-- zur Not das richtige Java systemweit auswählen, z.b. durch 
-  sudo update-java-alternatives -s java-7-openjdk-amd64
 
-*** Maven installieren
-sudo apt-get install maven
+Install dependencies
+--------------------
 
-*** TOMCAT 7 installieren
-sudo apt-get install tomcat7 tomcat7-admin 
-# richtiges JDK für Tomcat einstellen
-sudo gedit /etc/default/tomcat7 -> JAVA_HOME setzen
-sudo service tomcat7 start
+This howto has been written for Ubuntu Linux machines. You will need Java 1.7 JDK, maven to build the project, and a Tomcat server to deploy the web app.
 
-*** GRAPAT clonen und kompilieren
-git clone git@hebe:/grapat
+#### Java 1.7 JDK
+`sudo apt-get install java-7-openjdk-amd64`
 
-- mvn clean install
-- war-datei per hand deployen (rüberkopieren in webapps und warten)
-/var/lib/tomcat7/webapps
+Eventually set the JDK to be used system-wide:
+`sudo update-java-alternatives -s java-7-openjdk-amd64`
+
+#### Maven
+`sudo apt-get install maven`
+
+#### Tomcat 7
+`sudo apt-get install tomcat7 tomcat7-admin`
+
+Set the proper `JAVA_HOME` in /etc/default/tomcat7
+
+Start the tomcat server:
+`sudo service tomcat7 start`
 
 
-*** MYSQL Server 
-sudo apt-get install mysql-server
 
-mysql -u root -p
+Install GraPAT
+--------------
 
-# komische anonyme sql user löschen, weil man sich sonst mit dem neu anzulegenden benutzer nicht richtig authentifizieren kann
+Clone the repository:
+`git clone git@github.com:discourse-lab/GraPat.git`
+
+Change into the GraPat directory:
+`cd GraPat`
+
+Build the project:
+`mvn clean install`
+
+Deploy the project by (manually) copying the webapp into the Tomcat webapp directory:
+`sudo cp target/grapat.war /var/lib/tomcat7/webapps`
+
+
+
+Setup MYSQL server
+------------------
+
+`sudo apt-get install mysql-server`
+
+Login to your mysql server:
+`mysql -u root -p`
+
+In our installation of sql there appeared to be an anonymous sql user that needs to be deleted in order to make authentification work:
+```
 DELETE FROM mysql.user WHERE User = '';
 FLUSH PRIVILEGES;
+```
 
-# grapat benutzer erzeugen
+Create a grapat user for authentification with mysql:
+```
 CREATE USER grapat_user_auth;
 SET PASSWORD FOR 'grapat_user_auth'@'localhost' = PASSWORD('supersecret');
 GRANT ALL PRIVILEGES ON grapat.* TO 'grapat_user_auth'@'localhost' WITH GRANT OPTION;
+```
 
-# Datenbank anlegen
+Create the database:
+```
 CREATE DATABASE grapat;
 USE grapat;
 CREATE TABLE `users` (
@@ -49,10 +78,16 @@ CREATE TABLE `users` (
   `Password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-show tables;
+SHOW tables;
+```
 
-# Grapat Interface account anlegen
-INSERT INTO users (FirstName,LastName,Username,Password) VALUES('Vorname','Nachname','username','password');
+Create user account(s) for the annotation web interface:
+```
+INSERT INTO users (FirstName,LastName,Username,Password) VALUES('John','Doe','jdoe','donttellanybody');
+```
 
-# losannotieren
+
+Start annotating
+----------------
+
 http://localhost:8080/grapat/GraPAT
