@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<annotation_bundle id="Argumentation_Demo_procon_041114_pro" semantics="argumentation">
+  <entity id="procon_041114_pro">
+    <token_range id="0"><![CDATA[Soll der Steglitzer Kreisel abgerissen werden? Ja!]]></token_range>
+    <token_range id="1"><![CDATA[Alles spricht gegen den Steglitzer Kreisel.]]></token_range>
+    <token_range id="2"><![CDATA[Selbst wenn man vergisst, dass der olle Schuhkarton in bester Lage einst ein privates Prestigeobjekt war, das der öffentlichen Hand für teures Geld aufgenötigt wurde.]]></token_range>
+    <token_range id="3"><![CDATA[Ein Symbol der West-Berliner Filzwirtschaft in den späten sechziger Jahren.]]></token_range>
+    <token_range id="4"><![CDATA[Aber lassen wir das ruhig beiseite.]]></token_range>
+    <token_range id="5"><![CDATA[Der Kreisel ist Asbest verseucht.]]></token_range>
+    <token_range id="6"><![CDATA[Nicht nur hier und da, sondern durch und durch.]]></token_range>
+    <token_range id="7"><![CDATA[Zwar könnte man, wie beim Palast der Republik, den Bau bis aufs wackelige Stahlskelett entkleiden und neu aufbauen.]]></token_range>
+    <token_range id="8"><![CDATA[Aber das würde mindestens 84 Millionen Euro, vielleicht auch das Doppelte kosten.]]></token_range>
+    <token_range id="9"><![CDATA[Was für ein Preis für die Restaurierung eines städtebaulichen Schandflecks, der seit mehr als dreißig Jahren Schatten auf die nette, gutbürgerliche Umgebung wirft.]]></token_range>
+    <token_range id="10"><![CDATA[Von allen Seiten versperrt der Kreisel die Sicht.]]></token_range>
+    <token_range id="11"><![CDATA[Er ist keine Sehenswürdigkeit.]]></token_range>
+    <token_range id="12"><![CDATA[Und für die Mitarbeiter des Bezirks Steglitz, die im Hochhaus arbeiten, kann die Lebensqualität bei einem Umzug in ein anderes Dienstgebäude nur steigen.]]></token_range>
+    <token_range id="13"><![CDATA[Der Kreisel ist auch innen hässlich, zudem zugig und Energie verschleudernd.]]></token_range>
+    <token_range id="14"><![CDATA[Einzig brauchbar ist die gute Verkehrsanbindung und der Blick aus dem 24. Stock auf den Süden Berlins.]]></token_range>
+    <token_range id="15"><![CDATA[Aber beides rechtfertigt es nicht, das marode Gebäude zu sanieren.]]></token_range>
+    <token_range id="16"><![CDATA[Für das viele Geld kann man fast zwei neue, wirklich schöne Häuser bauen.]]></token_range>
+  </entity>
+</annotation_bundle>

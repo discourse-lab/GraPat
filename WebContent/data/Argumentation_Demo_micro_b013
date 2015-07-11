@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<annotation_bundle id="Argumentation_Demo_micro_b013" semantics="argumentation">
+  <entity id="micro_b013">
+      <token_range id="1"><![CDATA[Health insurance companies should naturally cover alternative medical treatments.]]></token_range>
+      <token_range id="2"><![CDATA[Not all practices and approaches that are lumped together under this term may have been proven in clinical trials,]]></token_range>
+      <token_range id="3"><![CDATA[yet it's precisely their positive effect when accompanying conventional 'western' medical therapies that's been demonstrated as beneficial.]]></token_range>
+      <token_range id="4"><![CDATA[Besides many general practitioners offer such counselling and treatments in parallel anyway -]]></token_range>
+      <token_range id="5"><![CDATA[and who would want to question their broad expertise?]]></token_range>
+  </entity>
+</annotation_bundle>
