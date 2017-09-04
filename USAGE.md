@@ -54,3 +54,9 @@ GraPAT stores it's annotations for each user as json-string in a mysql database.
 	env/bin/python grapat_to_pax.py --help
 
 	env/bin/python grapat_to_pax.py --text-folder /var/lib/tomcat7/webapps/grapat/data/ --output-folder arggraphs USERNAME ehe-fuer-alle.pro ehe-fuer-alle.con
+
+Or, if you want to convert all annotations of a user for all texts:
+
+	data="/var/lib/tomcat7/webapps/grapat/data"
+
+	for i in "$data"/*.xml; do f=$(basename "$i" .xml); env/bin/python grapat_to_pax.py --text-folder "$data" --output-folder arggraphs USERNAME "$f"; done
