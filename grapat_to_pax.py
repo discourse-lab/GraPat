@@ -109,9 +109,7 @@ def read_edus_from_source_xml(text_id):
     return edus
 
 
-def graph_to_xml(text_id, graph, output_filename):
-    # try to find source text
-    edus = read_edus_from_source_xml(text_id)
+def graph_to_xml(text_id, graph, edus, output_filename):
     doc_elm = etree.XML('<arggraph id="%s" />' % text_id)
 
     # a mapping from node_ids to xml_ids
@@ -199,11 +197,20 @@ def graph_to_xml(text_id, graph, output_filename):
 
 
 def save_xml_from_grapat(username, text_id, output_filename):
+    print "Processing", text_id, "...",
     data = query_latest_annotation(text_id, username)
     if data is None:
-        print "No data could be retrieved for", text_id
-    else:
-        graph_to_xml(text_id, json.loads(data.graph), output_filename)
+        print "no annotated data could be retrieved."
+        return
+
+    try:
+        edus = read_edus_from_source_xml(text_id)
+    except IOError:
+        print "no source xml file found to load the EDUs."
+        return
+
+    graph_to_xml(text_id, json.loads(data.graph), edus, output_filename)
+    print "done."
 
 
 def main():
