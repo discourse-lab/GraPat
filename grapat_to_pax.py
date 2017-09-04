@@ -154,34 +154,52 @@ def graph_to_xml(text_id, graph, edus, output_filename):
     to_edu_edges = []
     to_joint_edges = []
     to_adu_edges = []
+    edge_to_xml_id = {}
     max_edge_count = 0
-    for source in sorted_nicely(graph['edges'].keys()):
-        for target in sorted_nicely(graph['edges'][source].keys()):
-            for conn_id in sorted_nicely(graph['edges'][source][target].keys()):
-                edge_id = 'c%d' % max_edge_count
-                max_edge_count += 1
-                attrib = graph['edges'][source][target][conn_id]
-                if source.startswith('word_'):
-                    edge_elm = etree.XML(
-                        '<edge id="%s" src="%s" trg="%s" type="seg" />' % (
-                            edge_id, node_to_xml_ids[source],
-                            node_to_xml_ids[target]))
-                    to_edu_edges.append(edge_elm)
-                elif node_to_xml_ids[source].startswith('j'):
-                    edge_elm = etree.XML(
-                        '<edge id="%s" src="%s" trg="%s" type="seg" />' % (
-                            edge_id, node_to_xml_ids[source],
-                            node_to_xml_ids[target]))
-                    to_joint_edges.append(edge_elm)
-                else:
-                    if (attrib['c_type'] != "additional_source"):
-                        node_to_xml_ids[attrib['label_node_id']] = edge_id
-                    edge_elm = etree.XML(
-                        '<edge id="%s" src="%s" trg="%s" type="%s" />' % (
-                            edge_id, node_to_xml_ids[source],
-                            node_to_xml_ids[target],
-                            map_edge_type[attrib['c_type']]))
-                    to_adu_edges.append(edge_elm)
+
+    def is_garbage_edge(source, attrib):
+        return (attrib.get('c_type', None) is None and
+                not source.startswith('word_'))
+
+    def iter_edges(graph):
+        for source in sorted_nicely(graph['edges'].keys()):
+            for target in sorted_nicely(graph['edges'][source].keys()):
+                for conn_id in sorted_nicely(graph['edges'][source][target].keys()):
+                    attrib = graph['edges'][source][target][conn_id]
+                    if not is_garbage_edge(source, attrib):
+                        yield source, target, conn_id, attrib
+
+    # first pass: register edges and relation nodes, skip garbage edges
+    for source, target, conn_id, attrib in iter_edges(graph):
+        edge_id = 'c%d' % max_edge_count
+        max_edge_count += 1
+        edge_to_xml_id[conn_id] = edge_id
+        if attrib.get('label_node_id', None) is not None:
+            node_to_xml_ids[attrib['label_node_id']] = edge_id
+
+    # second pass: generate xml elements
+    for source, target, conn_id, attrib in iter_edges(graph):
+            edge_id = edge_to_xml_id[conn_id]
+            source_id = node_to_xml_ids[source]
+            target_id = node_to_xml_ids[target]
+            if source.startswith('word_'):
+                edge_elm = etree.XML(
+                    '<edge id="%s" src="%s" trg="%s" type="seg" />' % (
+                        edge_id, source_id, target_id))
+                to_edu_edges.append(edge_elm)
+            elif node_to_xml_ids[source].startswith('j'):
+                edge_elm = etree.XML(
+                    '<edge id="%s" src="%s" trg="%s" type="seg" />' % (
+                        edge_id, source_id, target_id))
+                to_joint_edges.append(edge_elm)
+            else:
+                edge_elm = etree.XML(
+                    '<edge id="%s" src="%s" trg="%s" type="%s" />' % (
+                        edge_id, source_id, target_id,
+                        map_edge_type[attrib['c_type']]))
+                to_adu_edges.append(edge_elm)
+
+    # serialize in order
     for e in to_edu_edges:
         doc_elm.append(e)
     for j in to_joint_edges:
