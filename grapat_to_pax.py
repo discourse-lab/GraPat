@@ -116,37 +116,37 @@ def graph_to_xml(text_id, graph, edus, output_filename):
     node_to_xml_ids = {}
 
     # serialize edus
-    max_edu_count = 0
+    max_edu_id = 1
     for edu_id in sorted_nicely(list(edus.keys())):
         edu_text = edus[edu_id]
-        new_edu_id = 'e%d' % max_edu_count
+        new_edu_id = 'e%d' % max_edu_id
         node_to_xml_ids['word_%s' % edu_id] = new_edu_id
-        max_edu_count += 1
+        max_edu_id += 1
         edu_elm = etree.XML('<edu id="%s" />' % new_edu_id)
         edu_elm.text = etree.CDATA(edu_text)
         doc_elm.append(edu_elm)
 
     # serialize joints
-    max_joint_count = 0
+    max_joint_id = 1
     for k in sorted_nicely(graph['nodes'].keys()):
         v = graph['nodes'][k]
         if 'n_type' in v and v['n_type'] == 'node_type_edu_join':
-            joint_id = 'j%d' % max_joint_count
+            joint_id = 'j%d' % max_joint_id
             node_to_xml_ids[k] = joint_id
-            max_joint_count += 1
+            max_joint_id += 1
             joint_elm = etree.XML('<joint id="%s" />' % joint_id)
             doc_elm.append(joint_elm)
 
     # serialize adus
-    max_adu_count = 0
+    max_adu_id = 1
     for k in sorted_nicely(graph['nodes'].keys()):
         v = graph['nodes'][k]
         if v.get('n_type', None) in ['node_type_proponent',
                                      'node_type_opponent']:
             adu_type = map_node_type[v['n_type']]
-            adu_id = 'a%d' % max_adu_count
+            adu_id = 'a%d' % max_adu_id
             node_to_xml_ids[k] = adu_id
-            max_adu_count += 1
+            max_adu_id += 1
             adu_elm = etree.XML('<adu id="%s" type="%s" />' % (adu_id, adu_type))
             doc_elm.append(adu_elm)
 
@@ -155,7 +155,7 @@ def graph_to_xml(text_id, graph, edus, output_filename):
     to_joint_edges = []
     to_adu_edges = []
     edge_to_xml_id = {}
-    max_edge_count = 0
+    max_edge_id = 1
 
     def is_garbage_edge(source, attrib):
         return (attrib.get('c_type', None) is None and
@@ -171,8 +171,8 @@ def graph_to_xml(text_id, graph, edus, output_filename):
 
     # first pass: register edges and relation nodes, skip garbage edges
     for source, target, conn_id, attrib in iter_edges(graph):
-        edge_id = 'c%d' % max_edge_count
-        max_edge_count += 1
+        edge_id = 'c%d' % max_edge_id
+        max_edge_id += 1
         edge_to_xml_id[conn_id] = edge_id
         if attrib.get('label_node_id', None) is not None:
             node_to_xml_ids[attrib['label_node_id']] = edge_id
