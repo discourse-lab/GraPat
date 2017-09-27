@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -48,8 +49,10 @@ public class ResourceHandler extends HttpServlet {
 		
 		ServletContext context = getServletContext();
 		Set<String> filesSet = context.getResourcePaths("/data/");
+		List<String> files = new ArrayList(filesSet);
+		Collections.sort(files);
 		Integer index = 0;
-		for (String file : filesSet) {
+		for (String file : files) {
 			String[] structuredFileName = file.split("/");
 			String filename = structuredFileName[structuredFileName.length - 1];
 			fileMap.put(index.toString(), filename);
