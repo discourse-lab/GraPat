@@ -1,6 +1,9 @@
+import datetime
+import json
 import os
 import sqlite3
 from argparse import ArgumentParser
+from contextlib import asynccontextmanager
 from datetime import timedelta
 
 import uvicorn
@@ -11,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
+from pydantic import BaseModel
 
 arg_parser = ArgumentParser()
 arg_parser.add_argument("--root-path", default="", type=str, help="REST API hostname")
@@ -19,8 +23,32 @@ arg_parser.add_argument("--port", default=8080, type=int, help="REST API port")
 arg_parser.add_argument("--reload", action="store_true", help="Reload service on file changes")
 args = arg_parser.parse_args()
 
-app = FastAPI()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    db_execute("""  CREATE TABLE IF NOT EXISTS results (
+                        `id` int(11), 
+                        `username` text , 
+                        `annotation_bundle` text , 
+                        `sentence` text , 
+                        `graph` longtext, 
+                        `layout` longtext, 
+                        `time` TIMESTAMP,
+                        PRIMARY KEY (`id`))""")
+
+    db_execute("""CREATE TABLE IF NOT EXISTS `users` (
+                      `id` int(32),
+                      `FirstName` varchar(128) DEFAULT NULL,
+                      `LastName` varchar(128) DEFAULT NULL,
+                      `UserName` varchar(128) DEFAULT NULL,
+                      `Password` varchar(255) DEFAULT NULL,
+                      PRIMARY KEY (`id`));
+                    """)
+    yield
+    # something for shutdown
+
+
+app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -35,32 +63,24 @@ manager = LoginManager(
 DB = {"users": {"john": {"name": "John Doe", "password": "hunter2"}}}
 
 
-def get_db_conn():
+def db_execute(stmt, params=(), commit=False):
     con = sqlite3.connect("grapat.db")
-    return con.cursor()
+    cur = con.cursor()
+    cur.execute(stmt, params)
+    if commit:
+        con.commit()
+    cur.close()
+    con.close()
 
-@app.on_event("startup")
-async def startup_event():
-    # init db
-    db_cur = get_db_conn()
-    db_cur.execute("""  CREATE TABLE IF NOT EXISTS results (
-                        `id` int(11), 
-                        `username` text , 
-                        `annotation_bundle` text , 
-                        `sentence` text , 
-                        `graph` longtext, 
-                        `layout` longtext, 
-                        `time` TIMESTAMP,
-                        PRIMARY KEY (`id`))""")
 
-    db_cur.execute("""CREATE TABLE IF NOT EXISTS `users` (
-                      `id` int(32),
-                      `FirstName` varchar(128) DEFAULT NULL,
-                      `LastName` varchar(128) DEFAULT NULL,
-                      `UserName` varchar(128) DEFAULT NULL,
-                      `Password` varchar(255) DEFAULT NULL,
-                      PRIMARY KEY (`id`));
-                    """)
+def db_fetch_results(query, params=()):
+    con = sqlite3.connect("grapat.db")
+    cur = con.cursor()
+    cur.execute(query, params)
+    result = cur.fetchall()
+    cur.close()
+    con.close()
+    return result
 
 
 @manager.user_loader()
@@ -103,18 +123,51 @@ async def get_resource(fname, request: Request):
 
 @app.get("/Loader", tags=["api"])
 async def load_from_db(bundle_id: str, sentence_id: str, request: Request):
+    """
+    Load annotations from DB
+    """
+    username = "unknown"
+    results = db_fetch_results(
+        "SELECT graph, time, layout FROM results WHERE username=? AND annotation_bundle=? AND sentence=?",
+        (username, bundle_id, sentence_id)
+    )
+    if results:
+        results.sort(key=lambda row: row[1], reverse=True)
+        graph, _, layout = results[0]
+        graph = json.loads(graph)
+        layout = json.loads(layout)
+    else:
+        graph, layout = None, None
     return {
-        'graph': None,
-        'layout': None
+        'graph': graph,
+        'layout': layout
     }
 
+# TODO fix: request object raises error
+# class GrapatRequest(BaseModel):
+#     annotation_bundle: str
+#     sentence: str
+#     layout: str
+#     graph: str
+#     annotator: str
+#
 
 @app.post("/GraPAT", tags=["api"])
-async def post_grapat(request: Request):
-    return {
-        'graph': None,
-        'layout': None
-    }
+async def post_grapat(r: Request):
+    """
+    Save annotations into DB
+    """
+    # print('GOT', r)
+    data = dict(await r.form())
+    if not data['graph']:
+        return {}
+    username = "unknown"
+    # TODO get username from current session
+    db_execute("INSERT INTO results(username, annotation_bundle, sentence, graph, layout, time) "
+               "VALUES(?, ?, ?, ?, ?, ?) ;",
+               (username, data['annotation_bundle'], data['sentence'], data['graph'], data['layout'],
+                datetime.datetime.now()),
+               commit=True)
 
 
 @app.get("/", tags=["templates"], response_class=HTMLResponse)
