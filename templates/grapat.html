@@ -28,11 +28,15 @@
         </select>
     </div>
     <div class="menu_container">
-        <input id="save" class="menu_button" value="Save" type="button" onclick="window.Sentiment.save();">
-        <div id="saved">saved</div>
+        <input id="username" value="Default">
     </div>
     <div class="menu_container">
-        <input id="log out" class="menu_button" value="Log out" type="button" onclick="window.Sentiment.logout();">
+        <input id="save" class="menu_button" value="Save" type="button" onclick="window.Sentiment.save();">
+        <div id="saved" class="userMessage">saved</div>
+    </div>
+    <div class="menu_container">
+        <input id="export" class="menu_button" value="Export" type="button" onclick="window.Sentiment.exportDB();">
+        <div id="exported" class="userMessage">exported</div>
     </div>
 </div>
 <div id="main">

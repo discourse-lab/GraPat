@@ -1,20 +1,17 @@
 import datetime
 import json
 import os
-import sqlite3
 from argparse import ArgumentParser
 from contextlib import asynccontextmanager
-from datetime import timedelta
 
 import uvicorn
-from fastapi import FastAPI, Request, Depends, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse
-from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi_login import LoginManager
-from fastapi_login.exceptions import InvalidCredentialsException
-from pydantic import BaseModel
+
+import grapat.export
+from grapat.db import db_execute, db_fetch_results
 
 arg_parser = ArgumentParser()
 arg_parser.add_argument("--root-path", default="", type=str, help="REST API hostname")
@@ -52,62 +49,7 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-SECRET = "super-secret-key"
-manager = LoginManager(
-    SECRET,
-    "/login",
-    use_cookie=True,
-    cookie_name='grapat-login'
-)
-
 DB = {"users": {"john": {"name": "John Doe", "password": "hunter2"}}}
-
-
-def db_execute(stmt, params=(), commit=False):
-    con = sqlite3.connect("grapat.db")
-    cur = con.cursor()
-    cur.execute(stmt, params)
-    if commit:
-        con.commit()
-    cur.close()
-    con.close()
-
-
-def db_fetch_results(query, params=()):
-    con = sqlite3.connect("grapat.db")
-    cur = con.cursor()
-    cur.execute(query, params)
-    result = cur.fetchall()
-    cur.close()
-    con.close()
-    return result
-
-
-@manager.user_loader()
-def query_user(user_id: str):
-    """
-    Get a user from the db
-    :param user_id: E-Mail of the user
-    :return: None or the user object
-    """
-    return DB["users"].get(user_id)
-
-
-@app.post("/login")
-def login(response: Response, data: OAuth2PasswordRequestForm = Depends()):
-    email = data.username
-    password = data.password
-
-    user = query_user(email)
-    if not user:
-        # you can return any response or error of your choice
-        return None
-    elif password != user["password"]:
-        raise InvalidCredentialsException
-
-    access_token = manager.create_access_token(data={"sub": email}, expires=timedelta(hours=12))
-    manager.set_cookie(response, access_token)
-    return response
 
 
 @app.get("/resources", tags=["api"])
@@ -122,11 +64,10 @@ async def get_resource(fname, request: Request):
 
 
 @app.get("/Loader", tags=["api"])
-async def load_from_db(bundle_id: str, sentence_id: str, request: Request):
+async def load_from_db(bundle_id: str, sentence_id: str, username: str = "Default"):
     """
     Load annotations from DB
     """
-    username = "unknown"
     results = db_fetch_results(
         "SELECT graph, time, layout FROM results WHERE username=? AND annotation_bundle=? AND sentence=?",
         (username, bundle_id, sentence_id)
@@ -143,6 +84,7 @@ async def load_from_db(bundle_id: str, sentence_id: str, request: Request):
         'layout': layout
     }
 
+
 # TODO fix: request object raises error
 # class GrapatRequest(BaseModel):
 #     annotation_bundle: str
@@ -157,11 +99,10 @@ async def post_grapat(r: Request):
     """
     Save annotations into DB
     """
-    # print('GOT', r)
     data = dict(await r.form())
     if not data['graph']:
         return {}
-    username = "unknown"
+    username = data.get('username', "Default")
     # TODO get username from current session
     db_execute("INSERT INTO results(username, annotation_bundle, sentence, graph, layout, time) "
                "VALUES(?, ?, ?, ?, ?, ?) ;",
@@ -170,23 +111,19 @@ async def post_grapat(r: Request):
                commit=True)
 
 
+@app.post("/grapat/export", tags=["api"])
+async def export_db(r: Request):
+    """
+    Export annotations into DB
+    """
+    data = dict(await r.form())
+    # username = data.get('username', "Default")
+    grapat.export.export_db()
+
+
 @app.get("/", tags=["templates"], response_class=HTMLResponse)
-@app.get("/index", tags=["templates"], response_class=HTMLResponse)
 async def get_main_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-
-@app.get("/grapat", tags=["templates"], response_class=HTMLResponse)
-async def get_view_page(request: Request, user=Depends(manager.optional)):
-    if user is None:
-        return templates.TemplateResponse("grapat.html", {"request": request})
-    else:
-        return templates.TemplateResponse("grapat.html", {"request": request})
-
-
-@app.get("/login", tags=["templates"], response_class=HTMLResponse)
-async def get_parser_view_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse("grapat.html", {"request": request})
 
 
 if __name__ == '__main__':
