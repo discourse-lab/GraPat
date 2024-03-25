@@ -90,11 +90,12 @@ window.XMLParser = {},
         _request_and_add: function (bundle_id, sentence_id, add_to_word_connections) {
             var req_data = {
                 "bundle_id": bundle_id,
-                "sentence_id": sentence_id
+                "sentence_id": sentence_id,
+                "username": $("username").val()
             };
             var delayed = [];
             var jreq = $.ajax({
-                type: 'GET', url: "Loader", data: req_data, dataType: "json", async: false, success: function (data) {
+                type: 'GET', url: "/Loader", data: req_data, dataType: "json", async: false, success: function (data) {
                     var graph = data.graph;
                     var layout = data.layout;
 
@@ -436,12 +437,14 @@ window.XMLParser = {},
                 layout[$(this)[0].id]["y"] = $(this).css("top");
             });
 
+            let username = $("#username").val()
+
             $.post('GraPAT', {
                     "annotation_bundle": annotation_bundle_id,
                     "sentence": sentence_order[current_sentence_idx],
                     "layout": JSON.stringify(layout),
                     "graph": JSON.stringify(annotations),
-                    "annotator": JSON.stringify({"id": annotator_id})
+                    "annotator": JSON.stringify(username),
                 },
                 function (data) {
                     $("#saved").hide().fadeIn(1500);
@@ -451,6 +454,17 @@ window.XMLParser = {},
             changed = false;
         },
 
+        exportDB: function () {
+            let username = $("#username").val()
+            $.post('/grapat/export', {
+                    "annotator": JSON.stringify(username),
+                },
+                function (data) {
+                    $("#exported").hide().fadeIn(1500);
+                    $("#exported").fadeOut(2500);
+                }
+            );
+        },
 
         logout: function () {
         },
@@ -640,6 +654,8 @@ window.XMLParser = {},
                 annotation_type = $(data).find('annotation_bundle').attr('semantics');
 
                 $('#rmenu').empty();
+                $('#graph_part').empty();
+
                 if (annotation_type == 'argumentation')
                     window.Sentiment.init_arg();
                 else if (annotation_type == 'sentiment')
@@ -1274,7 +1290,7 @@ window.XMLParser = {},
         init: function () {
             window.Sentiment.hide_all_context_menues();
             $('#labelPopUp').hide();
-            $('#saved').hide();
+            $('.userMessage').hide();
             window.Sentiment.get_files_to_be_annotated();
             window.Sentiment.update();
 

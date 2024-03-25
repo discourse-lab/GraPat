@@ -6,7 +6,7 @@
     margin: 5px;
 }
 
-#saved {
+.userMessage {
 	background-color: white;
     border: 1px solid #346789;
     border-radius: 0.5em;
