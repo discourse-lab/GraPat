@@ -19,6 +19,12 @@
 <body>
 <div class="menu">
     <div class="menu_container">
+        <form id="formFiles" enctype="multipart/form-data" method="post">
+            <input id="iptFiles" name="file" type="file"/>
+            <input id="btnFiles" type="button" value="Upload"/>
+        </form>
+    </div>
+    <div class="menu_container">
         <input id="clear" class="menu_button" value="Clear" type="button"
                onclick="window.Sentiment.clear_annotation();">
     </div>

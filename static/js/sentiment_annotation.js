@@ -1491,6 +1491,29 @@ window.XMLParser = {},
                 window.Sentiment.update();
             });
 
-        }
+            // $("#iptFiles").on("change", function () {
+            // })
+            $("#btnFiles").click(function () {
+                var fd = new FormData();
+                var files = $('#iptFiles')[0].files[0];
+                console.log(fd, files);
+                fd.append('file', files);
 
-    };
+                $.ajax({
+                    url: "/grapat/add",
+                    type: "POST",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    // success: function (response) {
+                    //     if (response != 0) {
+                    //         alert('file uploaded');
+                    //     } else {
+                    //         alert('file not uploaded');
+                    //     }
+                    // },
+                })
+            })
+        }
+    }

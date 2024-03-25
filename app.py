@@ -5,12 +5,13 @@ from argparse import ArgumentParser
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import grapat.export
+from grapat.convert import convert
 from grapat.db import db_execute, db_fetch_results
 
 arg_parser = ArgumentParser()
@@ -107,6 +108,11 @@ async def post_grapat(r: Request):
                (username, data['annotation_bundle'], data['sentence'], data['graph'], data['layout'],
                 datetime.datetime.now()),
                commit=True)
+
+@app.post("/grapat/add", tags=["api"])
+async def uploade_new_documents(file: UploadFile):
+    contents = await file.read()
+    convert(file.filename, contents)
 
 
 @app.post("/grapat/export", tags=["api"])
