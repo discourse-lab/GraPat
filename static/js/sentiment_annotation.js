@@ -95,7 +95,7 @@ window.XMLParser = {},
             };
             var delayed = [];
             var jreq = $.ajax({
-                type: 'GET', url: "/Loader", data: req_data, dataType: "json", async: false, success: function (data) {
+                type: 'GET', url: "/grapat", data: req_data, dataType: "json", async: false, success: function (data) {
                     var graph = data.graph;
                     var layout = data.layout;
 
@@ -439,7 +439,7 @@ window.XMLParser = {},
 
             let username = $("#username").val()
 
-            $.post('GraPAT', {
+            $.post('/grapat', {
                     "annotation_bundle": annotation_bundle_id,
                     "sentence": sentence_order[current_sentence_idx],
                     "layout": JSON.stringify(layout),
@@ -649,12 +649,13 @@ window.XMLParser = {},
 
             window.Sentiment.init_globals();
             jQuery.get('resources/' + filename, function (data) {
-                annotation_bundle_id = $(data).find('annotation_bundle').attr('id');
+                annotation_bundle_id = filename;
                 // argumentation, sentiment
                 annotation_type = $(data).find('annotation_bundle').attr('semantics');
 
                 $('#rmenu').empty();
-                $('#graph_part').empty();
+                $('#author').remove();
+                $('#author').remove();
 
                 if (annotation_type == 'argumentation')
                     window.Sentiment.init_arg();

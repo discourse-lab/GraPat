@@ -25,7 +25,7 @@ args = arg_parser.parse_args()
 async def lifespan(app: FastAPI):
     db_execute("""  CREATE TABLE IF NOT EXISTS results (
                         `id` int(11), 
-                        `username` text , 
+                        `username` text ,
                         `annotation_bundle` text , 
                         `sentence` text , 
                         `graph` longtext, 
@@ -49,8 +49,6 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-DB = {"users": {"john": {"name": "John Doe", "password": "hunter2"}}}
-
 
 @app.get("/resources", tags=["api"])
 async def get_resources(request: Request):
@@ -63,7 +61,7 @@ async def get_resource(fname, request: Request):
     return Response(content=data, media_type="application/xml")
 
 
-@app.get("/Loader", tags=["api"])
+@app.get("/grapat", tags=["api"])
 async def load_from_db(bundle_id: str, sentence_id: str, username: str = "Default"):
     """
     Load annotations from DB
@@ -94,7 +92,7 @@ async def load_from_db(bundle_id: str, sentence_id: str, username: str = "Defaul
 #     annotator: str
 #
 
-@app.post("/GraPAT", tags=["api"])
+@app.post("/grapat", tags=["api"])
 async def post_grapat(r: Request):
     """
     Save annotations into DB
@@ -116,8 +114,6 @@ async def export_db(r: Request):
     """
     Export annotations into DB
     """
-    data = dict(await r.form())
-    # username = data.get('username', "Default")
     grapat.export.export_db()
 
 
