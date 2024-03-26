@@ -17,32 +17,28 @@
     <script src="/static/js/bootbox-4.2.0.min.js"></script>
 </head>
 <body>
+<div>
+    <h1>GraPAT (Graph-based Potsdam Annotation Tool)</h1>
+    <a class="btn btn-default" href="/" role="button" disabled="disabled">Annotation</a>
+    <a class="btn btn-default" href="/control" role="button">Control</a>
+</div>
 <div class="menu">
-    <div class="menu_container">
-        <form id="formFiles" enctype="multipart/form-data" method="post">
-            <input id="iptFiles" name="file" type="file" multiple/>
-            <input id="btnFiles" type="button" value="Upload"/>
-        </form>
-    </div>
     <div class="menu_container">
         <input id="clear" class="menu_button" value="Clear" type="button"
                onclick="window.Sentiment.clear_annotation();">
     </div>
     <div class="menu_container">
-        <select id="annot_file_select" name="annot_file_select" onchange="window.Sentiment.change_annot_file();">
+        <select id="annot_file_select" name="annot_file_select" class="form-control" onchange="window.Sentiment.change_annot_file();">
             <option value="" disabled="disabled" selected="selected">Please select a file for annotation</option>
         </select>
     </div>
     <div class="menu_container">
-        <input id="username" value="Default">
+        <select id="username" class="form-control">
+        </select>
     </div>
     <div class="menu_container">
         <input id="save" class="menu_button" value="Save" type="button" onclick="window.Sentiment.save();">
         <div id="saved" class="userMessage">saved</div>
-    </div>
-    <div class="menu_container">
-        <input id="export" class="menu_button" value="Export" type="button" onclick="window.Sentiment.exportDB();">
-        <div id="exported" class="userMessage">exported</div>
     </div>
 </div>
 <div id="main">
@@ -123,8 +119,8 @@
             <div class="rmenu_element" id="del_outarcs">delete outgoing edges</div>
         </div>
     </div>
-    <input id="psentence_button" class="sentence_button" type="button" onclick="window.Sentiment.previous_sentence();">
-    <input id="nsentence_button" class="sentence_button" type="button" onclick="window.Sentiment.next_sentence();">
+    <div class="sentence_button" style="float: left; text-align: center" onclick="window.Sentiment.previous_sentence();">←<br>previous<br>←</div>
+    <div class="sentence_button" style="float: right; text-align: center" onclick="window.Sentiment.next_sentence();">←<br>next<br>←</div>
     <div id="source_text">
         <div id="sentence">
         </div>

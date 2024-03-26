@@ -25,14 +25,20 @@ args = arg_parser.parse_args()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db_execute("""  CREATE TABLE IF NOT EXISTS results (
-                        `id` int(11), 
                         `username` text ,
                         `annotation_bundle` text , 
                         `sentence` text , 
                         `graph` longtext, 
                         `layout` longtext, 
-                        `time` TIMESTAMP,
-                        PRIMARY KEY (`id`))""")
+                        `time` TIMESTAMP
+                        );""")
+
+    db_execute("""CREATE TABLE IF NOT EXISTS `users` (
+                      `firstname` varchar(128) DEFAULT NULL,
+                      `lastname` varchar(128) DEFAULT NULL,
+                      `username` varchar(128) DEFAULT NULL
+                    );
+                    """)
     yield
     # something for shutdown
     grapat.export.export_db()
@@ -52,6 +58,21 @@ async def get_resources(request: Request):
 async def get_resource(fname, request: Request):
     data = open(os.path.join('static/data/', fname)).read()
     return Response(content=data, media_type="application/xml")
+
+
+@app.get("/users", tags=["api"])
+async def get_resources(request: Request):
+    users = db_fetch_results("SELECT firstname, lastname, username FROM users;")
+    return [{'firstname': u[0], 'lastname': u[1], 'username': u[2]} for u in users]
+
+
+@app.post("/users", tags=["api"])
+async def get_resources(request: Request):
+    data = dict(await request.form())
+    db_execute("INSERT INTO users(firstname, lastname, username) "
+               "VALUES(?, ?, ?) ;",
+               (data['firstname'], data['lastname'], data['username']),
+               commit=True)
 
 
 @app.get("/grapat", tags=["api"])
@@ -93,7 +114,7 @@ async def post_grapat(r: Request):
     data = dict(await r.form())
     if not data['graph']:
         return {}
-    username = data.get('username', "Default")
+    username = data.get('annotator', "default")
     # TODO get username from current session
     db_execute("INSERT INTO results(username, annotation_bundle, sentence, graph, layout, time) "
                "VALUES(?, ?, ?, ?, ?, ?) ;",
@@ -120,6 +141,11 @@ async def export_db(r: Request):
 @app.get("/", tags=["templates"], response_class=HTMLResponse)
 async def get_main_page(request: Request):
     return templates.TemplateResponse("grapat.html", {"request": request})
+
+
+@app.get("/control", tags=["templates"], response_class=HTMLResponse)
+async def get_main_page(request: Request):
+    return templates.TemplateResponse("control.html", {"request": request})
 
 
 if __name__ == '__main__':

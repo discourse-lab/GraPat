@@ -304,6 +304,17 @@ window.XMLParser = {},
             });
         },
 
+        get_users: function () {
+            $.getJSON("/users", function (data) {
+                console.log(data);
+                data.forEach( function (v) {
+                    $('#username')
+                        .append($('<option>', {value: v.username})
+                            .text(v.firstname + " " + v.lastname));
+                });
+            });
+
+        },
 
         change_annot_file: function () {
             var flist = $("#annot_file_select")[0];
@@ -444,7 +455,7 @@ window.XMLParser = {},
                     "sentence": sentence_order[current_sentence_idx],
                     "layout": JSON.stringify(layout),
                     "graph": JSON.stringify(annotations),
-                    "annotator": JSON.stringify(username),
+                    "annotator": username,
                 },
                 function (data) {
                     $("#saved").hide().fadeIn(1500);
@@ -1292,8 +1303,9 @@ window.XMLParser = {},
             window.Sentiment.hide_all_context_menues();
             $('#labelPopUp').hide();
             $('.userMessage').hide();
-            window.Sentiment.get_files_to_be_annotated();
-            window.Sentiment.update();
+            this.get_files_to_be_annotated();
+            this.get_users();
+            this.update();
 
             $(document.body).keydown(function (event) {
                 var pressed = event.keyCode || event.which;
@@ -1398,14 +1410,6 @@ window.XMLParser = {},
             //    var state = jsPlumb.toggleSourceEnabled("window1");
             //    $(this).html(state ? "disable" : "enable");
             //});
-            $("#psentence_button")[0].value = "←\nprevious\n←";
-            $("#psentence_button").css({
-                float: "left"
-            });
-            $("#nsentence_button")[0].value = "→\nnext\n→";
-            $("#nsentence_button").css({
-                float: "right"
-            });
 
             // bring up the normal context menue when rightclicking in the graph part
             $("#graph_part").on("contextmenu", function (e) {
@@ -1506,13 +1510,13 @@ window.XMLParser = {},
                     contentType: false,
                     processData: false,
                     cache: false,
-                    // success: function (response) {
-                    //     if (response != 0) {
-                    //         alert('file uploaded');
-                    //     } else {
-                    //         alert('file not uploaded');
-                    //     }
-                    // },
+                    success: function (response) {
+                        if (response !== 0) {
+                            document.getElementById("formFiles").reset();
+                        } else {
+                            alert('file not uploaded');
+                        }
+                    },
                 })
             })
         }

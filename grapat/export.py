@@ -1,6 +1,7 @@
 import json
 import os.path
 import re
+import time
 
 from lxml import etree
 from peewee import SqliteDatabase, Model, TextField, DateTimeField
@@ -192,7 +193,7 @@ def graph_to_xml(text_id, graph, edus):
     return xml_string
 
 
-def save_xml_from_grapat(username, text_id, sentence):
+def save_xml_from_grapat(username, text_id, sentence, export_path):
     graph = query_latest_annotation(text_id, username)
     if graph is None:
         return
@@ -201,17 +202,18 @@ def save_xml_from_grapat(username, text_id, sentence):
     except IOError:
         return
     graph_xml = graph_to_xml(text_id, graph, edus)
-    os.makedirs('exports', exist_ok=True)
-    with open(os.path.join('exports', f'{text_id}-{sentence}-{username}.xml'), 'wb') as fh:
+    with open(os.path.join(export_path, f'{text_id}-{sentence}-{username}.xml'), 'wb') as fh:
         fh.write(graph_xml)
 
 
 def export_db():
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    export_path = os.path.join("exports", timestr)
+    os.makedirs(export_path, exist_ok=True)
     for username, annotation_id, sentence in db_fetch_results(
             "SELECT DISTINCT username, annotation_bundle, sentence FROM results"):
-        print("Export DB", username, annotation_id, sentence)
         try:
-            save_xml_from_grapat(username, annotation_id, sentence)
+            save_xml_from_grapat(username, annotation_id, sentence, export_path)
         except KeyError as e:
             print(e)
             continue
