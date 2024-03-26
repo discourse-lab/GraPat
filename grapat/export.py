@@ -210,4 +210,8 @@ def export_db():
     for username, annotation_id, sentence in db_fetch_results(
             "SELECT DISTINCT username, annotation_bundle, sentence FROM results"):
         print("Export DB", username, annotation_id, sentence)
-        save_xml_from_grapat(username, annotation_id, sentence)
+        try:
+            save_xml_from_grapat(username, annotation_id, sentence)
+        except KeyError as e:
+            print(e)
+            continue

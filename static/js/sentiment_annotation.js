@@ -1495,10 +1495,10 @@ window.XMLParser = {},
             // })
             $("#btnFiles").click(function () {
                 var fd = new FormData();
-                var files = $('#iptFiles')[0].files[0];
-                console.log(fd, files);
-                fd.append('file', files);
-
+                $.each($('#iptFiles')[0].files, function(i, file) {
+                    fd.append('files', file);
+                });
+                console.log(fd);
                 $.ajax({
                     url: "/grapat/add",
                     type: "POST",

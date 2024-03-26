@@ -33,17 +33,9 @@ async def lifespan(app: FastAPI):
                         `layout` longtext, 
                         `time` TIMESTAMP,
                         PRIMARY KEY (`id`))""")
-
-    db_execute("""CREATE TABLE IF NOT EXISTS `users` (
-                      `id` int(32),
-                      `FirstName` varchar(128) DEFAULT NULL,
-                      `LastName` varchar(128) DEFAULT NULL,
-                      `UserName` varchar(128) DEFAULT NULL,
-                      `Password` varchar(255) DEFAULT NULL,
-                      PRIMARY KEY (`id`));
-                    """)
     yield
     # something for shutdown
+    grapat.export.export_db()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -109,10 +101,12 @@ async def post_grapat(r: Request):
                 datetime.datetime.now()),
                commit=True)
 
+
 @app.post("/grapat/add", tags=["api"])
-async def uploade_new_documents(file: UploadFile):
-    contents = await file.read()
-    convert(file.filename, contents)
+async def uploade_new_documents(files: list[UploadFile]):
+    for file in files:
+        contents = await file.read()
+        convert(file.filename, contents)
 
 
 @app.post("/grapat/export", tags=["api"])
