@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Request, Response, UploadFile
+from fastapi import FastAPI, Request, Response, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -69,6 +69,8 @@ async def get_resources(request: Request):
 @app.post("/users", tags=["api"])
 async def get_resources(request: Request):
     data = dict(await request.form())
+    if not data['firstname'] or not data['lastname'] or not data['username']:
+        return HTTPException(status_code=404, detail="Item empty")
     db_execute("INSERT INTO users(firstname, lastname, username) "
                "VALUES(?, ?, ?) ;",
                (data['firstname'], data['lastname'], data['username']),
@@ -127,7 +129,7 @@ async def post_grapat(r: Request):
 async def uploade_new_documents(files: list[UploadFile]):
     for file in files:
         contents = await file.read()
-        convert(file.filename, contents)
+        convert(file.filename, contents.decode())
 
 
 @app.post("/grapat/export", tags=["api"])
@@ -141,11 +143,6 @@ async def export_db(r: Request):
 @app.get("/", tags=["templates"], response_class=HTMLResponse)
 async def get_main_page(request: Request):
     return templates.TemplateResponse("grapat.html", {"request": request})
-
-
-@app.get("/control", tags=["templates"], response_class=HTMLResponse)
-async def get_main_page(request: Request):
-    return templates.TemplateResponse("control.html", {"request": request})
 
 
 if __name__ == '__main__':

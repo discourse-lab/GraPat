@@ -296,6 +296,7 @@ window.XMLParser = {},
 
         get_files_to_be_annotated: function () {
             $.getJSON("/resources", function (data) {
+                $('#annot_file_select').empty();
                 $.each(data, function (key, value) {
                     $('#annot_file_select')
                         .append($('<option>', {value: key})
@@ -307,7 +308,8 @@ window.XMLParser = {},
         get_users: function () {
             $.getJSON("/users", function (data) {
                 console.log(data);
-                data.forEach( function (v) {
+                $('#username').empty();
+                data.forEach(function (v) {
                     $('#username')
                         .append($('<option>', {value: v.username})
                             .text(v.firstname + " " + v.lastname));
@@ -834,7 +836,7 @@ window.XMLParser = {},
                 });
             });
 
-            var allMovables = $(".movable");
+            const allMovables = $(".movable");
             // make them draggable
             jsPlumb.draggable(allMovables, {
                 start: function (event, ui) {
@@ -847,7 +849,7 @@ window.XMLParser = {},
                 }
             });
 
-            var wordDivs = $(".word, .word_arg, .word_sent");
+            const wordDivs = $(".word, .word_arg, .word_sent");
             jsPlumb.makeSource(wordDivs, {
                 anchor: ["TopCenter"],
                 endpoint: ["Dot", {radius: 0}],
@@ -871,15 +873,15 @@ window.XMLParser = {},
 
         labelPopUpButton_click: function (label_node_id, pol, text, ctxt, wk, irn, rhtrc, c_t) {
             changed = true;
-            var polarity = null;
-            var text_anchor = null;
-            var context = null;
-            var worldknowledge = null;
-            var irony = null;
-            var rhetoric = null;
-            var ln_id = null;
-            var old = false;
-            var c_type = null;
+            let polarity = null;
+            let text_anchor = null;
+            let context = null;
+            let worldknowledge = null;
+            let irony = null;
+            let rhetoric = null;
+            let ln_id = null;
+            let old = false;
+            let c_type = null;
 
             if (annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] != null)
                 old = true;
@@ -904,7 +906,7 @@ window.XMLParser = {},
 
             annotations.edges[current_source][current_target][current_connection.id]["label_node_id"] = ln_id;
 
-            if (annotation_type == 'sentiment') {
+            if (annotation_type === 'sentiment') {
                 if (pol != null)
                     polarity = pol;
                 else
@@ -932,30 +934,17 @@ window.XMLParser = {},
 
                 annotations.edges[current_source][current_target][current_connection.id]["polarity"] = polarity;
                 annotations.edges[current_source][current_target][current_connection.id]["text_anchor"] = text_anchor;
+                annotations.edges[current_source][current_target][current_connection.id]["context"] = !!context;
+                annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = !!worldknowledge;
+                annotations.edges[current_source][current_target][current_connection.id]["ironic"] = !!irony;
+                annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = !!rhetoric;
 
-                if (context)
-                    annotations.edges[current_source][current_target][current_connection.id]["context"] = true;
-                else
-                    annotations.edges[current_source][current_target][current_connection.id]["context"] = false;
-                if (worldknowledge)
-                    annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = true;
-                else
-                    annotations.edges[current_source][current_target][current_connection.id]["world_knowledge"] = false;
-                if (irony)
-                    annotations.edges[current_source][current_target][current_connection.id]["ironic"] = true;
-                else
-                    annotations.edges[current_source][current_target][current_connection.id]["ironic"] = false;
-                if (rhetoric)
-                    annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = true;
-                else
-                    annotations.edges[current_source][current_target][current_connection.id]["rhetoric"] = false;
-
-                if (polarity == 'negative' && !current_connection.hasType('negative')) {
+                if (polarity === 'negative' && !current_connection.hasType('negative')) {
                     current_connection.toggleType('negative');
-                } else if (polarity == 'positive' && !current_connection.hasType('positive')) {
+                } else if (polarity === 'positive' && !current_connection.hasType('positive')) {
                     current_connection.toggleType('positive');
                 }
-            } else if (annotation_type == 'argumentation') {
+            } else if (annotation_type === 'argumentation') {
                 if (c_t != null) {
                     c_type = c_t;
                 } else {
@@ -1494,30 +1483,5 @@ window.XMLParser = {},
                 $(window).resize();
                 window.Sentiment.update();
             });
-
-            // $("#iptFiles").on("change", function () {
-            // })
-            $("#btnFiles").click(function () {
-                var fd = new FormData();
-                $.each($('#iptFiles')[0].files, function(i, file) {
-                    fd.append('files', file);
-                });
-                console.log(fd);
-                $.ajax({
-                    url: "/grapat/add",
-                    type: "POST",
-                    data: fd,
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    success: function (response) {
-                        if (response !== 0) {
-                            document.getElementById("formFiles").reset();
-                        } else {
-                            alert('file not uploaded');
-                        }
-                    },
-                })
-            })
         }
     }

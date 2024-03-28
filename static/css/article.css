@@ -7,11 +7,11 @@
 }
 
 .userMessage {
-	background-color: white;
+    background-color: white;
     border: 1px solid #346789;
     border-radius: 0.5em;
-	font-weight: bold;
-	text-align: center;
+    font-weight: bold;
+    text-align: center;
 }
 
 #sentence {
@@ -24,22 +24,22 @@
     border: 1px solid #346789;
     border-radius: 0.3em;
     z-index: 22;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0, 0.8);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
     font-size: smaller;
     padding: 3px;
 }
 
 .node_type_proponent {
     border-radius: 50%;
-    line-height:2em;
+    line-height: 2em;
     border: 2pt solid #000000;
     background-color: white;
     padding-left: 1.5em;
     padding-right: 1.5em;
     font-size: 15px;
     font-weight: bold;
-    cursor:move;
+    cursor: move;
 }
 
 .node_type_proponent:hover {
@@ -48,14 +48,14 @@
 
 .node_type_opponent {
     border-radius: 0%;
-    line-height:2em;
+    line-height: 2em;
     border: 2pt solid #000000;
     background-color: white;
     padding-left: 1.5em;
     padding-right: 1.5em;
     font-size: 15px;
     font-weight: bold;
-    cursor:move;
+    cursor: move;
 }
 
 .node_type_opponent:hover {
@@ -65,9 +65,9 @@
 
 .node_type_edu_join {
     border-radius: 20%;
-    line-height:1em;
+    line-height: 1em;
     background-color: #eee;
-    cursor:move;
+    cursor: move;
 }
 
 .source_handle {
@@ -88,10 +88,10 @@
 }
 
 .rebut_undercut_circle {
-	width: 15px;
-	height: 15px;
-	background-color: white;
-	border: 2px solid black;
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border: 2px solid black;
 }
 
 .invisible {
@@ -99,7 +99,7 @@
 }
 
 .full_size {
-	width: 100%;
+    width: 100%;
 }
 
 .edge_label {
@@ -107,8 +107,8 @@
     border: 1px solid #346789;
     border-radius: 0.3em;
     z-index: 22;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0, 0.8);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
     font-size: smaller;
     padding: 3px;
 }
@@ -122,10 +122,10 @@
 }
 
 .extra_sentential_node {
-	position: relative;
+    position: relative;
     color: white;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0, 0.8);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
     left: -2.8em;
     top: -2.8em;
     width: 5em;
@@ -137,28 +137,17 @@
     margin: 0 auto;
 }
 
-.sentence_button {
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 5px;
-    float: right;
-    border: 1px solid black;
-    border-radius: 0.5em;
-    background-color: #346789;
+.btn-sentence {
     width: 100px;
-    height: 60px;
-    font-size: 1em;
-    color: white;
-    box-shadow: 2px 2px 19px #aaa;
-    -o-box-shadow: 2px 2px 19px #aaa;
-    -webkit-box-shadow: 2px 2px 19px #aaa;
-    -moz-box-shadow: 2px 2px 19px #aaa;
+    height: 80px;
 }
+
 .menu_container {
     float: right;
     margin-top: 10px;
     margin-left: 10px;
 }
+
 .menu_button {
     position: static;
     border: 1px solid black;
@@ -180,17 +169,11 @@
 }
 
 #attrsButton {
-	float: right;
+    float: right;
 }
 
 #popUpTable {
-	border-spacing: 10px;
-}
-
-.sentence_button:active {
-    width: 97px;
-    height: 49px;
-    font-size: 0.95em;
+    border-spacing: 10px;
 }
 
 #graph_part {
@@ -216,7 +199,7 @@
     float: left;
     width: 15em;
     padding: 4pt;
-    line-height: 1.5em; 
+    line-height: 1.5em;
     background-color: #eee;
 }
 
@@ -226,8 +209,8 @@
     left: 0;
     top: 0;
     position: absolute;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0, 0.8);
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
     z-index: 300;
 }
@@ -241,7 +224,7 @@
 
 #dmenu {
     display: none;
-    position:absolute;
+    position: absolute;
     padding: 0.25em;
     padding-left: 10px;
     padding-right: 10px;
@@ -253,7 +236,7 @@
 
 #rmenu {
     display: none;
-    position:absolute;
+    position: absolute;
     padding: 0.25em;
     padding-left: 10px;
     padding-right: 10px;
@@ -268,14 +251,14 @@
 }
 
 .attrsContent {
-	padding: 4%;
+    padding: 4%;
 }
 
 .attrsHeadline {
-	width: 100%;
-	text-align: center;
-	border-bottom: 1px solid black;
-	padding-bottom: 8%;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid black;
+    padding-bottom: 8%;
 }
 
 .subheading {
@@ -285,7 +268,7 @@
 }
 
 .empf {
-    font-style: italic;    
+    font-style: italic;
 }
 
 .excl {
@@ -299,10 +282,10 @@
 
 
 .corefLabel {
-	background-color: #4CBBD4;
-	font-size: 1.4em;
-	border-radius: 15px;
-	z-index: 100;
+    background-color: #4CBBD4;
+    font-size: 1.4em;
+    border-radius: 15px;
+    z-index: 100;
 }
 
 .named-entity-loc {
@@ -320,8 +303,13 @@
 }
 
 /** JSPLUMB ARTEFACTS **/
-._jsPlumb_connector { z-index:4; }
-._jsPlumb_endpoint { z-index:5; }
+._jsPlumb_connector {
+    z-index: 4;
+}
+
+._jsPlumb_endpoint {
+    z-index: 5;
+}
 
 .connectorClass {
     width: 5px;

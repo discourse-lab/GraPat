@@ -26,7 +26,7 @@ def convert(filename, contents):
         segments_elm = source_elm.xpath("/rst/body/segment")
         segments = [e.text for e in segments_elm]
     else:
-        segments = contents.split("\n")
+        segments = [line for line in map(lambda l: l.strip(), contents.split("\n")) if len(line) > 0 and line[0] != "#"]
     text_id = os.path.splitext(os.path.basename(filename))[0]
     xmlstring = generate_xml(text_id, segments)
     outpath = os.path.join('static/data', text_id + '.xml')
