@@ -7,7 +7,10 @@ COPY requirements.txt .
 RUN pip install -U pip wheel setuptools
 RUN pip install -r requirements.txt
 
-ADD grapat /app
+COPY grapat grapat
+COPY static static
+COPY templates templates
+COPY app.py app.py
 
 EXPOSE 8080
-ENTRYPOINT python app.py --port 8080 --reload
+ENTRYPOINT python app.py --port 8080
