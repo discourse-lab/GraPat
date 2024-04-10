@@ -24,6 +24,7 @@ args = arg_parser.parse_args()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    os.makedirs("db", exist_ok=True)
     db_execute("""  CREATE TABLE IF NOT EXISTS results (
                         `username` text ,
                         `annotation_bundle` text , 

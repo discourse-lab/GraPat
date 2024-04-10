@@ -91,7 +91,7 @@ window.XMLParser = {},
             var req_data = {
                 "bundle_id": bundle_id,
                 "sentence_id": sentence_id,
-                "username": $("username").val()
+                "username": $("#username").val()
             };
             var delayed = [];
             var jreq = $.ajax({

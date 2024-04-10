@@ -2,7 +2,7 @@ import sqlite3
 
 
 def db_execute(stmt, params=(), commit=False):
-    con = sqlite3.connect("grapat.db")
+    con = sqlite3.connect("db/grapat.db")
     cur = con.cursor()
     cur.execute(stmt, params)
     if commit:
@@ -12,7 +12,7 @@ def db_execute(stmt, params=(), commit=False):
 
 
 def db_fetch_results(query, params=()):
-    con = sqlite3.connect("grapat.db")
+    con = sqlite3.connect("db/grapat.db")
     cur = con.cursor()
     cur.execute(query, params)
     result = cur.fetchall()
